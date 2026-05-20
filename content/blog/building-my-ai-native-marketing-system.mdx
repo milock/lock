@@ -1,0 +1,29 @@
+---
+title: "Building my AI-native marketing system"
+description: "An early, still-changing look at the agents, skills, and pipelines I use to run a marketing function mostly solo."
+date: "2026-05-20"
+tags: ["ai-native", "go-to-market", "operations"]
+draft: false
+---
+
+This is an early post about a system that is still changing under me, so treat it as a snapshot rather than a finished blueprint. I will update it as the parts shift.
+
+The short version: I run a marketing function with a set of AI agents and tools I built for the way I actually work. Not a chatbot I poke at when I am stuck. A system that does real parts of the job, every day, whether or not I am watching.
+
+## What is in it
+
+Right now it is built from a few layers.
+
+There are about twenty custom skills. Each one is a small, repeatable job I do often enough that it was worth writing down once: drafting in my voice, turning a brief into a post, scrubbing a draft before it ships. Then there are seven specialized agents, each with its own context and its own narrow lane, so a writing task and a research task do not step on each other.
+
+On top of that sit five production automations that run on their own: a daily briefing, a weekly marketing report, a competitor scan, and a couple of others that keep the lights on. I never kick them off. They run on a schedule and leave me something to react to.
+
+The piece I am proudest of is the research pipeline. It will not hand me a claim it cannot back up. It pulls from four layers at once: my own internal memory, Perplexity, Firecrawl, and live community signal. Then it tiers every source by how much I should trust it and verifies that the URLs actually resolve before anything reaches me. It is the difference between research I can publish and research I have to re-check by hand.
+
+Two of the tools are open source. Humanizer scrubs the small tells that creep into AI writing. Polysearch is the multi-source research approach above, packaged so other people can run it with their own citation tiers.
+
+## What my job actually is
+
+People assume the agents do the work and I watch. It is closer to the opposite. My job is designing the flows, writing the prompts that make them reliable, and partnering with engineering to make the whole thing hold up in production. The system is only as good as the thinking I put into it, and a lot of that thinking is still wrong on the first try.
+
+Some of this works well. Some of it I am still figuring out. I will write about both as I go.

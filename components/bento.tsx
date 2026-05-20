@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { AnimatedBeamMultipleOutputs } from "@/components/animated-beam-multiple-outputs";
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
@@ -9,14 +10,11 @@ import Hero from "@/components/hero";
 import Marquee from "@/components/magicui/marquee";
 import Technologies from "@/components/technologies";
 import ThemeToggle from "@/components/theme-toggle";
-import NumberTicker from "@/components/magicui/number-ticker";
 import RetroGrid from "@/components/magicui/retro-grid";
 import { cn } from "@/lib/utils";
 import {
-  about,
   defaultDomains,
   experience,
-  metrics,
   profile,
   projects,
 } from "@/lib/data";
@@ -32,6 +30,56 @@ import {
 } from "@/components/magicui/terminal";
 
 const avatarSrc = process.env.AVATAR_URL || "https://github.com/milock.png";
+
+// Company monogram: 1–2 letters from the company name, used both as the
+// no-domain fallback (ExSite) and as the onError swap so a logo can never
+// render broken.
+function companyMonogram(name: string): string {
+  const words = name.replace(/[^A-Za-z0-9 ]/g, "").trim().split(/\s+/);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return (words[0] ?? name).slice(0, 2).toUpperCase();
+}
+
+// Small square logo for an experience card. Tries a remote favicon-style mark
+// when a domain is given; falls back to a styled monogram on error or when no
+// domain exists. Plain <img> keeps us off next/image remote-domain config.
+function CompanyLogo({
+  company,
+  domain,
+}: {
+  company: string;
+  domain?: string;
+}) {
+  const [broken, setBroken] = useState(!domain);
+
+  const monogramTile = (
+    <span
+      aria-hidden
+      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08] text-[10px] font-semibold tracking-tight text-neutral-200 ring-1 ring-inset ring-white/15"
+    >
+      {companyMonogram(company)}
+    </span>
+  );
+
+  if (broken) return monogramTile;
+
+  return (
+    // Plain <img> (not next/image) so we avoid remote-domain config and can
+    // swap to a monogram on error. Google's favicon service is a reliable,
+    // config-free logo source; the monogram fallback guarantees no broken mark.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+      alt=""
+      aria-hidden
+      width={24}
+      height={24}
+      loading="lazy"
+      className="h-6 w-6 shrink-0 rounded-md bg-white object-contain p-0.5"
+      onError={() => setBroken(true)}
+    />
+  );
+}
 
 const features = [
   // Hero - headline + tagline + theme toggle
@@ -60,11 +108,11 @@ const features = [
     ),
   },
 
-  // About - name + headshot + bio (links live in the Hero and Contact tiles)
+  // About - name + headshot + one-line statement (links live in the Hero and Contact tiles)
   {
     Icon: "",
     name: profile.name,
-    description: about,
+    description: "I build the thing from nothing.",
     className: "col-span-3 md:col-span-1",
     href: profile.links.linkedin,
     cta: "Connect on LinkedIn",
@@ -120,23 +168,43 @@ const features = [
             <div
               key={idx}
               className={cn(
-                "relative w-full cursor-default overflow-hidden rounded-xl border p-3",
+                "relative w-full cursor-default overflow-hidden rounded-xl border p-3.5",
                 "border-gray-950/[.1] bg-gray-950/[.01]",
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.10]"
               )}
             >
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-sm font-bold dark:text-white">
-                  {role.title}
-                </span>
-                <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
-                  {role.period}
+              {/* Header row: logo + company, then the one-line role title */}
+              <div className="flex items-center gap-2">
+                <CompanyLogo
+                  company={role.company}
+                  domain={role.logoDomain || undefined}
+                />
+                <span className="truncate text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                  {role.company}
                 </span>
               </div>
-              <div className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                {role.company}
+
+              <div className="mt-1.5 truncate whitespace-nowrap text-sm font-bold dark:text-white">
+                {role.title}
               </div>
-              <blockquote className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+
+              {/* Trust badges */}
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                {role.badges.map((badge) => (
+                  <span
+                    key={badge}
+                    className={cn(
+                      "rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap",
+                      "border border-gray-950/[.08] bg-gray-950/[.03] text-neutral-600",
+                      "dark:border-gray-50/[.12] dark:bg-gray-50/[.06] dark:text-neutral-300"
+                    )}
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
+
+              <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 {role.metric}
               </blockquote>
             </div>
@@ -156,10 +224,10 @@ const features = [
     cta: "See the open-source tools",
     className: "col-span-3 md:col-span-2",
     background: (
-      <div className="absolute right-0 top-0 w-[110%] h-[110%] origin-top-right translate-x-[5%] -translate-y-[15%] transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_40%)] group-hover:-translate-y-[18%] group-hover:scale-105">
+      <div className="absolute inset-x-0 top-0 h-[78%] origin-top px-6 pt-6 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_45%)] group-hover:scale-[1.02]">
         <FadeIn
           direction="up"
-          className="w-full h-full flex items-start justify-end"
+          className="flex h-full w-full items-start justify-center"
         >
           <Technologies />
         </FadeIn>
@@ -173,8 +241,8 @@ const features = [
     name: "AI-Native Ops",
     description:
       "A self-built multi-agent system that delivers a team's output, solo.",
-    href: "https://github.com/milock/humanizer",
-    cta: "View the humanizer skill",
+    href: "/blog/building-my-ai-native-marketing-system",
+    cta: "How the system works",
     className: "col-span-3 md:col-span-2",
     background: (
       <motion.div
@@ -269,32 +337,27 @@ const features = [
     ),
   },
 
-  // Metrics - number-ticker
+  // Projects pairs with Writing on its row (2 + 1 = 3) after the metrics
+  // tile was removed; the grid stays evenly tiled.
+
+  // Writing - blurb + link to /blog
   {
     Icon: "",
-    name: "By the numbers",
-    description: "Defensible outcomes, not vanity stats.",
-    className: "col-span-3 md:col-span-3",
-    href: "",
-    cta: "",
+    name: "Writing",
+    description:
+      "A weekly newsletter grown from zero to ~1,000 subscribers, plus notes on AI-native go-to-market.",
+    className: "col-span-3 md:col-span-1",
+    href: profile.links.blog,
+    cta: "Read the blog",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_5%,#000_40%)] group-hover:scale-[101%]">
-        <div className="grid h-2/3 grid-cols-2 gap-4 p-6 sm:grid-cols-4">
-          {metrics.map((m, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col items-start justify-center"
-            >
-              <div className="flex items-baseline text-4xl font-semibold text-neutral-700 dark:text-neutral-200 lg:text-5xl">
-                <span>{m.prefix}</span>
-                <NumberTicker value={m.value} />
-                <span>{m.suffix}</span>
-              </div>
-              <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                {m.label}
-              </div>
-            </div>
-          ))}
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)] group-hover:scale-[102%]">
+        <div className="flex h-2/3 items-center justify-center p-6">
+          <BlurIn
+            duration={0.5}
+            className="text-5xl font-semibold text-neutral-300 dark:text-neutral-700"
+          >
+            /blog
+          </BlurIn>
         </div>
       </div>
     ),
@@ -342,55 +405,7 @@ const features = [
     ),
   },
 
-  // Writing - blurb + link to /blog
-  {
-    Icon: "",
-    name: "Writing",
-    description:
-      "A weekly newsletter grown from zero to ~1,000 subscribers, plus notes on AI-native go-to-market.",
-    className: "col-span-3 md:col-span-1",
-    href: profile.links.blog,
-    cta: "Read the blog",
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)] group-hover:scale-[102%]">
-        <div className="flex h-2/3 items-center justify-center p-6">
-          <BlurIn
-            duration={0.5}
-            className="text-5xl font-semibold text-neutral-300 dark:text-neutral-700"
-          >
-            /blog
-          </BlurIn>
-        </div>
-      </div>
-    ),
-  },
-
-  // Terminal easter-egg - honest, on-brand for an AI-native marketer
-  {
-    Icon: "",
-    name: "Built with the stack",
-    description: "Every word here ran through my own tool first.",
-    className: "col-span-3 md:col-span-2",
-    href: "https://github.com/milock/humanizer",
-    cta: "Get humanizer",
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_30%,#000_70%)] group-hover:scale-[102%]">
-        <div className="flex items-center justify-center h-full w-full p-4">
-          <Terminal className="w-full max-w-md">
-            <TypingAnimation>$ humanizer scrub ./about-me.md</TypingAnimation>
-            <AnimatedSpan>✔ Scanning for AI tells...</AnimatedSpan>
-            <AnimatedSpan>✔ Cut 0 em dashes, 0 corporate punchlines.</AnimatedSpan>
-            <AnimatedSpan>✔ Kept the parts that sound like me.</AnimatedSpan>
-            <AnimatedSpan className="text-green-500">
-              ✓ Reads human. Shipped.
-            </AnimatedSpan>
-          </Terminal>
-        </div>
-      </div>
-    ),
-  },
-
-  // Contact - email / LinkedIn / GitHub / résumé buttons
+  // Contact - email / LinkedIn / GitHub / résumé buttons (pairs with Focus, 2 + 1)
   {
     Icon: "",
     name: "",
@@ -410,6 +425,33 @@ const features = [
           <ContactButtons />
         </div>
         <RetroGrid />
+      </div>
+    ),
+  },
+
+  // Terminal easter-egg - full-width band that closes the grid above the
+  // Ask tile. Full width keeps every row evenly tiled after the metrics
+  // tile was removed.
+  {
+    Icon: "",
+    name: "Built with the stack",
+    description: "Every word here ran through my own tool first.",
+    className: "col-span-3",
+    href: "https://github.com/milock/humanizer",
+    cta: "Get humanizer",
+    background: (
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_30%,#000_70%)] group-hover:scale-[101%]">
+        <div className="flex items-center justify-center h-full w-full p-4">
+          <Terminal className="w-full max-w-md">
+            <TypingAnimation>$ humanizer scrub ./about-me.md</TypingAnimation>
+            <AnimatedSpan>✔ Scanning for AI tells...</AnimatedSpan>
+            <AnimatedSpan>✔ Cut 0 em dashes, 0 corporate punchlines.</AnimatedSpan>
+            <AnimatedSpan>✔ Kept the parts that sound like me.</AnimatedSpan>
+            <AnimatedSpan className="text-green-500">
+              ✓ Reads human. Shipped.
+            </AnimatedSpan>
+          </Terminal>
+        </div>
       </div>
     ),
   },

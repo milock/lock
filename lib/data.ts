@@ -26,32 +26,42 @@ export const experience = [
     company: "Clarity RCM",
     title: "Head of Marketing",
     period: "2025–Present",
+    badges: ["Founding marketer", "$20M ARR"],
+    logoDomain: "clarityrcm.com",
     metric:
       "First marketing hire at a $20M ARR healthcare RCM company; built the function 0→1.",
   },
   {
     company: "Elation Health",
-    title: "Principal Product Marketing Manager",
+    title: "Principal PMM",
     period: "2023–2025",
+    badges: ["Series D", "$50M ARR"],
+    logoDomain: "elationhealth.com",
     metric: "Led two 0→1 launches (AI Scribe, Billing) to $8M+ combined ARR.",
   },
   {
     company: "360training",
-    title: "Product Marketing Lead, Healthcare",
+    title: "PMM Lead, Healthcare",
     period: "2022–2023",
+    badges: ["PE-backed", "$36M→$72M"],
+    logoDomain: "360training.com",
     metric:
       "Built PMM 0→4; scaled an acquired line to $10M ARR; helped 2x the business $36M→$72M.",
   },
   {
     company: "ExSite",
-    title: "Founder, Fractional PMM Practice",
+    title: "Founder, Fractional PMM",
     period: "2018–2022",
+    badges: ["Founder", "$2M raised"],
+    logoDomain: "",
     metric: "15+ early-stage clients; directed a $2M Kickstarter (top 1% that year).",
   },
   {
     company: "Meta",
-    title: "Product Operations Analyst, Platform",
+    title: "Product Ops, Platform",
     period: "2016–2018",
+    badges: ["NASDAQ: META", "0→500K MAU"],
+    logoDomain: "meta.com",
     metric: "Scaled Facebook Gaming 0→500K MAU.",
   },
 ];
@@ -83,20 +93,48 @@ export const metrics = [
   { value: 2, prefix: "", suffix: "", label: "open-source AI tools shipped" },
 ];
 
-// AI-native + GTM stack (reframes the dev icon-cloud).
-export const stack = [
-  "Claude",
-  "MCP",
-  "Python",
-  "Next.js",
-  "TypeScript",
-  "Tailwind CSS",
-  "HubSpot",
-  "Webflow",
-  "beehiiv",
-  "Vercel",
-  "Perplexity",
-  "Firecrawl",
+// AI-native + GTM stack rendered as a logo grid in the Stack tile.
+//
+// `slug` is a verified Simple Icons slug (https://cdn.simpleicons.org/{slug}).
+// Tools with no Simple Icons brand mark use `slug: null` and fall back to a
+// styled monogram chip rendered in-DOM, so a logo can never break. Every slug
+// below was HEAD-checked against the Simple Icons CDN.
+export type StackTool = { name: string; slug: string | null };
+
+export const stack: StackTool[] = [
+  // AI / build
+  { name: "Claude", slug: "anthropic" },
+  { name: "OpenAI", slug: null },
+  { name: "Cursor", slug: "cursor" },
+  { name: "Python", slug: "python" },
+  { name: "TypeScript", slug: "typescript" },
+  { name: "Next.js", slug: "nextdotjs" },
+  { name: "React", slug: "react" },
+  { name: "Tailwind", slug: "tailwindcss" },
+  { name: "Vercel", slug: "vercel" },
+  { name: "GitHub", slug: "github" },
+  { name: "n8n", slug: "n8n" },
+  { name: "Zapier", slug: "zapier" },
+  { name: "Hugging Face", slug: "huggingface" },
+  { name: "Perplexity", slug: "perplexity" },
+  { name: "Notion", slug: "notion" },
+  { name: "Linear", slug: "linear" },
+  { name: "Figma", slug: "figma" },
+  { name: "Slack", slug: null },
+  // GTM / marketing / sales
+  { name: "HubSpot", slug: "hubspot" },
+  { name: "Salesforce", slug: null },
+  { name: "Apollo", slug: null },
+  { name: "Gong", slug: null },
+  { name: "Navattic", slug: null },
+  { name: "Semrush", slug: "semrush" },
+  { name: "GA4", slug: "googleanalytics" },
+  { name: "Google Ads", slug: "googleads" },
+  { name: "Webflow", slug: "webflow" },
+  { name: "beehiiv", slug: null },
+  { name: "Intercom", slug: "intercom" },
+  { name: "Segment", slug: null },
+  { name: "Canva", slug: null },
 ];
 
 // Michael's focus areas (rendered in the focus-areas marquee tile).
