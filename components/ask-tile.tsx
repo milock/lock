@@ -63,7 +63,7 @@ export function AskTile() {
     <div
       id="ask"
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden rounded-xl p-6",
+        "tile-surface group relative flex h-full flex-col justify-between overflow-hidden p-6",
         // light styles — mirrors BentoCard
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         // dark styles — mirrors BentoCard
