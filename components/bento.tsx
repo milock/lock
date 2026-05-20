@@ -185,7 +185,7 @@ const features = [
                 className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-neutral-300/70 transition-colors duration-300 group-hover/exp:bg-neutral-400 dark:bg-white/15 dark:group-hover/exp:bg-white/30"
               />
 
-              {/* Top row: logo + bold company name, period pinned right. */}
+              {/* Top row: logo + bold company name (no years, per design). */}
               <div className="flex items-center gap-2">
                 <CompanyLogo
                   company={role.company}
@@ -193,9 +193,6 @@ const features = [
                 />
                 <span className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 dark:text-white">
                   {role.company}
-                </span>
-                <span className="shrink-0 text-[10px] font-medium tabular-nums text-neutral-400 dark:text-neutral-500">
-                  {role.period}
                 </span>
               </div>
 
