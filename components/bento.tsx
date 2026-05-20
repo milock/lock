@@ -52,10 +52,12 @@ function CompanyLogo({
 }) {
   const [broken, setBroken] = useState(!domain);
 
+  // Consistent ~22px square mark with a soft ring so the logo and the monogram
+  // fallback occupy identical space and align cleanly across all five cards.
   const monogramTile = (
     <span
       aria-hidden
-      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08] text-[10px] font-semibold tracking-tight text-neutral-200 ring-1 ring-inset ring-white/15"
+      className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md bg-neutral-100 text-[9px] font-semibold tracking-tight text-neutral-600 ring-1 ring-inset ring-black/[0.06] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15"
     >
       {companyMonogram(company)}
     </span>
@@ -72,10 +74,10 @@ function CompanyLogo({
       src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
       alt=""
       aria-hidden
-      width={24}
-      height={24}
+      width={22}
+      height={22}
       loading="lazy"
-      className="h-6 w-6 shrink-0 rounded-md bg-white object-contain p-0.5"
+      className="h-[22px] w-[22px] shrink-0 rounded-md bg-white object-contain p-px ring-1 ring-inset ring-black/[0.06] dark:ring-white/10"
       onError={() => setBroken(true)}
     />
   );
@@ -161,41 +163,56 @@ const features = [
       >
         <Marquee
           vertical
-          className="absolute h-3/4 top-6 [--duration:36s] [mask-image:linear-gradient(to_top,transparent_5%,#000_60%)] w-full"
+          className="absolute h-3/4 top-6 [--duration:36s] [--gap:0.75rem] [mask-image:linear-gradient(to_top,transparent_5%,#000_60%)] w-full px-1"
           pauseOnHover
         >
           {experience.map((role, idx) => (
             <div
               key={idx}
               className={cn(
-                "relative w-full cursor-default overflow-hidden rounded-xl border p-3.5",
-                "border-gray-950/[.1] bg-gray-950/[.01]",
-                "dark:border-gray-50/[.1] dark:bg-gray-50/[.10]"
+                "group/exp relative w-full cursor-default overflow-hidden rounded-xl border pl-4 pr-3.5 py-3",
+                "border-gray-950/[.08] bg-white",
+                "dark:border-gray-50/[.1] dark:bg-gray-50/[.06]",
+                "transform-gpu transition-all duration-300 ease-out",
+                "hover:border-gray-950/[.16] hover:bg-gray-950/[.02]",
+                "dark:hover:border-gray-50/[.2] dark:hover:bg-gray-50/[.1]"
               )}
             >
-              {/* Header row: logo + company, then the one-line role title */}
+              {/* Subtle left accent bar — anchors the eye and adds scanability
+                  down the stack; brightens on hover. */}
+              <span
+                aria-hidden
+                className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-neutral-300/70 transition-colors duration-300 group-hover/exp:bg-neutral-400 dark:bg-white/15 dark:group-hover/exp:bg-white/30"
+              />
+
+              {/* Top row: logo + bold company name, period pinned right. */}
               <div className="flex items-center gap-2">
                 <CompanyLogo
                   company={role.company}
                   domain={role.logoDomain || undefined}
                 />
-                <span className="truncate text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                <span className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 dark:text-white">
                   {role.company}
+                </span>
+                <span className="shrink-0 text-[10px] font-medium tabular-nums text-neutral-400 dark:text-neutral-500">
+                  {role.period}
                 </span>
               </div>
 
-              <div className="mt-1.5 truncate whitespace-nowrap text-sm font-bold dark:text-white">
+              {/* One-line role title — clearly secondary to the company. */}
+              <div className="mt-1 truncate whitespace-nowrap text-xs font-medium text-neutral-500 dark:text-neutral-400">
                 {role.title}
               </div>
 
-              {/* Trust badges */}
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              {/* Refined trust badges — consistent padding, subtle fill/border,
+                  no-wrap so the row never breaks awkwardly. */}
+              <div className="mt-2.5 flex items-center gap-1.5 overflow-hidden">
                 {role.badges.map((badge) => (
                   <span
                     key={badge}
                     className={cn(
-                      "rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap",
-                      "border border-gray-950/[.08] bg-gray-950/[.03] text-neutral-600",
+                      "inline-flex shrink-0 items-center rounded-full px-2 py-[3px] text-[10px] font-medium leading-none whitespace-nowrap",
+                      "border border-gray-950/[.07] bg-gray-950/[.025] text-neutral-600",
                       "dark:border-gray-50/[.12] dark:bg-gray-50/[.06] dark:text-neutral-300"
                     )}
                   >
@@ -204,9 +221,12 @@ const features = [
                 ))}
               </div>
 
-              <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                {role.metric}
-              </blockquote>
+              {/* Hairline divider, then the metric as quiet supporting text. */}
+              <div className="mt-2.5 border-t border-gray-950/[.06] pt-2 dark:border-gray-50/[.08]">
+                <p className="text-[11px] leading-snug text-neutral-500 dark:text-neutral-400">
+                  {role.metric}
+                </p>
+              </div>
             </div>
           ))}
         </Marquee>
@@ -290,7 +310,32 @@ const features = [
     ),
   },
 
-  // Projects - humanizer + polysearch
+  // Writing - blurb + link to /blog. Sits on the LEFT of its row (col-span-1 at
+  // the start), pairing with Projects (col-span-2) so the row still tiles to 3.
+  {
+    Icon: "",
+    name: "Writing",
+    description:
+      "A weekly newsletter grown from zero to ~1,000 subscribers, plus notes on AI-native go-to-market.",
+    className: "col-span-3 md:col-span-1",
+    href: profile.links.blog,
+    cta: "Read the blog",
+    background: (
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)] group-hover:scale-[102%]">
+        <div className="flex h-2/3 items-center justify-center p-6">
+          <BlurIn
+            duration={0.5}
+            className="text-5xl font-semibold text-neutral-300 dark:text-neutral-700"
+          >
+            /blog
+          </BlurIn>
+        </div>
+      </div>
+    ),
+  },
+
+  // Projects - humanizer + polysearch. Pairs with Writing on its row
+  // (Writing 1 + Projects 2 = 3) so the grid stays evenly tiled.
   {
     Icon: "",
     name: "Projects",
@@ -332,32 +377,6 @@ const features = [
               </a>
             ))}
           </Marquee>
-        </div>
-      </div>
-    ),
-  },
-
-  // Projects pairs with Writing on its row (2 + 1 = 3) after the metrics
-  // tile was removed; the grid stays evenly tiled.
-
-  // Writing - blurb + link to /blog
-  {
-    Icon: "",
-    name: "Writing",
-    description:
-      "A weekly newsletter grown from zero to ~1,000 subscribers, plus notes on AI-native go-to-market.",
-    className: "col-span-3 md:col-span-1",
-    href: profile.links.blog,
-    cta: "Read the blog",
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)] group-hover:scale-[102%]">
-        <div className="flex h-2/3 items-center justify-center p-6">
-          <BlurIn
-            duration={0.5}
-            className="text-5xl font-semibold text-neutral-300 dark:text-neutral-700"
-          >
-            /blog
-          </BlurIn>
         </div>
       </div>
     ),

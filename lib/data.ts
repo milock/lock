@@ -83,6 +83,14 @@ export const projects = [
     url: "https://github.com/milock/polysearch",
     language: "Python",
   },
+  {
+    name: "lock",
+    description:
+      "This site - a Next.js bento built and shipped solo. Open source.",
+    repo: "milock/lock",
+    url: "https://github.com/milock/lock",
+    language: "TypeScript",
+  },
 ];
 
 // Used by the number-ticker metrics tile.
