@@ -95,6 +95,67 @@
     }
   }
 
+  /* ── Cohesion tokens ─────────────────────────────────────────────
+     One shared vocabulary for tile radius / border / motion so every
+     tile reads as one designed system instead of hand-tuned one-offs. */
+  @layer base {
+    :root {
+      --tile-radius: 0.85rem;
+      --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+      --motion-fast: 220ms;
+      --motion-base: 320ms;
+    }
+  }
+
+  @layer components {
+    /* Shared tile surface + hover. Applied to every bento tile and the
+       AskTile so lift, border-glow, and timing are identical across the
+       grid. Hover lift is motion-gated; the border-glow alone remains
+       for reduced-motion users (no transform). */
+    .tile-surface {
+      border-radius: var(--tile-radius);
+      transition: transform var(--motion-base) var(--ease-out-soft),
+        box-shadow var(--motion-base) var(--ease-out-soft),
+        border-color var(--motion-base) var(--ease-out-soft);
+      will-change: transform;
+    }
+
+    .dark .tile-surface:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 18px 40px -20px rgba(0, 0, 0, 0.7),
+        0 0 32px -14px rgba(190, 210, 255, 0.35);
+    }
+
+    .tile-surface:hover {
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.05),
+        0 18px 40px -22px rgba(0, 0, 0, 0.28),
+        0 0 28px -16px rgba(80, 110, 200, 0.28);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .tile-surface:hover {
+        transform: translateY(-4px);
+      }
+    }
+  }
+
+  /* Global reduced-motion floor: neutralize long-running decorative
+     animations (marquee, meteor, grid, orbit, ripple, beam pulses) and
+     framer transitions for users who ask for less motion. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   /* rehype-pretty-code dual-theme: github-light by default, github-dark under .dark */
   [data-rehype-pretty-code-figure] pre {
     overflow-x: auto;

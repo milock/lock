@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import GitHubStars from "@/components/github-stars";
 import { ContactButtons, OpenToRoles } from "@/components/contact-button";
 import { AskTile } from "@/components/ask-tile";
+import { RevealCard } from "@/components/reveal-card";
 import {
   Terminal,
   TypingAnimation,
@@ -106,8 +107,9 @@ const features = [
     background: (
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, delay: 0.15 }}
       >
         <Marquee
           vertical
@@ -177,8 +179,9 @@ const features = [
     background: (
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, delay: 0.15 }}
       >
         <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
       </motion.div>
@@ -241,9 +244,9 @@ const features = [
                 target="_blank"
                 rel="noreferrer"
                 className={cn(
-                  "relative w-72 cursor-pointer overflow-hidden rounded-xl border p-4 hover:-translate-y-1",
-                  "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-                  "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+                  "relative w-72 cursor-pointer overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                  "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
+                  "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                   "transform-gpu transition-all duration-300 ease-out"
                 )}
               >
@@ -308,8 +311,9 @@ const features = [
     background: (
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2.5 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, delay: 0.15 }}
       >
         <Marquee
           className="absolute h-2/3 top-10 [--duration:40s] [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] w-full"
@@ -319,9 +323,9 @@ const features = [
             <div
               key={idx}
               className={cn(
-                "relative w-44 h-full cursor-default overflow-hidden rounded-xl border p-4 hover:-translate-y-1",
-                "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-                "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+                "relative w-44 h-full cursor-default overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
+                "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                 "transform-gpu transition-all duration-300 ease-out"
               )}
             >
@@ -416,15 +420,16 @@ export function Bento() {
     <>
       <BentoGrid>
         {features.map((feature, idx) => (
-          <BentoCard key={idx} {...feature} />
+          <BentoCard key={idx} index={idx} {...feature} />
         ))}
 
         {/* Featured "Ask this site anything" tile — full-width band that proves
             the AI-native positioning. Interactive, so it lives outside BentoCard
-            (whose overlay is pointer-events-none). col-span-3 = full grid width. */}
-        <div className="col-span-3 row-span-1">
+            (whose overlay is pointer-events-none). col-span-3 = full grid width.
+            Reveals last in the stagger sequence. */}
+        <RevealCard index={features.length} className="col-span-3 row-span-1">
           <AskTile />
-        </div>
+        </RevealCard>
       </BentoGrid>
     </>
   );
