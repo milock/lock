@@ -1,0 +1,168 @@
+@tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  @layer base {
+    :root {
+
+      scroll-behavior: smooth;
+      --background: 0 0% 100%;
+      --foreground: 0 0% 3.9%;
+
+      --card: 0 0% 100%;
+      --card-foreground: 0 0% 3.9%;
+
+      --popover: 0 0% 100%;
+      --popover-foreground: 0 0% 3.9%;
+
+      --primary: 0 0% 9%;
+      --primary-foreground: 0 0% 98%;
+
+      --secondary: 0 0% 96.1%;
+      --secondary-foreground: 0 0% 9%;
+
+      --muted: 0 0% 96.1%;
+      --muted-foreground: 0 0% 45.1%;
+
+      --accent: 0 0% 96.1%;
+      --accent-foreground: 0 0% 9%;
+
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+
+      --border: 0 0% 89.8%;
+      --input: 0 0% 89.8%;
+      --ring: 0 0% 3.9%;
+
+      --radius: 0.5rem;
+
+      --chart-1: 12 76% 61%;
+      --chart-2: 173 58% 39%;
+      --chart-3: 197 37% 24%;
+      --chart-4: 43 74% 66%;
+      --chart-5: 27 87% 67%;
+    }
+
+    .dark {
+      --background: 0 0% 10%;
+      --foreground: 0 0% 98%;
+
+      --card: 0 0% 3.9%;
+      --card-foreground: 0 0% 98%;
+
+      --popover: 0 0% 10%;
+      --popover-foreground: 0 0% 98%;
+
+      --primary: 0 0% 98%;
+      --primary-foreground: 0 0% 9%;
+
+      --secondary: 0 0% 14.9%;
+      --secondary-foreground: 0 0% 98%;
+
+      --muted: 0 0% 14.9%;
+      --muted-foreground: 0 0% 63.9%;
+
+      --accent: 0 0% 14.9%;
+      --accent-foreground: 0 0% 98%;
+
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+
+      --border: 0 0% 14.9%;
+      --input: 0 0% 14.9%;
+      --ring: 0 0% 83.1%;
+
+      --chart-1: 220 70% 50%;
+      --chart-2: 160 60% 45%;
+      --chart-3: 30 80% 55%;
+      --chart-4: 280 65% 60%;
+      --chart-5: 340 75% 55%;
+    }
+  .theme {
+
+        --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
+
+    }
+
+  }
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
+  }
+
+  /* rehype-pretty-code dual-theme: github-light by default, github-dark under .dark */
+  [data-rehype-pretty-code-figure] pre {
+    overflow-x: auto;
+    padding: 1rem 0;
+    line-height: 1.6;
+  }
+  [data-rehype-pretty-code-figure] code {
+    display: grid;
+    counter-reset: line;
+    background: transparent;
+  }
+  [data-rehype-pretty-code-figure] code[data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 1rem;
+    margin-right: 1.5rem;
+    text-align: right;
+    color: hsl(var(--muted-foreground));
+  }
+  [data-rehype-pretty-code-figure] [data-line] {
+    padding: 0 1.25rem;
+    border-left: 2px solid transparent;
+  }
+  [data-rehype-pretty-code-figure] [data-highlighted-line] {
+    background: hsl(var(--muted));
+    border-left-color: hsl(var(--foreground) / 0.4);
+  }
+  [data-rehype-pretty-code-title] {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid hsl(var(--border));
+    border-bottom: 0;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    background: hsl(var(--secondary));
+    color: hsl(var(--muted-foreground));
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  [data-rehype-pretty-code-title] + pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  /* shiki dual theme variable swap */
+  code[data-theme*=" "] span {
+    color: var(--shiki-light);
+  }
+  .dark code[data-theme*=" "] span {
+    color: var(--shiki-dark);
+  }
+  code[data-theme*=" "] {
+    background-color: var(--shiki-light-bg);
+  }
+  .dark code[data-theme*=" "] {
+    background-color: var(--shiki-dark-bg);
+  }
+
+  @theme inline {
+  @keyframes orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+
+        }
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+
+        }
+
+    }
+
+}
