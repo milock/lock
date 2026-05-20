@@ -43,9 +43,20 @@ export default function Hero() {
         />
       )}
       <div className="flex flex-col items-start justify-center h-full overflow-hidden p-6 z-50">
-        <WordPullUp words={profile.headline} />
+        {/* Big, declarative H1. The positioning line drops to a subhead so the
+            hero still says who he is without competing with the headline. */}
+        <WordPullUp
+          words="Let's cook"
+          className="text-left text-6xl leading-[1.05] md:text-7xl lg:text-7xl"
+        />
 
-        <div className="text-lg text-neutral-500 dark:text-neutral-400 lg:px-1 w-full ">
+        <FadeIn direction="down">
+          <p className="mt-2 text-base font-medium tracking-tight text-neutral-700 dark:text-neutral-200 sm:text-lg">
+            {profile.headline}
+          </p>
+        </FadeIn>
+
+        <div className="mt-3 text-lg text-neutral-500 dark:text-neutral-400 lg:px-1 w-full ">
           <BlurIn className="w-3/4 sm:w-2/3">{profile.tagline}</BlurIn>
 
           <FadeIn direction="down">
