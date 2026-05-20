@@ -10,9 +10,9 @@ type ChatMessage = {
   content: string;
 };
 
-// Design-preview reply. Kept friendly and plain — no marketing copy.
+// Design-preview reply. Kept friendly and plain - no marketing copy.
 const CANNED_REPLY =
-  "Thanks for asking! This is a design preview — the live assistant (grounded in my résumé and writing) is coming soon.";
+  "Thanks for asking! This is a design preview - the live assistant (grounded in my résumé and writing) is coming soon.";
 
 export function AskTile() {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
