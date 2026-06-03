@@ -343,7 +343,10 @@ const features = [
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.7, delay: 0.15 }}
       >
-        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
+        {/* w-full + max-w-[600px] (instead of a fixed w-[600px]) lets the beam
+            shrink to fit the tile on mobile so the right-most nodes never clip;
+            it still renders at full 600px scale on wider screens. */}
+        <AnimatedBeamMultipleOutputs className="absolute inset-x-0 top-4 mx-auto h-[280px] w-full max-w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] motion-safe:group-hover:scale-105 sm:h-[300px]" />
       </motion.div>
     ),
   },
