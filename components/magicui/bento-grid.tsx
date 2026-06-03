@@ -14,7 +14,9 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-2 lg:gap-4",
+        // Shorter rows on phones keep sparse tiles from leaving dead space;
+        // desktop keeps the original 22rem rhythm so the packed grid is intact.
+        "grid w-full auto-rows-[19rem] grid-cols-3 gap-2 sm:auto-rows-[21rem] md:auto-rows-[22rem] lg:gap-4",
         className
       )}
     >

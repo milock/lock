@@ -16,7 +16,7 @@ const Circle = forwardRef<
       className={cn(
         // Node chip. Sizes scale down on small screens so the whole constellation
         // fits inside the tile at 390px without clipping the right-most nodes.
-        "z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white p-2 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)] sm:h-12 sm:w-12 sm:p-3",
+        "z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white p-1.5 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)] sm:h-12 sm:w-12 sm:p-3",
         className
       )}
     >
@@ -67,7 +67,7 @@ export function AnimatedBeamMultipleOutputs({
             <Icons.anthropic className="h-5 w-5 sm:h-6 sm:w-6" />
           </Circle>
         </div>
-        <div className="flex flex-col justify-center gap-1.5 sm:gap-2">
+        <div className="flex flex-col justify-center gap-1 sm:gap-2">
           <Circle ref={div1Ref}>
             <Icons.perplexity className="h-5 w-5 sm:h-6 sm:w-6" />
           </Circle>

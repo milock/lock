@@ -20,8 +20,11 @@ export function AvatarDisc({ className }: { className?: string }) {
           "h-32 w-32 sm:h-36 sm:w-36",
           // Carbon/charcoal disc to sit closer to the site's dark surface.
           "bg-[radial-gradient(120%_120%_at_30%_20%,#363638_0%,#242426_55%,#161618_100%)]",
-          "ring-1 ring-white/12 ring-inset",
-          "shadow-[0_1px_2px_rgba(0,0,0,.08),0_12px_28px_-8px_rgba(0,0,0,.45)]",
+          // Clean neutral ring. A warm-neutral inset hairline (neutral-200, not
+          // pure white) keeps the rim from reading cool/blue against the navy-ish
+          // dark page, and a soft outer neutral ring lifts the disc off the tile.
+          "ring-1 ring-neutral-200/20 ring-inset",
+          "shadow-[0_0_0_1px_rgba(255,255,255,.04),0_1px_2px_rgba(0,0,0,.08),0_12px_28px_-8px_rgba(0,0,0,.45)]",
           "transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.03]"
         )}
       >

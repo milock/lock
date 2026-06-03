@@ -109,22 +109,34 @@ const features = [
     ),
   },
 
-  // About - name + headshot + one-line statement (links live in the Hero and Contact tiles)
+  // About - centered profile composition: avatar → name → one-liner, vertically
+  // and horizontally centered so the tile reads as an intentional, premium
+  // profile card with no dead gap (name/description are blanked on the BentoCard
+  // so they don't render bottom-anchored; the whole stack lives in `background`).
   {
     Icon: "",
-    name: profile.name,
-    description: "I build the thing from nothing.",
+    name: "",
+    description: "",
     className: "col-span-3 md:col-span-1",
     href: profile.links.linkedin,
     cta: "Connect on LinkedIn",
     background: (
-      <div>
-        {/* Illustrated avatar (black line-art on transparent) on a warm cream
-            disc so it pops against the dark tile - the personal-brand moment.
-            Centered near the top; the name + one-liner are rendered by BentoCard
-            below it, so the composition reads as a clean profile card. */}
-        <div className="absolute left-1/2 top-7 -translate-x-1/2 transition-all duration-300 ease-out group-hover:scale-[1.02]">
-          <AvatarDisc />
+      <div className="absolute inset-0">
+        {/* Illustrated avatar (black line-art on transparent) on a charcoal disc
+            so it pops against the dark tile - the personal-brand moment. The
+            avatar, name and one-liner form one centered group filling the tile. */}
+        <div className="flex h-full w-full flex-col items-center justify-center gap-5 px-6 text-center transition-all duration-300 ease-out group-hover:-translate-y-2">
+          <div className="transition-transform duration-300 ease-out group-hover:scale-[1.03]">
+            <AvatarDisc />
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-3xl font-semibold leading-tight text-neutral-700 dark:text-neutral-200">
+              {profile.name}
+            </div>
+            <p className="text-base text-neutral-500 dark:text-neutral-400">
+              I build the thing from nothing.
+            </p>
+          </div>
         </div>
 
         <FadeIn
@@ -156,7 +168,7 @@ const features = [
       >
         <Marquee
           vertical
-          className="absolute h-3/4 top-6 [--duration:36s] [--gap:0.75rem] [mask-image:linear-gradient(to_top,transparent_5%,#000_60%)] w-full px-1"
+          className="absolute inset-x-0 top-0 h-full [--duration:36s] [--gap:0.75rem] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_7%,#000_52%,transparent_82%)] w-full px-1"
           pauseOnHover
         >
           {experience.map((role, idx) => (
@@ -229,9 +241,9 @@ const features = [
     cta: "All projects on GitHub",
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
-        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+        <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent_0%,#000_6%,#000_50%,transparent_80%)]">
           <Marquee
-            className="absolute h-2/3 top-8 [--duration:30s] w-full"
+            className="absolute inset-x-0 top-0 h-full [--duration:30s] w-full items-start pt-5"
             pauseOnHover
           >
             {projects.map((project, idx) => (
@@ -346,7 +358,7 @@ const features = [
         {/* w-full + max-w-[600px] (instead of a fixed w-[600px]) lets the beam
             shrink to fit the tile on mobile so the right-most nodes never clip;
             it still renders at full 600px scale on wider screens. */}
-        <AnimatedBeamMultipleOutputs className="absolute inset-x-0 top-4 mx-auto h-[280px] w-full max-w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] motion-safe:group-hover:scale-105 sm:h-[300px]" />
+        <AnimatedBeamMultipleOutputs className="absolute inset-x-0 top-3 mx-auto h-[260px] w-full max-w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] motion-safe:group-hover:scale-105 sm:h-[300px]" />
       </motion.div>
     ),
   },
@@ -367,14 +379,14 @@ const features = [
         transition={{ duration: 0.7, delay: 0.15 }}
       >
         <Marquee
-          className="absolute h-2/3 top-10 [--duration:40s] [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] w-full"
+          className="absolute inset-x-0 top-0 h-full items-start pt-5 [--duration:40s] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_7%,#000_50%,transparent_80%)] w-full"
           pauseOnHover
         >
           {defaultDomains.map((f, idx) => (
             <div
               key={idx}
               className={cn(
-                "relative w-44 h-full cursor-default overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                "relative w-44 cursor-default overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
                 "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                 "transform-gpu transition-all duration-300 ease-out"
@@ -428,9 +440,9 @@ const features = [
     href: "/projects/lock",
     cta: "How I built it",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_30%,#000_70%)] group-hover:scale-[101%]">
-        <div className="flex items-center justify-center h-full w-full p-4">
-          <Terminal className="w-full max-w-md">
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_36%)] group-hover:scale-[101%]">
+        <div className="flex h-full w-full items-center justify-center p-4 pb-16 sm:items-center">
+          <Terminal className="h-auto w-full max-w-md">
             <TypingAnimation>$ git log --oneline this-site</TypingAnimation>
             <AnimatedSpan>✔ Next.js + TypeScript + Tailwind</AnimatedSpan>
             <AnimatedSpan>✔ Designed, built and shipped solo</AnimatedSpan>
