@@ -1,0 +1,32 @@
+---
+title: lock
+slug: lock
+description: My personal site - a Next.js dark bento built and shipped solo.
+repo: https://github.com/milock/lock
+url: https://lock-alpha-sooty.vercel.app
+stack:
+  - Next.js 14
+  - TypeScript
+  - Tailwind CSS
+  - Framer Motion
+  - MDX
+  - Vercel
+language: TypeScript
+---
+
+This is the site you're looking at: a Next.js 14 dark bento landing page, built and shipped solo. It runs on the App Router with a native MDX engine, generated OpenGraph images, an AI "ask this site" console, and Playwright end-to-end coverage.
+
+## What's under it
+
+The home page is a bento grid of tiles: experience, metrics, a stack logo wall, focus areas, and live GitHub stars pulled at request time. Each project tile links to its own MDX-rendered page (like this one), so the project write-ups share the same render path the rest of the site uses.
+
+## The interesting part
+
+The MDX setup that powers these project pages is the same one I use for long-form content: gray-matter for frontmatter, next-mdx-remote on the server, and rehype-pretty-code (Shiki) for syntax highlighting, all wrapped in Tailwind Typography for clean dark prose. Open Graph images are generated at the edge, and the whole thing is covered by Playwright tests so a layout regression shows up before it ships.
+
+## Stack
+
+Next.js 14, TypeScript, Tailwind CSS, Framer Motion, MDX, deployed on Vercel. Open source.
+
+- [Live site](https://lock-alpha-sooty.vercel.app)
+- [Repo on GitHub](https://github.com/milock/lock)

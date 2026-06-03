@@ -1,0 +1,32 @@
+---
+title: polysearch
+slug: polysearch
+description: Multi-source research pipeline that verifies its own citations.
+repo: https://github.com/milock/polysearch
+url: https://github.com/milock/polysearch
+stack:
+  - Python
+  - Qdrant
+  - Perplexity
+  - Firecrawl
+  - OpenAI / Anthropic APIs
+  - PyPI
+  - GitHub Actions
+language: Python
+---
+
+polysearch runs a topic through up to four research layers in parallel, synthesizes the findings, and then checks every cited source against the page it actually scraped before writing the report. It ships three ways from one codebase: a pip-installable Python CLI (`pip install polysearch`, v0.1.0 alpha), a Claude Code skill, and an agent template.
+
+## Four parallel layers, one synthesis
+
+Vector search over a personal corpus (Qdrant), decomposed sub-question research (Perplexity), live web grounding (Firecrawl), and community signal (Reddit, X, Hacker News, Polymarket) all run at once. An LLM then synthesizes the results, extracts claims, and writes a tiered, auditable report as both markdown and json.
+
+## Citations get verified, not trusted
+
+Every cited source is checked against the page that was actually scraped. The report tiers and flags claims instead of laundering whatever a model returned, so you can audit where each statement came from.
+
+## Degrades instead of breaking
+
+Each layer is a swappable Protocol. Missing credentials drop in null implementations, so the pipeline keeps running on whatever providers you've wired up. The tiered install scales from one API key to the full stack, so you pay only for what you connect. Published to PyPI, CI on GitHub Actions, MIT licensed.
+
+- [Repo on GitHub](https://github.com/milock/polysearch)

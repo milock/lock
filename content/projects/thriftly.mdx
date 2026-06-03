@@ -1,0 +1,33 @@
+---
+title: thriftly
+slug: thriftly
+description: Find the Goodwill with the best stuff.
+repo: https://github.com/milock/thriftly
+url: https://thriftly.xyz
+stack:
+  - Next.js 16
+  - TypeScript
+  - Tailwind CSS 4
+  - Leaflet
+  - U.S. Census ACS API
+  - OpenStreetMap / Overpass
+  - Vercel
+language: TypeScript
+---
+
+Thrift donations track local wealth, so the same chain can be a goldmine in one neighborhood and picked-over in another. thriftly ranks nearby Goodwill and thrift stores 0-100 by how affluent the surrounding area is, using free Census data instead of guesswork. The scoring model is fully explainable: every store card shows the raw numbers behind its rank.
+
+## A real affluence model
+
+For each store, thriftly builds a catchment of every Census tract whose centroid sits within ~3 miles, weighted by population and inverse distance. It then scores that catchment on median home value (40%), household income (35%), bachelor's-or-higher rate (15%), and gross rent (10%), each normalized to a national range. Weights are fixed and documented, and an in-app methodology popover walks through the math.
+
+## Two axes, kept honest
+
+Distance stays out of the headline number and shows separately, so "great stuff" never gets confused with "close to me." Tiers run Prime, Excellent, Strong, Fair, Lean, and the labels carry meaning without relying on color alone.
+
+## Tested like production
+
+44 unit tests plus 29 end-to-end tests, light and dark mode, responsive, and no paid APIs anywhere in the stack.
+
+- [Live at thriftly.xyz](https://thriftly.xyz)
+- [Repo on GitHub](https://github.com/milock/thriftly)

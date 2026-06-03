@@ -21,6 +21,7 @@ import {
 import { motion } from "framer-motion";
 import GitHubStars from "@/components/github-stars";
 import { ContactButtons, OpenToRoles } from "@/components/contact-button";
+import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
 import { RevealCard } from "@/components/reveal-card";
 import {
@@ -28,8 +29,6 @@ import {
   TypingAnimation,
   AnimatedSpan,
 } from "@/components/magicui/terminal";
-
-const avatarSrc = process.env.AVATAR_URL || "https://github.com/milock.png";
 
 // Company monogram: 1–2 letters from the company name, used both as the
 // no-domain fallback (ExSite) and as the onError swap so a logo can never
@@ -120,18 +119,12 @@ const features = [
     cta: "Connect on LinkedIn",
     background: (
       <div>
-        <div className="absolute right-0 top-0 h-3/4 w-full border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_5%,#000_50%)] group-hover:scale-105">
-          <BlurIn duration={0.5} className="h-full">
-            <Image
-              className="object-cover object-center h-full w-full"
-              src={avatarSrc}
-              alt="Michael Lock"
-              width={400}
-              height={400}
-              priority
-              quality={90}
-            />
-          </BlurIn>
+        {/* Illustrated avatar (black line-art on transparent) on a warm cream
+            disc so it pops against the dark tile - the personal-brand moment.
+            Sits upper-right; the name + one-liner are rendered by BentoCard
+            below it, so the composition reads as a clean profile card. */}
+        <div className="absolute right-6 top-7 transition-all duration-300 ease-out group-hover:scale-[1.02]">
+          <AvatarDisc />
         </div>
 
         <FadeIn
@@ -170,7 +163,7 @@ const features = [
             <div
               key={idx}
               className={cn(
-                "group/exp relative w-full cursor-default overflow-hidden rounded-xl border pl-4 pr-3.5 py-3",
+                "group/exp relative w-full cursor-default overflow-hidden rounded-xl border px-3.5 py-3",
                 "border-gray-950/[.08] bg-white",
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.06]",
                 "transform-gpu transition-all duration-300 ease-out",
@@ -178,13 +171,6 @@ const features = [
                 "dark:hover:border-gray-50/[.2] dark:hover:bg-gray-50/[.1]"
               )}
             >
-              {/* Subtle left accent bar — anchors the eye and adds scanability
-                  down the stack; brightens on hover. */}
-              <span
-                aria-hidden
-                className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-neutral-300/70 transition-colors duration-300 group-hover/exp:bg-neutral-400 dark:bg-white/15 dark:group-hover/exp:bg-white/30"
-              />
-
               {/* Top row: logo + bold company name (no years, per design). */}
               <div className="flex items-center gap-2">
                 <CompanyLogo
@@ -231,7 +217,61 @@ const features = [
     ),
   },
 
-  // Stack - AI/GTM icon cloud
+  // Projects - moved into the prominent col-span-2 slot right after Experience.
+  // Cards link INTERNALLY to each project's own page (/projects/<slug>) with a
+  // subtle "→" hover affordance. Pairs with Experience (1 + 2 = 3).
+  {
+    Icon: "",
+    name: "Projects",
+    description: "Open-source tools I built for the way I work.",
+    className: "col-span-3 md:col-span-2",
+    href: profile.links.github,
+    cta: "All projects on GitHub",
+    background: (
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
+          <Marquee
+            className="absolute h-2/3 top-8 [--duration:30s] w-full"
+            pauseOnHover
+          >
+            {projects.map((project, idx) => (
+              <a
+                key={idx}
+                href={project.href}
+                className={cn(
+                  "group/proj relative w-72 cursor-pointer overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                  "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
+                  "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
+                  "transform-gpu transition-all duration-300 ease-out"
+                )}
+              >
+                <div className="flex items-baseline justify-between gap-2">
+                  <figcaption className="flex items-center gap-1.5 text-base font-bold dark:text-white">
+                    {project.name}
+                    {/* Subtle internal-nav affordance: arrow slides in on hover. */}
+                    <span
+                      aria-hidden
+                      className="translate-x-[-3px] text-neutral-400 opacity-0 transition-all duration-300 group-hover/proj:translate-x-0 group-hover/proj:opacity-100 dark:text-neutral-300"
+                    >
+                      →
+                    </span>
+                  </figcaption>
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                    {project.language}
+                  </span>
+                </div>
+                <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+                  {project.description}
+                </blockquote>
+              </a>
+            ))}
+          </Marquee>
+        </div>
+      </div>
+    ),
+  },
+
+  // Stack - AI/GTM icon cloud. Relocated to pair with GitHub Stars (2 + 1 = 3).
   {
     Icon: "",
     name: "Stack",
@@ -252,28 +292,7 @@ const features = [
     ),
   },
 
-  // AI-native ops - animated beam (kept; on-brand for AI-native positioning)
-  {
-    Icon: "",
-    name: "AI-Native Ops",
-    description:
-      "A self-built multi-agent system that delivers a team's output, solo.",
-    href: "/blog/building-my-ai-native-marketing-system",
-    cta: "How the system works",
-    className: "col-span-3 md:col-span-2",
-    background: (
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.7, delay: 0.15 }}
-      >
-        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
-      </motion.div>
-    ),
-  },
-
-  // GitHub Stars - live, points at humanizer
+  // GitHub Stars - live, points at humanizer. Pairs with Stack (2 + 1 = 3).
   {
     Icon: "",
     name: "GitHub Stars",
@@ -307,75 +326,25 @@ const features = [
     ),
   },
 
-  // Writing - blurb + link to /blog. Sits on the LEFT of its row (col-span-1 at
-  // the start), pairing with Projects (col-span-2) so the row still tiles to 3.
+  // AI-native ops - animated beam. Full-width band (col-span-3) so the wide beam
+  // graphic reads at its intended scale and the row tiles cleanly on its own.
   {
     Icon: "",
-    name: "Writing",
+    name: "AI-Native Ops",
     description:
-      "A weekly newsletter grown from zero to ~1,000 subscribers, plus notes on AI-native go-to-market.",
-    className: "col-span-3 md:col-span-1",
-    href: profile.links.blog,
-    cta: "Read the blog",
+      "A self-built multi-agent system that delivers a team's output, solo.",
+    href: "/projects/humanizer",
+    cta: "See the tools",
+    className: "col-span-3",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)] group-hover:scale-[102%]">
-        <div className="flex h-2/3 items-center justify-center p-6">
-          <BlurIn
-            duration={0.5}
-            className="text-5xl font-semibold text-neutral-300 dark:text-neutral-700"
-          >
-            /blog
-          </BlurIn>
-        </div>
-      </div>
-    ),
-  },
-
-  // Projects - humanizer + polysearch. Pairs with Writing on its row
-  // (Writing 1 + Projects 2 = 3) so the grid stays evenly tiled.
-  {
-    Icon: "",
-    name: "Projects",
-    description: "Open-source tools I built for the way I work.",
-    className: "col-span-3 md:col-span-2",
-    href: profile.links.github,
-    cta: "All projects on GitHub",
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
-        <div className="absolute h-full w-full [mask-image:linear-gradient(to_top,transparent_20%,#000_70%)]">
-          <Marquee
-            className="absolute h-2/3 top-8 [--duration:30s] w-full"
-            pauseOnHover
-          >
-            {projects.map((project, idx) => (
-              <a
-                key={idx}
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className={cn(
-                  "relative w-72 cursor-pointer overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
-                  "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
-                  "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
-                  "transform-gpu transition-all duration-300 ease-out"
-                )}
-              >
-                <div className="flex items-baseline justify-between gap-2">
-                  <figcaption className="text-base font-bold dark:text-white">
-                    {project.name}
-                  </figcaption>
-                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
-                    {project.language}
-                  </span>
-                </div>
-                <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                  {project.description}
-                </blockquote>
-              </a>
-            ))}
-          </Marquee>
-        </div>
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, delay: 0.15 }}
+      >
+        <AnimatedBeamMultipleOutputs className="absolute right-0 top-4 h-[300px] w-[600px] border-none transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_10%,#000_100%)] md:[mask-image:linear-gradient(to_top,transparent_0%,#000_100%)] group-hover:scale-105" />
+      </motion.div>
     ),
   },
 
@@ -445,26 +414,37 @@ const features = [
     ),
   },
 
-  // Terminal easter-egg - full-width band that closes the grid above the
-  // Ask tile. Full width keeps every row evenly tiled after the metrics
-  // tile was removed.
+  // Vibe-coded - full-width band that closes the grid above the Ask tile.
+  // Celebrates that Michael built this site himself, with AI as the pair.
+  // Full width keeps every row evenly tiled. Links to the site's own project page.
   {
     Icon: "",
-    name: "Built with the stack",
-    description: "Every word here ran through my own tool first.",
+    name: "Vibe-coded by me",
+    description: "No template, no agency. I built this site myself, with AI.",
     className: "col-span-3",
-    href: "https://github.com/milock/humanizer",
-    cta: "Get humanizer",
+    href: "/projects/lock",
+    cta: "How I built it",
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_30%,#000_70%)] group-hover:scale-[101%]">
         <div className="flex items-center justify-center h-full w-full p-4">
           <Terminal className="w-full max-w-md">
-            <TypingAnimation>$ humanizer scrub ./about-me.md</TypingAnimation>
-            <AnimatedSpan>✔ Scanning for AI tells...</AnimatedSpan>
-            <AnimatedSpan>✔ Cut 0 em dashes, 0 corporate punchlines.</AnimatedSpan>
-            <AnimatedSpan>✔ Kept the parts that sound like me.</AnimatedSpan>
-            <AnimatedSpan className="text-green-500">
-              ✓ Reads human. Shipped.
+            <TypingAnimation>$ git log --oneline this-site</TypingAnimation>
+            <AnimatedSpan>✔ Next.js + TypeScript + Tailwind</AnimatedSpan>
+            <AnimatedSpan>✔ Designed, built and shipped solo</AnimatedSpan>
+            <AnimatedSpan>✔ AI as the pair, me on the wheel</AnimatedSpan>
+            <AnimatedSpan className="flex items-center gap-2 text-green-500">
+              ✓ Vibe-coded. Live.
+              {/* Small Notion-face signature on a cream disc - a quiet "made by me" mark. */}
+              <span className="grid h-6 w-6 place-items-center overflow-hidden rounded-full bg-[#faf3e6] ring-1 ring-inset ring-black/10">
+                <Image
+                  src={profile.avatar}
+                  alt=""
+                  aria-hidden
+                  width={28}
+                  height={28}
+                  className="h-[120%] w-[120%] translate-y-[10%] object-contain object-bottom"
+                />
+              </span>
             </AnimatedSpan>
           </Terminal>
         </div>

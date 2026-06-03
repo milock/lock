@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Mail, Linkedin, Github, Download } from "lucide-react";
+import { Mail, Linkedin, Github, Download, Figma } from "lucide-react";
 import { profile } from "@/lib/data";
 
 // Shared CTA hierarchy used by BOTH the Hero and the Contact tile so they stay
@@ -68,6 +68,25 @@ export function CtaButtons({ className }: { className?: string }) {
             className="group/li"
           >
             <Linkedin className="h-4 w-4 transition-transform duration-300 group-hover/li:-translate-y-px" />
+          </Button>
+        </a>
+
+        <a
+          href={profile.links.portfolio}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Portfolio"
+          title="Portfolio"
+          className="shrink-0"
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Portfolio"
+            title="Portfolio"
+            className="group/pf"
+          >
+            <Figma className="h-4 w-4 transition-transform duration-300 group-hover/pf:-translate-y-px" />
           </Button>
         </a>
       </div>
