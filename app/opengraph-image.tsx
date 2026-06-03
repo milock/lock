@@ -42,7 +42,7 @@ export default function OpengraphImage() {
               marginRight: 18,
             }}
           />
-          michaellock.dev
+          michael-lock.com
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>

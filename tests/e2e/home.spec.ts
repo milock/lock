@@ -3,6 +3,10 @@ import { test, expect } from "@playwright/test";
 // The site's four open-source project pages. Each lives at /projects/<slug>,
 // renders from content/projects/<slug>.mdx, and must return 200 with its title.
 const PROJECTS = [
+  { slug: "elation-scribe", title: "Elation AI Scribe Launch" },
+  { slug: "clarity-website", title: "Clarity RCM Website & Landing Pages" },
+  { slug: "sizzle-reel", title: "AAD 2026 Sizzle Reel" },
+  { slug: "alejandro-proposal", title: "Alejandro Proposal Microsite" },
   { slug: "humanizer", title: "humanizer" },
   { slug: "polysearch", title: "polysearch" },
   { slug: "thriftly", title: "thriftly" },

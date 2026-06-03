@@ -8,7 +8,7 @@ import { profile } from "@/lib/data";
 const inter = Inter({ subsets: ["latin"] });
 
 const BASE_URL = (
-  process.env.NEXT_PUBLIC_BASE_URL || "https://michaellock.dev"
+  process.env.NEXT_PUBLIC_BASE_URL || "https://michael-lock.com"
 ).replace(/\/$/, "");
 
 const title = `${profile.name} — Product Marketing & Marketing Leader`;

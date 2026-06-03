@@ -10,7 +10,7 @@ export const profile = {
   email: "themichaellock@gmail.com",
   avatar: "/images/notion-face.png",
   links: {
-    linkedin: "https://linkedin.com/in/lockmichael",
+    linkedin: "https://www.linkedin.com/in/michael--lock/",
     github: "https://github.com/milock",
     portfolio:
       "https://www.figma.com/design/SYgmqCRoefFFdwums5367F/Michael-s-Portfolio?t=KmZ5JjplH7FqLfwL-1",
@@ -82,6 +82,41 @@ export const experience = [
 ];
 
 export const projects = [
+  {
+    name: "Elation AI Scribe Launch",
+    slug: "elation-scribe",
+    description:
+      "0-to-1 GTM for the first clinical AI scribe built inside the EMR - positioned to justify a premium and sell the agentic vision early.",
+    language: "Product Marketing",
+    href: "/projects/elation-scribe",
+  },
+  {
+    name: "Clarity RCM Website & Landing Pages",
+    slug: "clarity-website",
+    description:
+      "Built and refreshed Clarity's ad landing pages - a big Core Web Vitals win, a ModMed positioning wedge, and a HubSpot form that survives mobile ad blockers.",
+    url: "https://get.clarityrcm.com",
+    language: "Web / Growth",
+    href: "/projects/clarity-website",
+  },
+  {
+    name: "AAD 2026 Sizzle Reel",
+    slug: "sizzle-reel",
+    description:
+      "A silent, stats-led brand reel that ran on loop at Clarity's AAD 2026 booth - directed and produced for a fraction of the vendor quotes.",
+    url: "https://www.youtube.com/watch?v=zdlme_KTkIQ",
+    language: "Event Marketing",
+    href: "/projects/sizzle-reel",
+  },
+  {
+    name: "Alejandro Proposal Microsite",
+    slug: "alejandro-proposal",
+    description:
+      "A proposal built as a website instead of a deck - fully bilingual, interactive, with modular pricing the client configures. Shipped in three days.",
+    url: "https://alejandro-proposal.vercel.app",
+    language: "Web",
+    href: "/projects/alejandro-proposal",
+  },
   {
     name: "humanizer",
     slug: "humanizer",

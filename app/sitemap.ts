@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllSlugs } from "@/lib/projects";
 
 const BASE_URL = (
-  process.env.NEXT_PUBLIC_BASE_URL || "https://michaellock.dev"
+  process.env.NEXT_PUBLIC_BASE_URL || "https://michael-lock.com"
 ).replace(/\/$/, "");
 
 export default function sitemap(): MetadataRoute.Sitemap {

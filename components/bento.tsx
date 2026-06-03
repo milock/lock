@@ -121,9 +121,9 @@ const features = [
       <div>
         {/* Illustrated avatar (black line-art on transparent) on a warm cream
             disc so it pops against the dark tile - the personal-brand moment.
-            Sits upper-right; the name + one-liner are rendered by BentoCard
+            Centered near the top; the name + one-liner are rendered by BentoCard
             below it, so the composition reads as a clean profile card. */}
-        <div className="absolute right-6 top-7 transition-all duration-300 ease-out group-hover:scale-[1.02]">
+        <div className="absolute left-1/2 top-7 -translate-x-1/2 transition-all duration-300 ease-out group-hover:scale-[1.02]">
           <AvatarDisc />
         </div>
 
@@ -333,8 +333,8 @@ const features = [
     name: "AI-Native Ops",
     description:
       "A self-built multi-agent system that delivers a team's output, solo.",
-    href: "/projects/humanizer",
-    cta: "See the tools",
+    href: profile.links.github,
+    cta: "See some of the tools",
     className: "col-span-3",
     background: (
       <motion.div
