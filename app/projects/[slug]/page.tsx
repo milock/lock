@@ -9,6 +9,10 @@ import {
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
 import { mdxOptions } from "@/lib/mdx-options";
+import { YouTubeEmbed } from "@/components/youtube-embed";
+
+// Custom components available to MDX project bodies (e.g. responsive video embeds).
+const mdxComponents = { YouTubeEmbed };
 
 interface PageProps {
   params: { slug: string };
@@ -121,7 +125,11 @@ export default function ProjectPage({ params }: PageProps) {
         <div className="h-px w-full bg-border/60" />
 
         <article className="prose prose-neutral mt-12 max-w-none dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl prose-h2:font-semibold prose-a:font-medium prose-a:underline-offset-4">
-          <MDXRemote source={project.content} options={mdxOptions} />
+          <MDXRemote
+            source={project.content}
+            options={mdxOptions}
+            components={mdxComponents}
+          />
         </article>
 
         <div className="mt-16 border-t border-border/60 pt-6">
