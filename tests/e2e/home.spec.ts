@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
 
-const BLOG_SLUG = "building-my-ai-native-marketing-system";
-const BLOG_TITLE = "Building my AI-native marketing system";
+// The site's four open-source project pages. Each lives at /projects/<slug>,
+// renders from content/projects/<slug>.mdx, and must return 200 with its title.
+const PROJECTS = [
+  { slug: "humanizer", title: "humanizer" },
+  { slug: "polysearch", title: "polysearch" },
+  { slug: "thriftly", title: "thriftly" },
+  { slug: "lock", title: "lock" },
+];
 
 test.describe("home page (bento landing)", () => {
   test.beforeEach(async ({ page }) => {
@@ -40,7 +46,7 @@ test.describe("home page (bento landing)", () => {
     expect(count).toBeGreaterThanOrEqual(2);
   });
 
-  test("résumé link, github link, and linkedin link are present", async ({
+  test("résumé, github, linkedin, and portfolio links are present", async ({
     page,
   }) => {
     // Résumé: a link with a download attribute OR an href ending in .pdf.
@@ -54,12 +60,18 @@ test.describe("home page (bento landing)", () => {
 
     const linkedinLinks = page.locator('a[href*="linkedin.com"]');
     expect(await linkedinLinks.count()).toBeGreaterThanOrEqual(1);
+
+    // Portfolio is a Figma file link (rendered in the hero CTA row).
+    const portfolioLinks = page.locator('a[href*="figma.com"]');
+    expect(await portfolioLinks.count()).toBeGreaterThanOrEqual(1);
   });
 
-  test("AI-Native Ops beam has an anthropic image and no openai image", async ({
+  test("AI-Native Ops beam has an anthropic image (Claude as the orchestrator)", async ({
     page,
   }) => {
-    // Wait for the page to settle so lazy/async images render.
+    // Wait for the page to settle so lazy/async images render. The center node
+    // is Claude/Anthropic; surrounding nodes are Michael's real stack (which may
+    // include other AI tools), so we only assert the orchestrator is present.
     await page.waitForLoadState("networkidle");
     const srcs = await page.evaluate(() =>
       Array.from(document.querySelectorAll("img")).map(
@@ -67,18 +79,39 @@ test.describe("home page (bento landing)", () => {
       ),
     );
     expect(srcs.some((s) => s.toLowerCase().includes("anthropic"))).toBe(true);
-    expect(srcs.some((s) => s.toLowerCase().includes("openai"))).toBe(false);
   });
 
   test("projects include humanizer, polysearch, and lock", async ({ page }) => {
     const bodyText = (await page.locator("body").innerText()).toLowerCase();
     expect(bodyText).toContain("humanizer");
     expect(bodyText).toContain("polysearch");
-    // "lock" appears in the name "Michael Lock" too, but the project must exist;
-    // assert a github.com/milock/lock link is present to be precise.
-    const lockRepoLinks = page.locator('a[href*="milock/lock"]');
-    expect(await lockRepoLinks.count()).toBeGreaterThanOrEqual(1);
+    // "lock" appears in the name "Michael Lock" too, so to prove the project
+    // exists assert its internal project link is present (cards now link
+    // in-app to /projects/<slug> rather than straight out to GitHub).
+    const lockProjectLinks = page.locator('a[href="/projects/lock"]');
+    expect(await lockProjectLinks.count()).toBeGreaterThanOrEqual(1);
     expect(bodyText).toContain("lock");
+  });
+
+  test("Projects tile cards link internally to /projects/<slug>", async ({
+    page,
+  }) => {
+    // The Projects tile cards now navigate to each project's own page rather
+    // than linking straight out to GitHub.
+    for (const project of PROJECTS) {
+      const internalLink = page.locator(
+        `a[href="/projects/${project.slug}"]`,
+      );
+      expect(
+        await internalLink.count(),
+        `expected an internal link to /projects/${project.slug}`,
+      ).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  test('the "Vibe-coded" section text is present', async ({ page }) => {
+    const bodyText = await page.locator("body").innerText();
+    expect(bodyText).toContain("Vibe-coded");
   });
 
   test("no broken images — every <img> decodes (naturalWidth > 0)", async ({
@@ -135,17 +168,22 @@ test.describe("home page (bento landing)", () => {
   });
 });
 
-test.describe("blog post route", () => {
-  test(`/blog/${BLOG_SLUG} returns 200 and shows its title`, async ({
-    page,
-  }) => {
-    const response = await page.goto(`/blog/${BLOG_SLUG}`);
-    expect(response, "navigation produced a response").not.toBeNull();
-    expect(response!.status()).toBe(200);
+test.describe("project pages", () => {
+  for (const project of PROJECTS) {
+    test(`/projects/${project.slug} returns 200 and shows its title`, async ({
+      page,
+    }) => {
+      const response = await page.goto(`/projects/${project.slug}`);
+      expect(response, "navigation produced a response").not.toBeNull();
+      expect(response!.status()).toBe(200);
 
-    const heading = page.getByRole("heading", { name: BLOG_TITLE });
-    await expect(heading).toBeVisible();
-  });
+      const heading = page.getByRole("heading", {
+        level: 1,
+        name: project.title,
+      });
+      await expect(heading).toBeVisible();
+    });
+  }
 });
 
 test.describe("mobile layout", () => {

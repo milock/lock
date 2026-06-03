@@ -23,7 +23,10 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (!project) return {};
 
   return {
-    title: `${project.title} - Michael Lock`,
+    // Bare project name only. The root layout's title template (`%s · Michael
+    // Lock`) appends the name, producing e.g. "thriftly · Michael Lock". Including
+    // "- Michael Lock" here too would double it.
+    title: project.title,
     description: project.description,
     openGraph: {
       title: project.title,
