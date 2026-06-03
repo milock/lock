@@ -1,0 +1,31 @@
+---
+title: humanizer
+slug: humanizer
+description: Drop-in writing skill that scrubs AI tells before you ship.
+repo: https://github.com/milock/humanizer
+url: https://github.com/milock/humanizer
+stack:
+  - Markdown skill spec
+  - Python
+  - Claude / LLM-agnostic
+  - GitHub Actions
+language: Markdown
+---
+
+humanizer is a single markdown skill file that catches the patterns giving AI writing away and rewrites them without flattening the author's voice. It installs into Claude Code, pastes into Cursor, or runs as a system prompt against the Anthropic, OpenAI, or any other API. It's LLM-agnostic, Anthropic Skills compliant, and marked stable.
+
+## What it does
+
+Most "humanize my writing" tools are a word blacklist. humanizer is a real pipeline. Six steps run in order: auto-detect the channel, optional voice calibration, pattern scan, severity gate, rewrite, and a final self-audit. Underneath that sit 16 named structural patterns, a 3-tier vocabulary system, 5 punctuation budgets, and a banned-opener list.
+
+## The interesting part
+
+It's channel-aware. An email gets scored differently from a blog post, so the rewrite fits the format instead of homogenizing everything down to one register. The rewrite step touches only the offending spans rather than regenerating the whole piece, then audits its own output before handing it back.
+
+I dogfood it. This is the tool I run every piece of my own writing through, including this page.
+
+## Stack
+
+A markdown skill spec at the core, Python for validation and tooling, GitHub Actions for CI, MIT licensed.
+
+- [Repo on GitHub](https://github.com/milock/humanizer)

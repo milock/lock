@@ -2,16 +2,20 @@
 
 export const profile = {
   name: "Michael Lock",
-  headline: "Product Marketing & Marketing Leader · AI-Native GTM Operator",
+  headline:
+    "Health-tech product marketing leader · Storytelling, positioning & 0-to-1 launches · AI-native operator",
   tagline:
-    "I build the marketing function, the product launch, and the AI system that runs both.",
+    "I build the function, the launch, and the AI system that runs both.",
   location: "San Diego, CA",
   email: "themichaellock@gmail.com",
-  avatar: "/images/headshot.jpg", // placeholder until headshot is added; fallback github.com/milock.png
+  avatar: "/images/notion-face.png",
   links: {
     linkedin: "https://linkedin.com/in/lockmichael",
     github: "https://github.com/milock",
-    blog: "/blog",
+    portfolio:
+      "https://www.figma.com/design/SYgmqCRoefFFdwums5367F/Michael-s-Portfolio?t=KmZ5JjplH7FqLfwL-1",
+    // Blog removed; repointed to GitHub so legacy consumers never 404.
+    blog: "https://github.com/milock",
     resume: "/michael-lock-resume.pdf",
     email: "mailto:themichaellock@gmail.com",
   },
@@ -19,85 +23,112 @@ export const profile = {
 
 // Short, first-person bio (condensed from LinkedIn About).
 export const about =
-  "I build the thing from nothing: the marketing function, the product launch, and now the AI system that runs the work. I've stood up product marketing from zero at three companies, led two 0→1 launches to $8M+ combined ARR, and I run a marketing function on a self-built multi-agent system, with two of the tools open-sourced. Deep healthcare and vertical SaaS.";
+  "I build the thing from nothing: the marketing function, the product launch, and now the AI system that runs the work. I've stood up product marketing from zero at three companies, led two 0-to-1 launches to $8M+ combined ARR, and I run a marketing function on a self-built multi-agent system, with two of the tools open-sourced. Deep healthcare and vertical SaaS.";
 
 export const experience = [
   {
     company: "Clarity RCM",
-    title: "Head of Marketing",
-    period: "2025–Present",
+    title: "Head of Marketing (Founding Marketer)",
+    period: "2025-Present",
     badges: ["Founding marketer", "$20M ARR"],
     logoDomain: "clarityrcm.com",
     metric:
-      "First marketing hire at a $20M ARR healthcare RCM company; built the function 0→1.",
+      "Built the function 0-to-1: 300% more qualified inbound and $7M in closed-won ARR (up 35% YoY).",
   },
   {
     company: "Elation Health",
-    title: "Principal PMM",
-    period: "2023–2025",
+    title: "Principal Product Marketing Manager",
+    period: "2023-2025",
     badges: ["Series D", "$50M ARR"],
     logoDomain: "elationhealth.com",
-    metric: "Led two 0→1 launches (AI Scribe, Billing) to $8M+ combined ARR.",
+    metric:
+      "Led 0-to-1 GTM for a clinical AI scribe ($3M ARR yr 1) and a new billing product ($5M ARR).",
   },
   {
     company: "360training",
-    title: "PMM Lead, Healthcare",
-    period: "2022–2023",
+    title: "Product Marketing Lead, Healthcare",
+    period: "2022-2023",
     badges: ["PE-backed", "$36M→$72M"],
     logoDomain: "360training.com",
     metric:
-      "Built PMM 0→4; scaled an acquired line to $10M ARR; helped 2x the business $36M→$72M.",
+      "Built PMM 0-to-4; took an acquired HIPAA product line to $10M ARR; helped 2x the business $36M to $72M.",
   },
   {
     company: "ExSite",
     title: "Founder, Fractional PMM",
-    period: "2018–2022",
+    period: "2018-2022",
     badges: ["Founder", "$2M raised"],
     logoDomain: "",
-    metric: "15+ early-stage clients; directed a $2M Kickstarter (top 1% that year).",
+    metric:
+      "Fractional PMM for 30+ clients; reusable launch frameworks adopted as their internal standards.",
   },
   {
     company: "Meta",
     title: "Product Ops, Platform",
-    period: "2016–2018",
+    period: "2016-2018",
     badges: ["NASDAQ: META", "0→500K MAU"],
     logoDomain: "meta.com",
-    metric: "Scaled Facebook Gaming 0→500K MAU.",
+    metric: "Scaled Facebook Gaming 0 to 500K MAU.",
+  },
+  {
+    company: "Accenture",
+    title: "Financial Operations Analyst",
+    period: "2015-2016",
+    badges: ["Consulting"],
+    logoDomain: "accenture.com",
+    metric:
+      "Financial operations on the Meta finance BPO; converted into a full-time role at Meta.",
   },
 ];
 
 export const projects = [
   {
     name: "humanizer",
+    slug: "humanizer",
     description:
-      "Open-source Claude skill that scrubs AI-writing tells across the content workflow - 6-step pipeline, 16 structural patterns, 3-tier vocab system.",
-    repo: "milock/humanizer",
+      "Drop-in writing skill that scrubs AI tells before you ship, without flattening your voice.",
+    repo: "https://github.com/milock/humanizer",
     url: "https://github.com/milock/humanizer",
-    language: "Python",
+    language: "Markdown",
+    href: "/projects/humanizer",
   },
   {
     name: "polysearch",
+    slug: "polysearch",
     description:
-      "Modular, multi-source research pipeline with citation-tier classification - plug-and-play package + Claude skill + agent template.",
-    repo: "milock/polysearch",
+      "Multi-source research pipeline that verifies its own citations before it writes the report.",
+    repo: "https://github.com/milock/polysearch",
     url: "https://github.com/milock/polysearch",
     language: "Python",
+    href: "/projects/polysearch",
+  },
+  {
+    name: "thriftly",
+    slug: "thriftly",
+    description:
+      "Ranks nearby thrift stores 0-100 by how affluent the surrounding area is, using free Census data.",
+    repo: "https://github.com/milock/thriftly",
+    url: "https://thriftly.xyz",
+    language: "TypeScript",
+    href: "/projects/thriftly",
   },
   {
     name: "lock",
+    slug: "lock",
     description:
-      "This site - a Next.js bento built and shipped solo. Open source.",
-    repo: "milock/lock",
-    url: "https://github.com/milock/lock",
+      "This site - a Next.js dark bento built and shipped solo. Open source.",
+    repo: "https://github.com/milock/lock",
+    url: "https://lock-alpha-sooty.vercel.app",
     language: "TypeScript",
+    href: "/projects/lock",
   },
 ];
 
 // Used by the number-ticker metrics tile.
 export const metrics = [
   { value: 1000, prefix: "", suffix: "+", label: "newsletter subscribers, from zero" },
-  { value: 8, prefix: "$", suffix: "M+", label: "ARR launched 0→1" },
-  { value: 3, prefix: "", suffix: "", label: "PMM functions built 0→1" },
+  { value: 8, prefix: "$", suffix: "M+", label: "ARR launched 0-to-1" },
+  { value: 3, prefix: "", suffix: "", label: "PMM functions built 0-to-1" },
   { value: 2, prefix: "", suffix: "", label: "open-source AI tools shipped" },
 ];
 
@@ -147,7 +178,7 @@ export const stack: StackTool[] = [
 
 // Michael's focus areas (rendered in the focus-areas marquee tile).
 export const focusAreas = [
-  { name: "Go-to-Market", body: "0→1 launches, positioning, and category strategy." },
+  { name: "Go-to-Market", body: "0-to-1 launches, positioning, and category strategy." },
   { name: "Pricing & Packaging", body: "Good-better-best architecture; attach-rate and ARPA lift." },
   { name: "Competitive Intel", body: "Teardowns, battlecards, and win/loss that move win rates." },
   { name: "AI-Native Ops", body: "Multi-agent workflows that deliver a team's output, solo." },
