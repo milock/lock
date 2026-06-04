@@ -2465,17 +2465,25 @@
          * Draw the horizon line.
          */
         draw: function () {
-            this.canvasCtx.drawImage(Runner.imageSprite, this.sourceXPos[0],
-                this.spritePos.y,
-                this.sourceDimensions.WIDTH, this.sourceDimensions.HEIGHT,
-                this.xPos[0], this.yPos,
-                this.dimensions.WIDTH, this.dimensions.HEIGHT);
-
-            this.canvasCtx.drawImage(Runner.imageSprite, this.sourceXPos[1],
-                this.spritePos.y,
-                this.sourceDimensions.WIDTH, this.sourceDimensions.HEIGHT,
-                this.xPos[1], this.yPos,
-                this.dimensions.WIDTH, this.dimensions.HEIGHT);
+            // Tile the ground across the full canvas width. The original drew
+            // only two 600px segments, which leaves a scrolling gap once the
+            // canvas is wider than ~600px.
+            var ratio = Math.floor(window.devicePixelRatio) || 1;
+            var logicalWidth = this.canvas.width / ratio;
+            var segW = this.dimensions.WIDTH;
+            var offset = this.xPos[0] % segW;
+            if (offset > 0) {
+                offset -= segW;
+            }
+            var idx = 0;
+            for (var x = offset; x < logicalWidth; x += segW) {
+                this.canvasCtx.drawImage(Runner.imageSprite,
+                    this.sourceXPos[idx % 2], this.spritePos.y,
+                    this.sourceDimensions.WIDTH, this.sourceDimensions.HEIGHT,
+                    x, this.yPos,
+                    segW, this.dimensions.HEIGHT);
+                idx++;
+            }
         },
 
         /**

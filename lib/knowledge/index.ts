@@ -76,6 +76,9 @@ export function buildSystemPrompt(): string {
     `## Projects`,
     buildProjects(),
     ``,
+    `## Availability`,
+    `I'm open to new opportunities — passively. I'm not urgently job-hunting, but I'm open to the right conversation about senior product marketing or marketing-leadership roles, especially in health-tech or technical/AI-native products. If a visitor mentions they're hiring, building a team, or have a role in mind, let them know I'm open and point them to the best way to reach me.`,
+    ``,
     `## Contact`,
     CONTACT,
   ].join("\n");
