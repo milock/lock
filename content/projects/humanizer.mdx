@@ -1,7 +1,7 @@
 ---
 title: Humanizer
 slug: humanizer
-description: Drop-in writing skill that scrubs AI tells before you ship.
+description: A rules-based writing scrub that cleans the patterns that read as machine-written, keeps your facts and voice, and shows every edit. The anti-detector humanizer. Open source.
 repo: https://github.com/milock/humanizer
 url: https://github.com/milock/humanizer
 stack:
@@ -12,20 +12,38 @@ stack:
 language: Markdown
 ---
 
-humanizer is a single markdown skill file that catches the patterns giving AI writing away and rewrites them without flattening the author's voice. It installs into Claude Code, pastes into Cursor, or runs as a system prompt against the Anthropic, OpenAI, or any other API. It's LLM-agnostic, Anthropic Skills compliant, and marked stable.
+Every AI humanizer on the market sells the same promise: make your text undetectable. I built Humanizer to do the reverse. It never looks at a detector. It cleans up the patterns that make writing read as machine-generated, keeps your facts and voice intact, and shows you exactly what it changed and why.
 
-## What it does
+## Problem
 
-Most "humanize my writing" tools are a word blacklist. humanizer is a real pipeline. Six steps run in order: auto-detect the channel, optional voice calibration, pattern scan, severity gate, rewrite, and a final self-audit. Underneath that sit 16 named structural patterns, a 3-tier vocabulary system, 5 punctuation budgets, and a banned-opener list.
+The popular fix for AI-sounding text makes things worse. Most "humanizer" tools are black-box paraphrasers tuned for one job: lowering a detector score. They reshape your sentences, and along the way they quietly rewrite your numbers, names, and meaning. You get text that might pass a scan and no longer says what you wrote.
 
-## The interesting part
+Two facts convinced me the whole approach was a dead end. AI detectors already misclassify human writing at high rates, including non-native English writers flagged as AI up to 61% of the time (Stanford, Patterns, 2023), so "undetectable" was never the real goal. Detectors are now trained directly on humanizer outputs too, which turns evasion into an arms race you lose by next quarter. A tool with no record of what it changed is also a non-starter for anyone who has to disclose or stand behind their use of AI.
 
-It's channel-aware. An email gets scored differently from a blog post, so the rewrite fits the format instead of homogenizing everything down to one register. The rewrite step touches only the offending spans rather than regenerating the whole piece, then audits its own output before handing it back.
+## Solution
 
-I dogfood it. This is the tool I run every piece of my own writing through, including this page.
+Humanizer is a rules-based writing scrub. It catches the structural and vocabulary patterns that make text read as machine-written, rewrites them while preserving the author's voice and argument, and hands back a diff of every edit with the reason for it. When a draft passes the AI-tell checks but makes no real claim, it flags the draft as hollow instead of approving empty prose. I optimized for durability over evasion, on the logic that a tool which protects your facts and shows its work ages better than one chasing a score detectors are already learning to beat.
 
-## Stack
+## Approach
 
-A markdown skill spec at the core, Python for validation and tooling, GitHub Actions for CI, MIT licensed.
+The catalog does most of the work, and I sourced it rather than guessed. It holds twenty-one named patterns and a 55-word vocabulary list, each entry pulled from primary research (Carnegie Mellon's frequency study, Buffer's analysis of 52 million LinkedIn posts, Wikipedia's AI-writing taxonomy) and paired with a before/after example and a severity rationale.
 
-- [Repo on GitHub](https://github.com/milock/humanizer)
+A few design calls shaped how it behaves:
+
+- **Structure before vocabulary.** Sentence shape predicts machine-likeness more reliably than word choice, so the scan checks structure first. Swapping "leverage" for "use" is necessary but useless if every sentence is the same length.
+- **Do the least it can.** A severity gate decides between patching the bad spans and a full rewrite. It only rewrites everything when the skeleton itself is AI-shaped. Good writing gets left alone.
+- **A mandatory second pass.** After rewriting, it asks itself what still reads as AI and revises again. First-pass cleanups miss residual tells.
+- **Voice carve-outs.** Short sentences, fragments, and "And"/"But" openers are AI tells and also marks of good human writing. Opt-in voice profiles keep the tool from sanding the personality off someone's draft.
+
+It ships as a single zero-dependency markdown file. The same skill runs unmodified in Claude Code, Cursor, Continue, Aider, and as a raw API system prompt, with a CI validator and a one-command installer.
+
+## Results
+
+This is a recent solo project, so what's worth judging is the build and the thinking. There's no adoption to point to yet.
+
+- One portable file runs across five-plus AI coding environments with no per-platform code.
+- Refactored from a 617-line monolith to a 343-line core with on-demand reference files, so the skill stays focused on workflow and passes its CI validator.
+- A stable, parseable output format (Issues, Rewrite, What Changed, Self-Audit, Final) that a writing agent can chain as an automated last pass.
+- Open source under MIT at [github.com/milock/humanizer](https://github.com/milock/humanizer).
+
+The hardest part of building it was teaching the tool to recognize when good human writing should be left alone.

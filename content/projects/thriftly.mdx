@@ -1,7 +1,7 @@
 ---
 title: Thriftly
 slug: thriftly
-description: Find the Goodwill with the best stuff.
+description: A scoring engine that ranks every US Goodwill 0-100 on likely donation quality from Census data, shipped as a live, self-maintaining web app. Solo, full-stack, open source.
 repo: https://github.com/milock/thriftly
 url: https://thriftly.xyz
 stack:
@@ -15,19 +15,40 @@ stack:
 language: TypeScript
 ---
 
-Thrift donations track local wealth, so the same chain can be a goldmine in one neighborhood and picked-over in another. thriftly ranks nearby Goodwill and thrift stores 0-100 by how affluent the surrounding area is, using free Census data instead of guesswork. The scoring model is fully explainable: every store card shows the raw numbers behind its rank.
+I built a scoring engine that ranks every Goodwill in the US by how good its donations are likely to be, then shipped it as a live web app. It's solo, full-stack, and open source. Live at [thriftly.xyz](https://thriftly.xyz), code at [github.com/milock/thriftly](https://github.com/milock/thriftly).
 
-## A real affluence model
+## Problem
 
-For each store, thriftly builds a catchment of every Census tract whose centroid sits within ~3 miles, weighted by population and inverse distance. It then scores that catchment on median home value (40%), household income (35%), bachelor's-or-higher rate (15%), and gross rent (10%), each normalized to a national range. Weights are fixed and documented, and an in-app methodology popover walks through the math.
+Goodwill inventory quality swings hard by location. Stores in wealthier areas get better donations, but there's no way to know which store is worth the drive before you walk in. I wanted a number that told me where the good stuff was.
 
-## Two axes, kept honest
+The catch: no off-the-shelf "affluence" index exists. The closest public tools - CDC's Social Vulnerability Index, the Area Deprivation Index - measure poverty or deprivation, not wealth. So I had to build the affluence signal from scratch.
 
-Distance stays out of the headline number and shows separately, so "great stuff" never gets confused with "close to me." Tiers run Prime, Excellent, Strong, Fair, Lean, and the labels carry meaning without relying on color alone.
+## Solution
 
-## Tested like production
+Thriftly scores every US Goodwill from 0 to 100 on likely donation quality. The score comes from four Census signals: home value, household income, education, and rent. Every result card shows the breakdown, so you can see exactly why a store scored what it did.
 
-44 unit tests plus 29 end-to-end tests, light and dark mode, responsive, and no paid APIs anywhere in the stack.
+About 6,000 stores, all 50 states plus DC, with searches that come back in well under a second.
 
-- [Live at thriftly.xyz](https://thriftly.xyz)
-- [Repo on GitHub](https://github.com/milock/thriftly)
+## Approach
+
+Three decisions shaped the project.
+
+**The data architecture came out of a wall I hit.** The obvious version queries the map and Census APIs live on every search. I built that first, and OpenStreetMap's Overpass API throttled my server IP for hours within a day. So I inverted it. A weekly automated build pre-scores the entire country, with retry logic and three mirror servers so no state silently drops out. Searches then run against a bundled dataset in memory and answer in 5 to 200 milliseconds. The tradeoff is real: the data can be up to seven days old. I handle that with a visible "last updated" timestamp and an on-demand refresh button for anyone who needs live results. The constraint ended up handing me a better design than I'd have drawn on a whiteboard.
+
+**I kept distance separate from the score.** It was tempting to fold "how close is it" into one number, but "great stuff" and "near me" are different questions, and blending them would have lied to the user. The score stays absolute. Distance is its own sort, so you decide the tradeoff.
+
+**I didn't trust the easy statistic.** Using the median income of the single tract a store sits in is bad math. Instead, each store blends the demographics of every Census tract within three miles, weighted by population and inverse distance, so a nearby high-income neighborhood counts more than a far one. A small offset keeps the store's own location from running away with infinite weight.
+
+The same instinct shows up in smaller places. I hand-tuned the score color scale in OKLCH because naive RGB blending of amber to green came out muddy brown. And I built 466 city and state pages, pre-rendered with structured data, so each one can be found in search on its own.
+
+## Results
+
+- Live at [thriftly.xyz](https://thriftly.xyz): ~6,000 Goodwills scored across all 50 states and DC, searches in 5 to 200 ms
+- 466 pre-rendered city and state pages, built for organic discovery
+- Self-maintaining: a weekly GitHub Action rebuilds the national dataset and auto-deploys, no manual upkeep
+- 80 automated tests, TypeScript strict mode, end-to-end suite running against the production build for determinism
+- Public and MIT-licensed, so anyone can inspect or fork it
+
+No usage numbers to share yet. What stands on its own is the build: it's live, and every tradeoff and line of source is out in the open to check.
+
+Stack: Next.js 16, React 19, TypeScript, Leaflet, with Census ACS and OpenStreetMap as the data sources.

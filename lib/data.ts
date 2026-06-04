@@ -113,7 +113,7 @@ export const projects: Project[] = [
     name: "Elation AI Scribe Launch",
     slug: "elation-scribe",
     description:
-      "0-to-1 GTM for the first clinical AI scribe built into the EMR.",
+      "0-to-1 GTM for the first AI scribe built inside the EMR. $3M ARR year one.",
     language: "Product Marketing",
     href: "/projects/elation-scribe",
     type: "marketing",
@@ -122,7 +122,7 @@ export const projects: Project[] = [
     name: "Clarity Ad Landing Pages",
     slug: "clarity-landing-pages",
     description:
-      "Five Next.js ad landing pages. Big Core Web Vitals win, ModMed wedge.",
+      "The Next.js ad-landing platform our paid search runs on. 52 to 90 on mobile.",
     url: "https://get.clarityrcm.com",
     language: "Web / Growth",
     href: "/projects/clarity-landing-pages",
@@ -132,7 +132,7 @@ export const projects: Project[] = [
     name: "Humanizer",
     slug: "humanizer",
     description:
-      "Drop-in writing skill that scrubs AI tells without flattening voice.",
+      "A rules-based writing scrub that cleans AI tells and shows its work. OSS.",
     repo: "https://github.com/milock/humanizer",
     url: "https://github.com/milock/humanizer",
     language: "Markdown",
@@ -143,7 +143,7 @@ export const projects: Project[] = [
     name: "Clarity Website Refresh",
     slug: "clarity-website",
     description:
-      "Repositioned Clarity's marketing site: messaging, pages, and brand.",
+      "Rebuilt Clarity's marketing site positioning-first, 13 to 25 pages, solo.",
     url: "https://clarityrcm.com",
     language: "Messaging & Brand",
     href: "/projects/clarity-website",
@@ -154,7 +154,7 @@ export const projects: Project[] = [
     name: "Alejandro Proposal Microsite",
     slug: "alejandro-proposal",
     description:
-      "A bilingual, interactive client proposal built as a website, not a deck.",
+      "The proposal built as the bilingual, interactive site it was pitching.",
     url: "https://alejandro-proposal.vercel.app",
     language: "Web",
     href: "/projects/alejandro-proposal",
@@ -165,7 +165,7 @@ export const projects: Project[] = [
     name: "Polysearch",
     slug: "polysearch",
     description:
-      "Research pipeline that verifies its own citations before it writes.",
+      "Open architecture for multi-source research that verifies its own citations.",
     repo: "https://github.com/milock/polysearch",
     url: "https://github.com/milock/polysearch",
     language: "Python",
@@ -187,7 +187,7 @@ export const projects: Project[] = [
     name: "Thriftly",
     slug: "thriftly",
     description:
-      "Ranks nearby thrift stores 0-100 by local affluence, from Census data.",
+      "Ranks every US Goodwill 0-100 on donation quality, from Census data.",
     repo: "https://github.com/milock/thriftly",
     url: "https://thriftly.xyz",
     language: "TypeScript",
@@ -198,7 +198,7 @@ export const projects: Project[] = [
     name: "Lock",
     slug: "lock",
     description:
-      "This site: a Next.js dark bento, designed and shipped solo. Open source.",
+      "This site: range as proof, not pitch. Designed, written, and shipped solo.",
     repo: "https://github.com/milock/lock",
     url: "https://michael-lock.com",
     language: "TypeScript",
