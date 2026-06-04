@@ -19,12 +19,17 @@ const STARTERS = [
 const FALLBACK =
   "I'm having trouble responding right now. Email me at themichaellock@gmail.com and I'll get right back to you.";
 
-// Pull the rendered text out of a UI message's parts.
+// Pull the rendered text out of a UI message's parts. The model is asked for
+// plain text, but it occasionally slips in markdown; strip the common markers
+// so bubbles never show literal ** or # characters.
 function messageText(message: { parts: Array<{ type: string; text?: string }> }) {
   return message.parts
     .filter((p) => p.type === "text")
     .map((p) => p.text ?? "")
-    .join("");
+    .join("")
+    .replace(/\*\*/g, "") // bold markers
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "") // headers
+    .replace(/^\s*[-*]\s+/gm, "• "); // normalize bullets to a dot
 }
 
 export function AskTile() {
@@ -61,7 +66,7 @@ export function AskTile() {
     <div
       id="ask"
       className={cn(
-        "tile-surface group relative flex h-full flex-col justify-between overflow-hidden p-6",
+        "tile-surface group relative flex h-full flex-col overflow-hidden p-6",
         // light styles — mirrors BentoCard
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         // dark styles — mirrors BentoCard
@@ -77,11 +82,15 @@ export function AskTile() {
         </p>
       </div>
 
-      {(hasThread || error) && (
-        <div
-          ref={threadRef}
-          className="mt-5 max-h-48 space-y-3 overflow-y-auto pr-1"
-        >
+      {/* The thread fills all the space between the header and the input and
+          scrolls internally, so a taller card means more visible answer. When
+          empty it just holds the space, keeping the input pinned to the bottom. */}
+      <div
+        ref={threadRef}
+        className="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1"
+      >
+        {(hasThread || error) && (
+          <>
           {messages.map((message) => (
             <div
               key={message.id}
@@ -120,8 +129,9 @@ export function AskTile() {
               </div>
             </div>
           )}
-        </div>
-      )}
+          </>
+        )}
+      </div>
 
       {/* Starter prompts hug the input directly above it (grouped in the same
           bottom block) instead of floating in the middle of the tile. */}
