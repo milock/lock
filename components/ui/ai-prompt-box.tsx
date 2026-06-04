@@ -154,25 +154,41 @@ export function PromptInputBox({
           </div>
         </TooltipProvider>
 
-        <button
-          type="button"
-          onClick={submit}
-          disabled={!canSend}
-          aria-label="Send message"
-          className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
-            "bg-primary text-primary-foreground",
-            "transition-[transform,opacity,background-color] duration-200",
-            "motion-safe:hover:scale-105 motion-safe:active:scale-95",
-            "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
-          )}
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <ArrowUp className="h-4 w-4" />
-          )}
-        </button>
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={submit}
+                disabled={!canSend}
+                aria-label="Send message"
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                  "bg-primary text-primary-foreground",
+                  "transition-[transform,opacity,background-color] duration-200",
+                  "motion-safe:hover:scale-105 motion-safe:active:scale-95",
+                  "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+                )}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowUp className="h-4 w-4" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={6}
+              className={cn(
+                "z-50 rounded-md border border-border bg-popover px-2 py-1",
+                "text-xs text-popover-foreground shadow-md"
+              )}
+            >
+              Send
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );

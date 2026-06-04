@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { PromptInputBox } from "@/components/ui/ai-prompt-box";
@@ -19,17 +21,78 @@ const STARTERS = [
 const FALLBACK =
   "I'm having trouble responding right now. Email me at themichaellock@gmail.com and I'll get right back to you.";
 
-// Pull the rendered text out of a UI message's parts. The model is asked for
-// plain text, but it occasionally slips in markdown; strip the common markers
-// so bubbles never show literal ** or # characters.
-function messageText(message: { parts: Array<{ type: string; text?: string }> }) {
+// Pull the raw text out of a UI message's parts.
+function rawText(message: { parts: Array<{ type: string; text?: string }> }) {
   return message.parts
     .filter((p) => p.type === "text")
     .map((p) => p.text ?? "")
-    .join("")
+    .join("");
+}
+
+const LINK_CLASS =
+  "font-medium text-foreground underline decoration-foreground/30 underline-offset-2 transition-colors hover:decoration-foreground";
+
+// Matches a markdown link, a bare http(s) URL, or an internal /projects/<slug>
+// path so the assistant can point visitors to a page to read more.
+const LINK_RE =
+  /\[([^\]]+)\]\(([^)]+)\)|(https?:\/\/[^\s<)]+)|(\/projects\/[a-z0-9-]+)/g;
+
+// Render an assistant message: strip stray markdown markers (the model is asked
+// for plain text but occasionally slips), then turn any links it includes into
+// real, clickable anchors — internal paths use Next's client-side Link.
+function renderAssistant(raw: string): React.ReactNode {
+  const clean = raw
     .replace(/\*\*/g, "") // bold markers
     .replace(/^\s{0,3}#{1,6}\s+/gm, "") // headers
     .replace(/^\s*[-*]\s+/gm, "• "); // normalize bullets to a dot
+
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let i = 0;
+  let m: RegExpExecArray | null;
+  LINK_RE.lastIndex = 0;
+  while ((m = LINK_RE.exec(clean)) !== null) {
+    if (m.index > last) out.push(clean.slice(last, m.index));
+
+    let href: string;
+    let label: string;
+    let tail = "";
+    if (m[1] !== undefined) {
+      label = m[1];
+      href = m[2];
+    } else {
+      const matched = (m[3] ?? m[4]) as string;
+      // Don't swallow trailing sentence punctuation into the href.
+      const trimmed = matched.replace(/[.,;:!?)]+$/, "");
+      tail = matched.slice(trimmed.length);
+      href = trimmed;
+      label = trimmed;
+    }
+
+    out.push(
+      href.startsWith("/") ? (
+        <Link key={`lnk-${i}`} href={href} className={LINK_CLASS}>
+          {label}
+        </Link>
+      ) : (
+        <a
+          key={`lnk-${i}`}
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className={LINK_CLASS}
+        >
+          {label}
+        </a>
+      )
+    );
+    if (tail) out.push(tail);
+
+    last = m.index + m[0].length;
+    i += 1;
+  }
+  if (last < clean.length) out.push(clean.slice(last));
+  return out;
 }
 
 export function AskTile() {
@@ -62,11 +125,37 @@ export function AskTile() {
     (status === "streaming" &&
       messages[messages.length - 1]?.role === "user");
 
+  const reduceMotion = useReducedMotion();
+  // Idle, the card hugs its header + prompts (no empty void). Once a thread (or
+  // error) exists it unfolds to a fixed, internally-scrolling height — capped
+  // near the old tile size so it never dominates the page. The cap is
+  // responsive and measured on the client so the unfold reads naturally on any
+  // viewport. Animating real height (not a transform) means the grid below
+  // glides down with it instead of jumping.
+  const expanded = hasThread || Boolean(error);
+  const [cap, setCap] = React.useState(608);
+  React.useEffect(() => {
+    const measure = () => {
+      const w = window.innerWidth;
+      setCap(w >= 768 ? 608 : w >= 640 ? 576 : 544); // 38 / 36 / 34rem
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
   return (
-    <div
+    <motion.div
       id="ask"
+      initial={false}
+      animate={{ height: expanded ? cap : "auto" }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+      }
       className={cn(
-        "tile-surface group relative flex h-full flex-col overflow-hidden p-6",
+        "tile-surface group relative flex flex-col overflow-hidden p-6",
         // light styles — mirrors BentoCard
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         // dark styles — mirrors BentoCard
@@ -87,7 +176,12 @@ export function AskTile() {
           empty it just holds the space, keeping the input pinned to the bottom. */}
       <div
         ref={threadRef}
-        className="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1"
+        className={cn(
+          "min-h-0 flex-1 space-y-3 overflow-y-auto pr-1",
+          // Only claim vertical space once there's something to show, so the
+          // idle card hugs tight to the header.
+          (hasThread || error) && "mt-5"
+        )}
       >
         {(hasThread || error) && (
           <>
@@ -107,7 +201,9 @@ export function AskTile() {
                     : "bg-secondary text-secondary-foreground"
                 )}
               >
-                {messageText(message)}
+                {message.role === "user"
+                  ? rawText(message)
+                  : renderAssistant(rawText(message))}
               </div>
             </div>
           ))}
@@ -159,7 +255,7 @@ export function AskTile() {
 
         <PromptInputBox onSend={send} isLoading={isLoading} />
       </div>
-    </div>
+    </motion.div>
   );
 }
 

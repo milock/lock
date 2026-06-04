@@ -346,13 +346,15 @@ const features = [
                 </div>
 
                 {/* Arrow appears directly under the language label, top-right,
-                    on hover. */}
-                <span
-                  aria-hidden
-                  className="absolute right-4 top-8 text-neutral-400 opacity-0 transition-opacity duration-300 group-hover/proj:opacity-100 dark:text-neutral-300"
+                    on hover. A real link (z-10 over the stretched card link) so
+                    clicking the arrow itself navigates, with a slide nudge. */}
+                <a
+                  href={project.href}
+                  aria-label={`Open ${project.name}`}
+                  className="absolute right-3 top-7 z-10 rounded p-1 text-neutral-400 opacity-0 transition-all duration-300 group-hover/proj:translate-x-0.5 group-hover/proj:opacity-100 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-white"
                 >
                   →
-                </span>
+                </a>
 
                 <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                   <ProjectBadge type={project.type} />
@@ -608,22 +610,26 @@ const AFTER_ASK = [2, 4, 3, 5, 7, 6, 9, 8];
 
 export function Bento() {
   return (
-    <>
+    // A flex column of three full-width blocks. The gap matches BentoGrid's own
+    // row gap so the seams are invisible, but splitting here lets the Ask tile
+    // size to its own content between two grids instead of being stretched to a
+    // fixed 2-row cell.
+    <div className="flex w-full flex-col gap-2 lg:gap-4">
       <BentoGrid>
         {BEFORE_ASK.map((featureIdx, i) => (
           <BentoCard key={featureIdx} index={i} {...features[featureIdx]} />
         ))}
+      </BentoGrid>
 
-        {/* Featured "Ask this site anything" tile — full-width band that proves
-            the AI-native positioning. Interactive, so it lives outside BentoCard
-            (whose overlay is pointer-events-none). col-span-3 = full grid width. */}
-        <RevealCard
-          index={BEFORE_ASK.length}
-          className="col-span-3 row-span-2"
-        >
-          <AskTile />
-        </RevealCard>
+      {/* Featured "Ask this site anything" tile — full-width band that proves
+          the AI-native positioning. Pulled out of the fixed auto-rows grid so it
+          can hug its content when idle and animate open on the first question,
+          gliding the grid below it down as it grows. fill={false} drops h-full. */}
+      <RevealCard index={BEFORE_ASK.length} fill={false} className="w-full">
+        <AskTile />
+      </RevealCard>
 
+      <BentoGrid>
         {AFTER_ASK.map((featureIdx, i) => (
           <BentoCard
             key={featureIdx}
@@ -632,6 +638,6 @@ export function Bento() {
           />
         ))}
       </BentoGrid>
-    </>
+    </div>
   );
 }
