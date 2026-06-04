@@ -20,9 +20,9 @@ Open source: [github.com/milock/polysearch](https://github.com/milock/polysearch
 
 ## Problem
 
-AI research tools pull from a lot of sources and attach citations to what they write. Attaching a source is not the same as checking that the claim is actually backed by it. Even on the easiest grounded task there is, summarizing a single document you hand the model, the best 2026 models still make things up a small but real share of the time. Stretch that to multi-source synthesis and the gap gets wider.
+AI research tools pull from a lot of sources and attach citations to what they write. Attaching a source is not the same as checking that the claim is actually backed by it. Even on the easiest grounded task there is, summarizing a single document you hand the model, the best 2026 models still make things up around 1.8 to 5 percent of the time (Vectara's HHEM leaderboard). Stretch that to multi-source synthesis and the gap gets wider.
 
-The popular open tools do not close it. The two most-used research projects on GitHub, each with tens of thousands of stars, both retrieve from across the web and surface inline citations. Neither one checks that the cited page actually says what the claim says, so that work falls to the reader. In a regulated field like healthcare, where I work, being confidently wrong is expensive.
+The popular open tools do not close it. GPT Researcher (27.5k GitHub stars) and Stanford's STORM (28.3k) both retrieve from across the web and surface inline citations. Neither one checks that the cited page actually says what the claim says, so that work falls to the reader. In a regulated field like healthcare, where I work, being confidently wrong is expensive.
 
 ## Solution
 
@@ -51,7 +51,7 @@ The CLI carries the controls you would expect: `--depth quick|standard|deep` (45
 ## Results
 
 - A working, pip-installable pipeline that runs four research layers in parallel and returns a verified, tiered report in about a minute for a few cents.
-- A verification layer that closes the exact gap the most-used open research tools leave open, plus a tiered install so you can start on a single key and scale up.
+- A verification layer that closes the exact gap GPT Researcher and STORM (27.5k and 28.3k stars) leave open, plus a tiered install so you can start on a single key and scale up.
 - A five-interface contract system that lets a small team extend the pipeline through protocol-based pull requests without touching the core, with release automation and typed tests from early on.
 
 The most useful proof came from running this very write-up through the pipeline's own approach. The tool worked, and it honestly flagged how weak my sources were: of about seventy-one citation pairs it could confirm one, and the rest were low-tier listicles. I re-grounded the load-bearing facts by hand against canonical sources. The problem turned out to be exactly as hard as I claimed, and the verification layer caught it where the popular tools would have attached those listicles and moved on.
