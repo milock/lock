@@ -13,7 +13,7 @@
 
 ---
 
-My personal site, live at **[michael-lock.com](https://michael-lock.com)**. The home page is a single-page bento grid: who I am, the work I've shipped, the AI-native and go-to-market stack I build on, and how to reach me. Every project links to its own write-up rendered from MDX, and there's an "ask me anything" console — a design preview for now, with the model wiring still ahead of it.
+My personal site, live at **[michael-lock.com](https://michael-lock.com)**. The home page is a single-page bento grid: who I am, the work I've shipped, the AI-native and go-to-market stack I build on, and how to reach me. Every project links to its own write-up rendered from MDX, and there's an "ask me anything" console — a chatbot grounded only in my resume and project write-ups (Anthropic Claude), with streaming replies and a rate-limited server endpoint.
 
 Built with Next.js 14 (App Router). It leans on scroll-reveal animation, server components, and a single source of content in `lib/data.ts`.
 
@@ -21,7 +21,8 @@ Built with Next.js 14 (App Router). It leans on scroll-reveal animation, server 
 
 - **Bento landing page** — a responsive grid of tiles (hero, about, experience, projects, stack, GitHub stars, AI-native ops, focus areas, contact) with scroll-reveal and entrance animations.
 - **MDX project pages** — each project lives as an `.mdx` file in `content/projects/` and renders at `/projects/<slug>` with its own metadata and repo / live / Figma links.
-- **"Ask me anything" console** — a design preview of a conversational way to explore the site (UI-only for now, with a clean seam for the model).
+- **"Ask me anything" chatbot** — a conversational way to explore the site, grounded **only** in the resume + project content (Anthropic Claude Haiku), streaming, behind a rate-limited, origin-checked server endpoint with input caps. No personal data beyond what's already on the page.
+- **`llms.txt` + Markdown for every page** — `/llms.txt`, `/llms-full.txt`, and a `.md` version of the home page and each project, for LLM crawlers.
 - **Live GitHub stars** — pulled at request time across my open-source repos.
 - **AI-native ops beam** — an animated diagram of the multi-agent stack the marketing function runs on.
 - **Syntax-highlighted code** — rehype-pretty-code + Shiki, GitHub light/dark themes.
@@ -65,7 +66,20 @@ pnpm test:e2e     # run the Playwright suite
 
 ## Content
 
-All site content lives in `lib/data.ts` (profile, experience, projects, stack, focus areas). Each project's long-form write-up is an `.mdx` file in `content/projects/`; adding a file there creates its page and adds it to the sitemap automatically.
+All site content lives in `lib/data.ts` (profile, experience, projects, stack, focus areas). Each project's long-form write-up is an `.mdx` file in `content/projects/`; adding a file there creates its page and adds it to the sitemap automatically. The chatbot's knowledge is assembled from the same resume + project files in `lib/knowledge/`.
+
+## Configuration
+
+Copy `.env.example` to `.env.local` and fill it in. `.env.local` is gitignored — never commit real keys.
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ANTHROPIC_API_KEY` | for the chatbot | Server-only key for `app/api/chat`. Without it, the chat returns a friendly offline notice. |
+| `NEXT_PUBLIC_BASE_URL` | no | Canonical/sitemap/OG/llms base URL. Defaults to the production domain. |
+| `GITHUB_USERNAME` | no | Whose public repo stars feed the GitHub Stars tile. |
+| `GITHUB_TOKEN` | no | Read-only, no-scope token that only raises the GitHub API rate limit. |
+
+**If you fork this and enable the chatbot, set a monthly spend limit on the Anthropic key** (console.anthropic.com). The endpoint is a public, billable surface; the in-app rate limit is a soft per-instance layer, and the spend cap is the hard backstop.
 
 ## License
 
