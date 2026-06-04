@@ -64,7 +64,7 @@ export default function Hero() {
 
         <FadeIn direction="down">
           <div className="mt-6 w-full max-w-xl">
-            <CtaButtons />
+            <CtaButtons row />
           </div>
         </FadeIn>
       </div>
