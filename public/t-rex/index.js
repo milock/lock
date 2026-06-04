@@ -425,7 +425,7 @@
                 boxStyles.paddingLeft.length - 2));
 
             this.dimensions.WIDTH = this.outerContainerEl.offsetWidth - padding * 2;
-            this.dimensions.WIDTH = Math.min(DEFAULT_WIDTH, this.dimensions.WIDTH); //Arcade Mode
+            // full-width track: 600px cap removed so it fills the container
             if (this.activated) {
                 this.setArcadeModeContainerScale();
             }
