@@ -69,24 +69,33 @@ function renderAssistant(raw: string): React.ReactNode {
       label = trimmed;
     }
 
-    out.push(
-      href.startsWith("/") ? (
-        <Link key={`lnk-${i}`} href={href} className={LINK_CLASS}>
-          {label}
-        </Link>
-      ) : (
-        <a
-          key={`lnk-${i}`}
-          href={href}
-          target="_blank"
-          rel="noreferrer"
-          className={LINK_CLASS}
-        >
-          {label}
-        </a>
-      )
-    );
-    if (tail) out.push(tail);
+    // Only ever render http(s) or internal "/" links. Anything else (e.g. a
+    // javascript: or data: URL the model could be coaxed into emitting) is
+    // shown as plain text, never as a clickable href.
+    const internal = href.startsWith("/");
+    const safe = internal || /^https?:\/\//i.test(href);
+    if (!safe) {
+      out.push(m[0]);
+    } else {
+      out.push(
+        internal ? (
+          <Link key={`lnk-${i}`} href={href} className={LINK_CLASS}>
+            {label}
+          </Link>
+        ) : (
+          <a
+            key={`lnk-${i}`}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className={LINK_CLASS}
+          >
+            {label}
+          </a>
+        )
+      );
+      if (tail) out.push(tail);
+    }
 
     last = m.index + m[0].length;
     i += 1;
