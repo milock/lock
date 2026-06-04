@@ -18,10 +18,14 @@ export function RevealCard({
   children,
   index = 0,
   className,
+  // Most tiles stretch to fill their grid cell (h-full). The Ask tile sizes to
+  // its own content (it animates open), so it opts out with fill={false}.
+  fill = true,
 }: {
   children: ReactNode;
   index?: number;
   className?: string;
+  fill?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
 
@@ -29,12 +33,12 @@ export function RevealCard({
   const delay = Math.min(index * 0.07, 0.42);
 
   if (reduceMotion) {
-    return <div className={cn("h-full", className)}>{children}</div>;
+    return <div className={cn(fill && "h-full", className)}>{children}</div>;
   }
 
   return (
     <motion.div
-      className={cn("h-full", className)}
+      className={cn(fill && "h-full", className)}
       initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -8% 0px" }}

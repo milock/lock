@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { profile } from "@/lib/data";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -64,7 +65,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* Snappy hover labels site-wide; skipDelay lets you glide between
+              adjacent buttons without re-waiting the open delay each time. */}
+          <TooltipProvider delayDuration={200} skipDelayDuration={300}>
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
         <Toaster />
       </body>

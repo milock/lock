@@ -44,7 +44,7 @@ export default function Hero() {
         {/* Big, declarative H1. The positioning line drops to a subhead so the
             hero still says who he is without competing with the headline. */}
         <WordPullUp
-          words="Let's cook"
+          words="Let's cook."
           className="text-left text-6xl leading-[1.05] md:text-7xl lg:text-7xl"
         />
 
