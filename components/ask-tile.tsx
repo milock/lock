@@ -104,13 +104,89 @@ function renderAssistant(raw: string): React.ReactNode {
   return out;
 }
 
+// Where the chat thread is mirrored so it survives navigating to a project page
+// and back within the same tab.
+const STORE_KEY = "ask-thread:v1";
+
+// Reveal `full` a character (or a few) at a time while `typing` is true, so a
+// streamed reply reads like it's being typed rather than arriving in word
+// chunks. When `typing` is false the full text shows at once, so restored or
+// past messages never re-type.
+function useTypewriter(full: string, typing: boolean): string {
+  const [n, setN] = React.useState(typing ? 0 : full.length);
+
+  React.useEffect(() => {
+    if (!typing) setN(full.length);
+  }, [typing, full.length]);
+
+  React.useEffect(() => {
+    if (!typing || n >= full.length) return;
+    const id = window.setInterval(() => {
+      setN((c) => {
+        if (c >= full.length) return c;
+        // Catch up if the stream raced ahead, but tick one-by-one near the end
+        // so the tail still reads as typing.
+        const remaining = full.length - c;
+        const step = remaining > 80 ? Math.ceil(remaining / 24) : 1;
+        return Math.min(full.length, c + step);
+      });
+    }, 18);
+    return () => window.clearInterval(id);
+  }, [typing, full.length, n]);
+
+  return typing ? full.slice(0, n) : full;
+}
+
+// One assistant bubble — its own component so the typewriter hook can run
+// per-message (hooks can't live inside a .map()).
+function AssistantBubble({ raw, typing }: { raw: string; typing: boolean }) {
+  const shown = useTypewriter(raw, typing);
+  return <>{renderAssistant(shown)}</>;
+}
+
 export function AskTile() {
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, status, error, setMessages } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
   const isLoading = status === "submitted" || status === "streaming";
   const threadRef = React.useRef<HTMLDivElement | null>(null);
+  // Tracks which messages came from restored storage (so they don't re-type)
+  // and whether we've already hydrated once.
+  const restoredIds = React.useRef<Set<string>>(new Set());
+  const hydrated = React.useRef(false);
+
+  // Restore a prior thread (same tab) once on mount.
+  React.useEffect(() => {
+    if (hydrated.current) return;
+    hydrated.current = true;
+    try {
+      const raw = window.sessionStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (Array.isArray(saved) && saved.length) {
+        for (const msg of saved) if (msg?.id) restoredIds.current.add(msg.id);
+        setMessages(saved);
+      }
+    } catch {
+      // ignore malformed storage
+    }
+  }, [setMessages]);
+
+  // Persist on idle (not mid-stream) so a project-page round trip keeps it.
+  React.useEffect(() => {
+    if (!hydrated.current) return;
+    if (status !== "ready" && status !== "error") return;
+    try {
+      if (messages.length) {
+        window.sessionStorage.setItem(STORE_KEY, JSON.stringify(messages));
+      } else {
+        window.sessionStorage.removeItem(STORE_KEY);
+      }
+    } catch {
+      // ignore quota / serialization issues
+    }
+  }, [messages, status]);
 
   const send = React.useCallback(
     (text: string) => {
@@ -128,6 +204,7 @@ export function AskTile() {
   }, [messages, status]);
 
   const hasThread = messages.length > 0;
+  const lastId = messages[messages.length - 1]?.id;
   // The assistant is "thinking" once a question is in but no reply text yet.
   const awaitingReply =
     status === "submitted" ||
@@ -194,28 +271,36 @@ export function AskTile() {
       >
         {(hasThread || error) && (
           <>
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex",
-                message.role === "user" ? "justify-end" : "justify-start"
-              )}
-            >
+          {messages.map((message) => {
+            const isUser = message.role === "user";
+            const raw = rawText(message);
+            // The latest assistant message types out live; everything else
+            // (past turns, restored-from-storage) renders instantly.
+            const typing =
+              !isUser &&
+              message.id === lastId &&
+              !restoredIds.current.has(message.id);
+            return (
               <div
+                key={message.id}
                 className={cn(
-                  "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground"
+                  "flex",
+                  isUser ? "justify-end" : "justify-start"
                 )}
               >
-                {message.role === "user"
-                  ? rawText(message)
-                  : renderAssistant(rawText(message))}
+                <div
+                  className={cn(
+                    "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                    isUser
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  )}
+                >
+                  {isUser ? raw : <AssistantBubble raw={raw} typing={typing} />}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {awaitingReply && (
             <div className="flex justify-start">

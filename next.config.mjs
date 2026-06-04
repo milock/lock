@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Restore scroll position on browser back/forward instead of jumping to the
+  // top — so returning from a project page lands roughly where you left off.
+  experimental: {
+    scrollRestoration: true,
+  },
   // Ensure the project MDX write-ups are bundled into the routes that read them
   // at runtime (chat system prompt + the .md / llms.txt generators).
   outputFileTracingIncludes: {

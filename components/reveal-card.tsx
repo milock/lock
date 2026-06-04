@@ -32,13 +32,21 @@ export function RevealCard({
   // Stagger caps out so a long grid never feels slow to settle.
   const delay = Math.min(index * 0.07, 0.42);
 
+  // `group/tile` makes this stable wrapper the hover target for the tile's lift
+  // (see .tile-surface lift in globals.css). The wrapper never moves, so the
+  // lift can't pull the hovered element out from under the cursor at the edge —
+  // which is what caused the hover-jitter/vibration.
   if (reduceMotion) {
-    return <div className={cn(fill && "h-full", className)}>{children}</div>;
+    return (
+      <div className={cn("group/tile", fill && "h-full", className)}>
+        {children}
+      </div>
+    );
   }
 
   return (
     <motion.div
-      className={cn(fill && "h-full", className)}
+      className={cn("group/tile", fill && "h-full", className)}
       initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.25, margin: "0px 0px -8% 0px" }}

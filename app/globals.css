@@ -124,7 +124,11 @@
        small client helper adds it to whichever tile is centered in the
        viewport (see CenterHover). It's only ever applied under (hover: none),
        so it never double-fires on desktop. */
-    .dark .tile-surface:hover,
+    /* Hover is detected on the stable .group/tile wrapper (RevealCard), not on
+       .tile-surface itself, so the lift never moves the hover target out from
+       under the cursor at an edge (no jitter). `.is-active` is the touch
+       center-of-viewport equivalent. */
+    .dark .group\/tile:hover .tile-surface,
     .dark .tile-surface.is-active {
       border-color: rgba(255, 255, 255, 0.18);
       box-shadow:
@@ -133,7 +137,7 @@
         0 0 32px -14px rgba(190, 210, 255, 0.35);
     }
 
-    .tile-surface:hover,
+    .group\/tile:hover .tile-surface,
     .tile-surface.is-active {
       box-shadow:
         0 0 0 1px rgba(0, 0, 0, 0.05),
@@ -142,7 +146,7 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      .tile-surface:hover,
+      .group\/tile:hover .tile-surface,
       .tile-surface.is-active {
         transform: translateY(-4px);
       }
