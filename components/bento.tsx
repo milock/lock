@@ -560,7 +560,7 @@ const features = [
   {
     Icon: "",
     name: "Vibe-coded by me",
-    description: "The whole site, end to end. Open source.",
+    description: "Like it? It's open source.",
     className: "col-span-3 md:col-span-2",
     href: "/projects/lock",
     cta: "How I built it",
