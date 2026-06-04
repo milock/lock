@@ -1,18 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import { PromptInputBox } from "@/components/ui/ai-prompt-box";
 import { cn } from "@/lib/utils";
-
-type ChatMessage = {
-  id: number;
-  role: "user" | "assistant";
-  content: string;
-};
-
-// Design-preview reply. Kept friendly and plain - no marketing copy.
-const CANNED_REPLY =
-  "Thanks for asking! This is a design preview - the live assistant (grounded in my résumé and writing) is coming soon.";
 
 // Starter prompts to seed the conversation. Clicking one sends it like any
 // typed message. Shown only before a thread exists.
@@ -22,50 +14,48 @@ const STARTERS = [
   "Why health-tech?",
 ];
 
+// Shown if the request fails (no key, rate limit, network). Keeps the tile
+// friendly instead of surfacing a raw error.
+const FALLBACK =
+  "I'm having trouble responding right now. Email me at themichaellock@gmail.com and I'll get right back to you.";
+
+// Pull the rendered text out of a UI message's parts.
+function messageText(message: { parts: Array<{ type: string; text?: string }> }) {
+  return message.parts
+    .filter((p) => p.type === "text")
+    .map((p) => p.text ?? "")
+    .join("");
+}
+
 export function AskTile() {
-  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const idRef = React.useRef(0);
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { messages, sendMessage, status, error } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
+
+  const isLoading = status === "submitted" || status === "streaming";
   const threadRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Clear any pending canned-reply timer on unmount.
-  React.useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
+  const send = React.useCallback(
+    (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isLoading) return;
+      sendMessage({ text: trimmed });
+    },
+    [isLoading, sendMessage]
+  );
 
   // Keep the newest message in view.
   React.useEffect(() => {
     const el = threadRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, isLoading]);
+  }, [messages, status]);
 
-  const handleSend = (message: string) => {
-    const userMessage: ChatMessage = {
-      id: (idRef.current += 1),
-      role: "user",
-      content: message,
-    };
-    setMessages((prev) => [...prev, userMessage]);
-    setIsLoading(true);
-
-    // Brief shimmer before the canned reply. NO fetch/network here.
-    // TODO: wire to /app/api/chat/route.ts (Vercel AI SDK 'ai' + Claude),
-    // system-prompted on résumé/about content. Replace the canned reply below.
-    timerRef.current = setTimeout(() => {
-      const assistantMessage: ChatMessage = {
-        id: (idRef.current += 1),
-        role: "assistant",
-        content: CANNED_REPLY,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsLoading(false);
-    }, 900);
-  };
-
-  const hasThread = messages.length > 0 || isLoading;
+  const hasThread = messages.length > 0;
+  // The assistant is "thinking" once a question is in but no reply text yet.
+  const awaitingReply =
+    status === "submitted" ||
+    (status === "streaming" &&
+      messages[messages.length - 1]?.role === "user");
 
   return (
     <div
@@ -87,7 +77,7 @@ export function AskTile() {
         </p>
       </div>
 
-      {hasThread && (
+      {(hasThread || error) && (
         <div
           ref={threadRef}
           className="mt-5 max-h-48 space-y-3 overflow-y-auto pr-1"
@@ -102,23 +92,31 @@ export function AskTile() {
             >
               <div
                 className={cn(
-                  "max-w-[85%] rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                  "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
                   message.role === "user"
                     ? "bg-primary text-primary-foreground"
                     : "bg-secondary text-secondary-foreground"
                 )}
               >
-                {message.content}
+                {messageText(message)}
               </div>
             </div>
           ))}
 
-          {isLoading && (
+          {awaitingReply && (
             <div className="flex justify-start">
               <div className="flex items-center gap-1.5 rounded-2xl bg-secondary px-3.5 py-2.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse" />
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse [animation-delay:150ms]" />
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse [animation-delay:300ms]" />
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="flex justify-start">
+              <div className="max-w-[85%] rounded-2xl bg-secondary px-3.5 py-2 text-sm leading-relaxed text-secondary-foreground">
+                {FALLBACK}
               </div>
             </div>
           )}
@@ -128,13 +126,13 @@ export function AskTile() {
       {/* Starter prompts hug the input directly above it (grouped in the same
           bottom block) instead of floating in the middle of the tile. */}
       <div className="mt-5">
-        {!hasThread && (
+        {!hasThread && !error && (
           <div className="mb-2.5 flex flex-wrap gap-2">
             {STARTERS.map((prompt) => (
               <button
                 key={prompt}
                 type="button"
-                onClick={() => handleSend(prompt)}
+                onClick={() => send(prompt)}
                 className={cn(
                   "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                   "border border-black/[0.08] bg-black/[0.03] text-neutral-600",
@@ -149,7 +147,7 @@ export function AskTile() {
           </div>
         )}
 
-        <PromptInputBox onSend={handleSend} isLoading={isLoading} />
+        <PromptInputBox onSend={send} isLoading={isLoading} />
       </div>
     </div>
   );
