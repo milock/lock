@@ -165,7 +165,7 @@ const features = [
     // Standard hover CTA like the other tiles, but centered under the name.
     href: profile.links.linkedin,
     cta: "Connect on LinkedIn",
-    ctaIcon: <Linkedin className="h-4 w-4" />,
+    ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
     ctaCenter: true,
     background: (
       <div className="absolute inset-0">
@@ -205,7 +205,7 @@ const features = [
     description: "Where I've built and what it returned.",
     href: profile.links.linkedin,
     cta: "Full history on LinkedIn",
-    ctaIcon: <Linkedin className="h-4 w-4" />,
+    ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
     className: "col-span-3 md:col-span-1",
     background: (
       <motion.div
@@ -308,10 +308,10 @@ const features = [
     className: "col-span-3",
     href: profile.links.github,
     cta: "GitHub",
-    ctaIcon: <Github className="h-4 w-4" />,
+    ctaIcon: <Github className="mr-2 h-4 w-4" />,
     href2: profile.links.portfolio,
     cta2: "Figma portfolio",
-    cta2Icon: <Figma className="h-4 w-4" />,
+    cta2Icon: <Figma className="mr-2 h-4 w-4" />,
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[101%]">
         <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent_0%,#000_6%,#000_50%,transparent_80%)]">
@@ -403,7 +403,7 @@ const features = [
       "The AI-native and go-to-market tools I build the function on.",
     href: profile.links.github,
     cta: "See the open-source tools",
-    ctaIcon: <Github className="h-4 w-4" />,
+    ctaIcon: <Github className="mr-2 h-4 w-4" />,
     className: "col-span-3 md:col-span-2",
     background: (
       <div className="absolute inset-x-0 top-0 h-[78%] origin-top px-6 pt-6 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_45%)] group-hover:scale-[1.02]">
@@ -425,7 +425,7 @@ const features = [
     className: "col-span-3 md:col-span-1",
     href: profile.links.github,
     cta: "View my GitHub",
-    ctaIcon: <Github className="h-4 w-4" />,
+    ctaIcon: <Github className="mr-2 h-4 w-4" />,
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_70%)] group-hover:scale-105 group-hover:-translate-y-4">
         <div className="text-7xl font-semibold w-full flex justify-center items-center h-2/3 group-hover:-translate-y-2 transition-all duration-300">
@@ -459,7 +459,7 @@ const features = [
       "A self-built multi-agent system that delivers a team's output, solo.",
     href: profile.links.github,
     cta: "See some of the tools",
-    ctaIcon: <Github className="h-4 w-4" />,
+    ctaIcon: <Github className="mr-2 h-4 w-4" />,
     className: "col-span-3",
     background: (
       <motion.div
@@ -483,7 +483,7 @@ const features = [
     description: "Where I spend my time.",
     href: profile.links.linkedin,
     cta: "More on LinkedIn",
-    ctaIcon: <Linkedin className="h-4 w-4" />,
+    ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
     className: "col-span-3 md:col-span-2",
     background: (
       <motion.div
@@ -619,7 +619,7 @@ export function Bento() {
             (whose overlay is pointer-events-none). col-span-3 = full grid width. */}
         <RevealCard
           index={BEFORE_ASK.length}
-          className="col-span-3 row-span-2 sm:row-span-1"
+          className="col-span-3 row-span-2"
         >
           <AskTile />
         </RevealCard>
