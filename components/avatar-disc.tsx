@@ -17,7 +17,7 @@ export function AvatarDisc({ className }: { className?: string }) {
       <div
         className={cn(
           "group/disc relative grid place-items-center overflow-hidden rounded-full",
-          "h-32 w-32 sm:h-36 sm:w-36",
+          "h-24 w-24 sm:h-28 sm:w-28",
           // Carbon/charcoal disc to sit closer to the site's dark surface.
           "bg-[radial-gradient(120%_120%_at_30%_20%,#363638_0%,#242426_55%,#161618_100%)]",
           // Clean neutral ring. A warm-neutral inset hairline (neutral-200, not

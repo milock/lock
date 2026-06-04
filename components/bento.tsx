@@ -170,7 +170,7 @@ const features = [
         {/* Illustrated avatar (black line-art on transparent) on a charcoal disc
             so it pops against the dark tile - the personal-brand moment. The
             avatar, name, title and LinkedIn link form one centered group. */}
-        <div className="flex h-full w-full flex-col items-center justify-center gap-5 px-6 text-center transition-all duration-300 ease-out group-hover:-translate-y-2">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center transition-all duration-300 ease-out group-hover:-translate-y-7">
           <div className="transition-transform duration-300 ease-out group-hover:scale-[1.03]">
             <AvatarDisc />
           </div>
