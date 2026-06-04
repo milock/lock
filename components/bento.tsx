@@ -36,6 +36,7 @@ import { ContactButtons, OpenToRoles } from "@/components/contact-button";
 import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
 import { RevealCard } from "@/components/reveal-card";
+import { CenterHover } from "@/components/center-hover";
 import {
   Terminal,
   TypingAnimation,
@@ -615,6 +616,9 @@ export function Bento() {
     // size to its own content between two grids instead of being stretched to a
     // fixed 2-row cell.
     <div className="flex w-full flex-col gap-2 lg:gap-4">
+      {/* Touch-only: activates the centered tile's hover state as you scroll. */}
+      <CenterHover />
+
       <BentoGrid>
         {BEFORE_ASK.map((featureIdx, i) => (
           <BentoCard key={featureIdx} index={i} {...features[featureIdx]} />
