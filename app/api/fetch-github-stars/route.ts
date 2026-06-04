@@ -1,67 +1,62 @@
-export const dynamic = 'force-dynamic'; // defaults to auto
+// Sums public repo stars for the GitHub Stars tile. Cached/revalidated hourly so
+// we don't hammer GitHub's unauthenticated rate limit (60/hr per IP) on every
+// page view — which was 403ing and rendering "NaN".
+export const revalidate = 3600;
 
 interface Repo {
   stargazers_count: number;
-  name: string;
 }
 
-export async function GET(request: Request): Promise<Response> {
+// Shown when GitHub is unreachable / rate-limited so the tile never renders NaN.
+// Set GITHUB_TOKEN (read-only, no scope) in Vercel to lift the rate limit.
+const FALLBACK_STARS = 5;
+
+export async function GET(): Promise<Response> {
   const username = process.env.GITHUB_USERNAME || "milock";
-  // Optional read-only token. Public repo stars resolve unauthenticated; a
-  // token only raises the rate limit (set GITHUB_TOKEN in Vercel if stars 403).
   const token = process.env.GITHUB_TOKEN;
-  const baseUrl = `https://api.github.com/users/${username}/repos`;
   const headers: Record<string, string> = {
-    "Accept": "application/vnd.github.v3+json",
+    Accept: "application/vnd.github.v3+json",
   };
-  if (token) {
-    headers["Authorization"] = `token ${token}`;
-  }
+  if (token) headers.Authorization = `token ${token}`;
+
+  const ok = (totalStars: number, fallback = false) =>
+    new Response(JSON.stringify({ totalStars, fallback }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
 
   try {
     let totalStars = 0;
-    let nextUrl: string | null = baseUrl;
-    let page = 1; // Start from the first page
+    let nextUrl: string | null = `https://api.github.com/users/${username}/repos?per_page=100`;
 
     while (nextUrl) {
-      const response: Response = await fetch(`${nextUrl}?page=${page}&timestamp=${Date.now()}`, { headers }); // Cache busting
+      const response: Response = await fetch(nextUrl, {
+        headers,
+        next: { revalidate: 3600 },
+      });
       if (!response.ok) {
-        console.error(`Failed to fetch URL: ${nextUrl}, Status: ${response.status}`);
-        return new Response(JSON.stringify({ error: `Failed to fetch repositories, Status: ${response.status}` }), { status: response.status });
-      }
-
-      const rateLimitRemaining = response.headers.get('x-ratelimit-remaining');
-      const rateLimitReset = response.headers.get('x-ratelimit-reset');
-      if (rateLimitRemaining !== null && parseInt(rateLimitRemaining) === 0) {
-        const resetTime = new Date(parseInt(rateLimitReset!) * 1000);
-        console.error(`Rate limit exceeded. Try again after ${resetTime}`);
-        return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), { status: 429 });
+        // Rate-limited or unavailable — serve the fallback instead of erroring
+        // (which previously produced NaN downstream).
+        return ok(FALLBACK_STARS, true);
       }
 
       const repos: Repo[] = await response.json();
-      repos.forEach(repo => {
-        totalStars += repo.stargazers_count;
-      });
-
-      // Check for pagination
-      const linkHeader: string | null = response.headers.get('link');
-      if (linkHeader) {
-        const nextLink = linkHeader.split(',').find(s => s.includes('rel="next"'));
-        if (nextLink) {
-          const match = nextLink.match(/<([^>]+)>/);
-          nextUrl = match ? match[1] : null;
-          page += 1; // Increment the page number
-        } else {
-          nextUrl = null;
-        }
-      } else {
-        nextUrl = null;
+      if (!Array.isArray(repos)) return ok(FALLBACK_STARS, true);
+      for (const repo of repos) {
+        totalStars += Number(repo?.stargazers_count) || 0;
       }
+
+      // Follow GitHub's pagination Link header.
+      const linkHeader = response.headers.get("link");
+      const next = linkHeader
+        ?.split(",")
+        .find((s) => s.includes('rel="next"'))
+        ?.match(/<([^>]+)>/);
+      nextUrl = next ? next[1] : null;
     }
 
-    return new Response(JSON.stringify({ totalStars }), { status: 200 });
-  } catch (error) {
-    console.error('Error fetching repositories:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch repositories' }), { status: 500 });
+    return ok(totalStars);
+  } catch {
+    return ok(FALLBACK_STARS, true);
   }
 }

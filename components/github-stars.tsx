@@ -23,7 +23,8 @@ const GitHubStars = () => {
     return <div>0</div>;
   }
 
-  return <NumberTicker value={stars} />;
+  // Belt-and-suspenders: never let a non-finite value reach the ticker.
+  return <NumberTicker value={Number.isFinite(stars) ? stars : 5} />;
 };
 
 export default GitHubStars;
