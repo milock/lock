@@ -7,6 +7,11 @@ interface MarqueeProps {
   children?: React.ReactNode;
   vertical?: boolean;
   repeat?: number;
+  // When true, the track auto-scrolls but the user can also swipe/scroll
+  // through it with a trackpad or touch (native overflow scrolling on-axis,
+  // scrollbar hidden). Pairs well with pauseOnHover so the animation yields
+  // while the user is interacting.
+  scrollable?: boolean;
   [key: string]: any;
 }
 
@@ -17,13 +22,19 @@ export default function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  scrollable = false,
   ...props
 }: MarqueeProps) {
   return (
     <div
       {...props}
       className={cn(
-        "group flex overflow-hidden p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
+        "group flex p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
+        scrollable
+          ? vertical
+            ? "overflow-y-auto overflow-x-hidden overscroll-y-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            : "overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          : "overflow-hidden",
         {
           "flex-row": !vertical,
           "flex-col": vertical,

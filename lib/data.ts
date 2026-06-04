@@ -105,64 +105,34 @@ export type Project = {
   figma?: boolean;
 };
 
+// Ordered to alternate marketing and build cards as evenly as a 3:6 split
+// allows (M B B M B B M B B), so the badges never clump. Descriptions are kept
+// to a uniform ~65-72 characters so every card wraps to the same two lines.
 export const projects: Project[] = [
   {
     name: "Elation AI Scribe Launch",
     slug: "elation-scribe",
     description:
-      "0-to-1 GTM for the first clinical AI scribe built inside the EMR - positioned to justify a premium and sell the agentic vision early.",
+      "0-to-1 GTM for the first clinical AI scribe built into the EMR.",
     language: "Product Marketing",
     href: "/projects/elation-scribe",
     type: "marketing",
   },
   {
-    name: "Clarity Website Refresh",
-    slug: "clarity-website",
-    description:
-      "Repositioned Clarity's marketing site - new messaging, a sharper service-page ecosystem, and a brand that finally matches a $20M business.",
-    url: "https://clarityrcm.com",
-    language: "Messaging & Brand",
-    href: "/projects/clarity-website",
-    type: "marketing",
-    figma: true,
-  },
-  {
     name: "Clarity Ad Landing Pages",
     slug: "clarity-landing-pages",
     description:
-      "Five Next.js ad landing pages - a big Core Web Vitals win, a ModMed positioning wedge, and a HubSpot form that survives mobile ad blockers.",
+      "Five Next.js ad landing pages. Big Core Web Vitals win, ModMed wedge.",
     url: "https://get.clarityrcm.com",
     language: "Web / Growth",
     href: "/projects/clarity-landing-pages",
     type: "build",
   },
   {
-    name: "AAD 2026 Sizzle Reel",
-    slug: "sizzle-reel",
-    description:
-      "A silent, stats-led brand reel that ran on loop at Clarity's AAD 2026 booth - directed and produced for a fraction of the vendor quotes.",
-    url: "https://www.youtube.com/watch?v=zdlme_KTkIQ",
-    language: "Event Marketing",
-    href: "/projects/sizzle-reel",
-    type: "marketing",
-    figma: true,
-  },
-  {
-    name: "Alejandro Proposal Microsite",
-    slug: "alejandro-proposal",
-    description:
-      "A proposal built as a website instead of a deck - fully bilingual, interactive, with modular pricing the client configures. Shipped in three days.",
-    url: "https://alejandro-proposal.vercel.app",
-    language: "Web",
-    href: "/projects/alejandro-proposal",
-    type: "build",
-    figma: true,
-  },
-  {
-    name: "humanizer",
+    name: "Humanizer",
     slug: "humanizer",
     description:
-      "Drop-in writing skill that scrubs AI tells before you ship, without flattening your voice.",
+      "Drop-in writing skill that scrubs AI tells without flattening voice.",
     repo: "https://github.com/milock/humanizer",
     url: "https://github.com/milock/humanizer",
     language: "Markdown",
@@ -170,10 +140,32 @@ export const projects: Project[] = [
     type: "build",
   },
   {
-    name: "polysearch",
+    name: "Clarity Website Refresh",
+    slug: "clarity-website",
+    description:
+      "Repositioned Clarity's marketing site: messaging, pages, and brand.",
+    url: "https://clarityrcm.com",
+    language: "Messaging & Brand",
+    href: "/projects/clarity-website",
+    type: "marketing",
+    figma: true,
+  },
+  {
+    name: "Alejandro Proposal Microsite",
+    slug: "alejandro-proposal",
+    description:
+      "A bilingual, interactive client proposal built as a website, not a deck.",
+    url: "https://alejandro-proposal.vercel.app",
+    language: "Web",
+    href: "/projects/alejandro-proposal",
+    type: "build",
+    figma: true,
+  },
+  {
+    name: "Polysearch",
     slug: "polysearch",
     description:
-      "Multi-source research pipeline that verifies its own citations before it writes the report.",
+      "Research pipeline that verifies its own citations before it writes.",
     repo: "https://github.com/milock/polysearch",
     url: "https://github.com/milock/polysearch",
     language: "Python",
@@ -181,10 +173,21 @@ export const projects: Project[] = [
     type: "build",
   },
   {
-    name: "thriftly",
+    name: "AAD 2026 Sizzle Reel",
+    slug: "sizzle-reel",
+    description:
+      "Silent, stats-led brand reel for the AAD booth, at a fraction of cost.",
+    url: "https://www.youtube.com/watch?v=zdlme_KTkIQ",
+    language: "Event Marketing",
+    href: "/projects/sizzle-reel",
+    type: "marketing",
+    figma: true,
+  },
+  {
+    name: "Thriftly",
     slug: "thriftly",
     description:
-      "Ranks nearby thrift stores 0-100 by how affluent the surrounding area is, using free Census data.",
+      "Ranks nearby thrift stores 0-100 by local affluence, from Census data.",
     repo: "https://github.com/milock/thriftly",
     url: "https://thriftly.xyz",
     language: "TypeScript",
@@ -192,10 +195,10 @@ export const projects: Project[] = [
     type: "build",
   },
   {
-    name: "lock",
+    name: "Lock",
     slug: "lock",
     description:
-      "This site - a Next.js dark bento built and shipped solo. Open source.",
+      "This site: a Next.js dark bento, designed and shipped solo. Open source.",
     repo: "https://github.com/milock/lock",
     url: "https://michael-lock.com",
     language: "TypeScript",
@@ -206,7 +209,7 @@ export const projects: Project[] = [
 
 // Used by the number-ticker metrics tile.
 export const metrics = [
-  { value: 1000, prefix: "", suffix: "+", label: "newsletter subscribers, from zero" },
+  { value: 5000, prefix: "", suffix: "+", label: "newsletter subscribers, from zero" },
   { value: 8, prefix: "$", suffix: "M+", label: "ARR launched 0-to-1" },
   { value: 3, prefix: "", suffix: "", label: "PMM functions built 0-to-1" },
   { value: 2, prefix: "", suffix: "", label: "open-source AI tools shipped" },
@@ -262,7 +265,7 @@ export const focusAreas = [
   { name: "Pricing & Packaging", body: "Good-better-best architecture; attach-rate and ARPA lift." },
   { name: "Competitive Intel", body: "Teardowns, battlecards, and win/loss that move win rates." },
   { name: "AI-Native Ops", body: "Multi-agent workflows that deliver a team's output, solo." },
-  { name: "Demand & Content", body: "A weekly newsletter grown from zero to ~1,000 subscribers." },
+  { name: "Demand & Content", body: "A weekly newsletter grown from zero to 5,000+ subscribers." },
   { name: "Product", body: "A self-built prototype that became a funded roadmap product." },
 ];
 

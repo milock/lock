@@ -33,6 +33,8 @@ const BentoCard = ({
   description,
   href,
   cta,
+  href2,
+  cta2,
   index = 0,
 }: {
   name?: string;
@@ -42,6 +44,9 @@ const BentoCard = ({
   description?: string;
   href?: string;
   cta?: string;
+  // Optional second CTA, rendered beside the first (e.g. GitHub + Figma).
+  href2?: string;
+  cta2?: string;
   index?: number;
 }) => (
   <RevealCard
@@ -68,18 +73,18 @@ const BentoCard = ({
           )}
         </div>
 
-        <div className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
+        <div className="text-3xl font-semibold text-neutral-700 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_14px_hsl(var(--background))] dark:text-neutral-300">
           {name}
         </div>
       </div>
-      <p className="w-full text-neutral-500 dark:text-neutral-400 dark:drop-shadow">
+      <p className="w-full text-neutral-500 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_12px_hsl(var(--background))] dark:text-neutral-400">
         {description}
       </p>
     </div>
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
       )}
     >
       {href !== "" ? (
@@ -97,6 +102,19 @@ const BentoCard = ({
       ) : (
         ""
       )}
+      {cta2 && href2 ? (
+        <Button
+          variant="ghost"
+          asChild
+          size="sm"
+          className="pointer-events-auto group/Arrow2"
+        >
+          <a href={href2} target="_blank" rel="noreferrer">
+            {cta2}
+            <ArrowRightIcon className="ml-2 h-4 w-4 lg:group-hover/Arrow2:translate-x-1 transition-transform duration-300" />
+          </a>
+        </Button>
+      ) : null}
     </div>
     {/* Hover wash is dark-mode only: on the light theme a darkening overlay
         made the black tile text harder to read, so light tiles stay bright on
