@@ -1,6 +1,7 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText, convertToModelMessages, type UIMessage } from "ai";
 import { buildSystemPrompt } from "@/lib/knowledge";
+import { logConversation } from "@/lib/db";
 
 // Node runtime so the system prompt can read the project MDX files at startup.
 export const runtime = "nodejs";
@@ -144,12 +145,31 @@ export async function POST(req: Request) {
     return new Response("bad request", { status: 400 });
   }
 
+  // Captured for logging once the reply finishes. convKey is the first
+  // message's id, which the client resends every turn, so snapshots of the same
+  // conversation share a key.
+  const convKey = messages[0]?.id ?? null;
+  const ip = clientIp(req);
+  const userAgent = req.headers.get("user-agent");
+  const priorMessages = messages.map((m) => ({
+    role: m.role,
+    text: textOf(m),
+  }));
+
   const result = streamText({
     model: anthropic("claude-haiku-4-5"),
     system: systemPrompt(),
     messages: await convertToModelMessages(slice),
     temperature: 0.4,
     maxOutputTokens: 600,
+    onFinish: async ({ text }) => {
+      await logConversation({
+        convKey,
+        ip,
+        userAgent,
+        messages: [...priorMessages, { role: "assistant", text }],
+      });
+    },
   });
 
   return result.toUIMessageStreamResponse();
