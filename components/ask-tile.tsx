@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 // Starter prompts to seed the conversation. Clicking one sends it like any
 // typed message. Shown only before a thread exists.
 const STARTERS = [
-  "What has Michael shipped 0-to-1?",
-  "How does he use AI to run a marketing team?",
+  "What have you shipped 0-to-1?",
+  "How do you use AI to run a marketing team?",
   "Why health-tech?",
 ];
 
