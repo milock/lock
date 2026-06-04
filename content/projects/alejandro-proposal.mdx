@@ -1,7 +1,7 @@
 ---
 title: Alejandro Proposal Microsite
 slug: alejandro-proposal
-description: A proposal built as a website instead of a deck - fully bilingual, interactive, with modular pricing the client configures. Designed and shipped in three days.
+description: A proposal built as the credibility surface it was pitching - a bilingual, interactive site shipped solo in four days. The $37K engagement was signed.
 repo: ""
 url: https://alejandro-proposal.vercel.app
 stack:
@@ -15,16 +15,33 @@ language: Web
 figma: https://www.figma.com/design/SYgmqCRoefFFdwums5367F/Michael-s-Portfolio?t=KmZ5JjplH7FqLfwL-1
 ---
 
-I designed and built this in three days. It's a proposal for Alejandro Di Tolla, a fractional COO in Seattle, but instead of sending a PDF or a slide deck I made the pitch itself a website. The site walks through the work I'd recommend - brand refresh, new site, CRM, GTM - and lets him explore it the way you'd explore a product rather than read down a document. He accepted, and I'm mid-engagement now, building out what it laid out.
+## Problem
 
-## A few things I'm proud of
+Alejandro is a fractional COO. For twenty years he won work through a closed-loop referral network in the Pacific Northwest. That network was aging out. His introducers were retiring, and the two long-term offers on the table both required moving back to Washington, which he didn't want to do from Spain.
 
-It's fully bilingual in English and Spanish, and the localization is real: a locale switcher, a Spanish glossary, and a separate Spanish-language proposal PDF, not machine translation bolted on at the end.
+He needed a new channel: VC proxy networks. Talent partners and operating partners who route warm intros to portfolio CEOs. That channel converts at 50-80% when the intro is warm, versus 2-10% cold, but it only works if a partner can skim something in 30 seconds and forward it. Alejandro had a solid case-study site and nothing built for that job. His marketing was fine. The gap was in how he reached people.
 
-The proposal is interactive instead of flat. Flip-card plugin demos put the ask on the front and a sample of the output on the back, an animated timeline carries the plan, scroll-triggered reveals pace the read, and pull quotes hold the through-line.
+## Solution
 
-Pricing is modular. The service tiers are encoded as a scope-and-price builder Alejandro can configure himself, so the proposal flexes to whatever he actually wants to buy.
+I proposed building him the credibility surface that channel needs, and I built the proposal itself as that surface.
 
-## Built fast, held to a real bar
+Instead of a PDF, the proposal was a bilingual interactive site - the same kind of asset Phase 2 of the engagement would produce. If he doubted I could build the thing I was pitching, the thing he was reading answered the question.
 
-Three days did not mean cutting corners. Accessibility is tested with axe-core, the flows are covered with Playwright end-to-end tests, and performance is held to Lighthouse CI budgets.
+## Approach
+
+Four days, intro email to live site. Solo, every layer:
+
+- **Strategy.** Diagnosed the distribution gap and defined a "founder-led to founder-leveraged" positioning. I structured the work in two phases with a decision gate at week three, where he could walk away owing nothing. He'd told me twice he couldn't bet on something that takes two years to pay off, so I capped his risk at $13K and three weeks before the larger commitment.
+- **Research.** Built and verified the VC partner target list, cutting three programs that show up on every stale fractional-COO list but had quietly wound down.
+- **Writing and design.** Around 4,000 words in an operator-to-operator register, with a custom editorial design system. I applied a banned-phrase list and one hard rule to every layer: no implied prior fractional clients, because I don't have any. Faking a track record would have failed the exact authenticity test the project was built around.
+- **Engineering.** Built and shipped the site from scratch in Next.js. Bilingual infrastructure with a real Spanish translation and glossary, not a machine swap. Six interactive sections, including an engagement timeline that doubles as the decision gate. Full test coverage on every interactive piece (Vitest and Playwright, desktop and mobile), accessibility audited to zero serious violations, performance held to Lighthouse budgets. Four days didn't mean cutting corners, and the tests are the receipt.
+
+One more judgment call worth naming. I worked backward from what he already had. He'd shelved a seminar series and built a rough CRM over a weekend. Rather than propose replacing either, I framed the content engine to extract from the seminar and pitched the CRM recommendation as a 30-day parallel run. If his own build kept earning its keep, he'd keep it.
+
+## Results
+
+- The $37,000 engagement was accepted. I'm mid-delivery now, building out what the proposal laid out.
+- Four days from first contact to a deployed bilingual site, with accessibility tests, end-to-end coverage, and performance budgets intact.
+- Every layer owned solo: the diagnosis, the copy, the design system, and the full build across 88 commits.
+
+The proposal argued I could build him a credibility surface. The proposal was that surface. He signed soon after reading it.

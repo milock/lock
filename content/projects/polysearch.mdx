@@ -1,7 +1,7 @@
 ---
 title: Polysearch
 slug: polysearch
-description: Multi-source research pipeline that verifies its own citations.
+description: An open-source architecture for verifiable multi-source research - it checks that every citation actually backs its claim, the gap the popular tools leave open.
 repo: https://github.com/milock/polysearch
 url: https://github.com/milock/polysearch
 stack:
@@ -15,18 +15,38 @@ stack:
 language: Python
 ---
 
-polysearch runs a topic through up to four research layers in parallel, synthesizes the findings, and then checks every cited source against the page it actually scraped before writing the report. It ships three ways from one codebase: a pip-installable Python CLI (`pip install polysearch`, v0.1.0 alpha), a Claude Code skill, and an agent template.
+Open source: [github.com/milock/polysearch](https://github.com/milock/polysearch)
 
-## Four parallel layers, one synthesis
+## Problem
 
-Vector search over a personal corpus (Qdrant), decomposed sub-question research (Perplexity), live web grounding (Firecrawl), and community signal (Reddit, X, Hacker News, Polymarket) all run at once. An LLM then synthesizes the results, extracts claims, and writes a tiered, auditable report as both markdown and json.
+AI research tools pull from a lot of sources and attach citations to what they write. But attaching a source isn't the same as checking that the claim is actually backed by it. Even on the easiest grounded task there is - summarizing a single document you hand the model - the best 2026 models still make things up around 1.8 to 5 percent of the time (Vectara's HHEM leaderboard). Stretch that to multi-source synthesis and the gap gets wider.
 
-## Citations get verified, not trusted
+The popular open tools don't close it. GPT Researcher (27.5k GitHub stars) and Stanford's STORM (28.3k) both retrieve from across the web and surface inline citations. Neither one checks that the cited page actually says what the claim says, so that work falls to the reader. In a regulated field like healthcare, where I work, being confidently wrong is expensive.
 
-Every cited source is checked against the page that was actually scraped. The report tiers and flags claims instead of laundering whatever a model returned, so you can audit where each statement came from.
+## Solution
 
-## Degrades instead of breaking
+Polysearch is an open-source architecture for verifiable multi-source research. It's a modular pipeline that treats two things as first-class outputs: checking that each citation actually supports its claim, and ranking sources by how credible they are. It's the open generalization of a research pipeline I run in production at Clarity RCM.
 
-Each layer is a swappable Protocol. Missing credentials drop in null implementations, so the pipeline keeps running on whatever providers you've wired up. The tiered install scales from one API key to the full stack, so you pay only for what you connect. Published to PyPI, CI on GitHub Actions, MIT licensed.
+Here's where it actually stands. v0.1.0 ships the full design and the scaffolding - the contracts, the CI, the docs, the release setup. The provider implementations and the orchestrator are the next phase. What's real today is the system design and a careful bootstrap, and that's what this entry covers.
 
-- [Repo on GitHub](https://github.com/milock/polysearch)
+## Approach
+
+The whole thing is built as a set of swappable contracts, so the pieces can land independently and nothing locks you to one vendor.
+
+- **Five protocols.** Research, vector store, web grounder, synthesizer, citation verifier. Each is an interface, so swapping Perplexity for Tavily, or OpenAI for Anthropic, never touches the orchestrator. They just implement the same contract.
+- **A fixed four-layer pipeline, not an agentic loop.** This was a deliberate trade. Most people are building agentic research chains. For batch research I chose a fixed pipeline instead: less flexible, but its cost and behavior are predictable and the layers run in parallel. There's no tool-calling chain to debug.
+- **Graceful degradation.** Missing a credential substitutes a null provider instead of crashing. A failed layer logs a warning and the pipeline keeps going. One API key gets you a working result, five gets you the full stack. No gatekeeping.
+- **Citation tiering by authority.** A domain whitelist ranks sources - government, academic, and major news above payer policy, which sits above gray literature - then the verifier HEAD-checks each URL and fuzzy-matches the quoted text against the live page.
+- **Discipline before features.** Matrix CI across Python 3.12 and 3.13, automated PyPI releases over OIDC with no secrets in the repo, typed contracts, and a contribution guide built for protocol-based pull requests. The CLI even returns a specific exit code for "not built yet," so anything downstream can detect a placeholder.
+
+## Results
+
+The repo is young, so I'll keep this to what already exists.
+
+- A five-interface contract system that lets a one or two person team extend the pipeline through protocol-based pull requests without touching the core.
+- A verification design that closes the exact gap two of the most-used research tools (27.5k and 28.3k stars) leave open.
+- Release automation and typed, tested scaffolding in the first commit, so other people can build on it from day one.
+
+The most useful thing I learned came from running this very write-up through the pipeline's own approach. The verification layer choked right where I predicted: it could confirm one of seventy-one citation pairs, and the rest were low-tier listicles. I re-grounded the load-bearing facts by hand against canonical sources. That failure is the argument for the project. The problem is exactly as hard as I claimed, and the tooling everyone uses doesn't solve it yet.
+
+Status: v0.1.0. Architecture and scaffolding complete. Orchestrator and providers next.

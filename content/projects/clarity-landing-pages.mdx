@@ -1,7 +1,7 @@
 ---
 title: Clarity Ad Landing Pages
 slug: clarity-landing-pages
-description: Five Next.js ad landing pages - a big Core Web Vitals win, a ModMed-contract positioning wedge, and a HubSpot form that survives mobile ad blockers.
+description: The landing-page platform our paid search runs on - 13 pages from one template, mobile PageSpeed from ~52 to ~90, with brand voice and performance enforced as tests.
 repo: ""
 url: https://get.clarityrcm.com
 stack:
@@ -15,16 +15,37 @@ language: Web / Growth
 figma: ""
 ---
 
-I built the landing pages behind get.clarityrcm.com, the site paid traffic lands on after a Google ad. After running an agency RFP, I brought the work in-house and shipped five pages on my own in Next.js with a full tracking stack. The job was equal parts engineering and growth: standardize a sprawling set of pages onto one canonical template, sharpen the copy, and make the whole thing fast enough that ad clicks actually convert.
+I run Clarity's paid search, and I built the pages those ads point at. On this project, the biggest engineering decisions were marketing decisions.
 
-## A real page-speed win
+Live at [get.clarityrcm.com](https://get.clarityrcm.com).
 
-Marketing tags were dragging the pages down. The analytics suite, the ad tags, and the full HubSpot bundle all loaded too early and blocked first paint. I deferred them to load lazily, trimmed the icon imports, and moved the largest content into view far sooner. Mobile performance went from the low 50s to 90-plus on clean runs, with a large drop in load time. I added real-user monitoring so the number stays honest in production rather than just on a lab test.
+## Problem
 
-## Positioning, not just pages
+Clarity runs Google Ads to independent dermatology practices. Every click costs money, and most of it was landing on slow, generic pages. Mobile PageSpeed sat around 52. For a lead-gen page, that number moves conversion directly. A 0.1-second mobile speed improvement has been shown to lift lead-gen conversion (Deloitte, *Milliseconds Make Millions*).
 
-The pages are built around a ModMed-contract wedge. A practice on ModMed can keep its EMR and practice-management software and swap only the outsourced billing service to Clarity, with the same access an in-house billing team would have. The copy makes that switch feel small instead of scary, which is most of the conversion battle on a paid landing page. Every competitor claim went through a Lanham Act and FTC review before it went live.
+The deeper issue was ownership. The path from ad click to form submit was split across an agency, a marketer, and whoever could touch the CMS that week. No single person owned the whole thing, so the page speed, the copy, and the conversion number all drifted.
 
-## A form that does not silently fail
+## Solution
 
-The lead form is a HubSpot embed, and on mobile it would sometimes render as a blank box when an ad blocker or DNS filter blocked HubSpot's host. I added a loading state and a first-party fallback CTA that appears if the embed never shows, so a blocked third party never costs a lead. Guarded with unit and end-to-end tests.
+I built and own the landing-page platform our ad spend runs on. Thirteen live pages served from one template, deployed continuously, guarded by a test suite that checks both performance and brand voice on every push. The person buying the traffic also owns the system it lands on.
+
+## Approach
+
+I engineered it like a product, not a marketing page.
+
+One typed template renders every route. Adding a new landing page is a type-checked content object, not new React code. I can stand up a conquest page (clarity-vs-modmed, say) in the time it takes to write the copy, because the layout is solved once and the tests catch anything that breaks.
+
+I built speed into the architecture from the start. Every tracking script (GA4, Google Ads, HubSpot, LinkedIn, about 677KB of third-party JavaScript) loads last, off the critical render path. That includes my own attribution. The instinct in marketing is to fire tracking first, because that's how you prove the campaign worked, but the page has to paint before anyone converts, so I did the opposite. The hero is text only, so the largest element on screen is an H1 that loads instantly, and I reserve space for the form so the layout never jumps. Mobile PageSpeed moved from about 52 to about 90.
+
+I also turned the brand rules into tests. A deploy fails if a headline runs long, an em-dash slips in, a required trust stat goes missing, or a page drops below WCAG 2.1 AA. Brand drift on paid traffic becomes a failing build instead of a manual review I have to remember to run.
+
+A few details I cared about: if HubSpot's form embed gets blocked by an ad blocker or a Safari content blocker, the prospect would normally see a blank box and leave, and that's a click I already paid for. So after nine seconds the page swaps in a first-party booking link, and I test it by deliberately aborting the request. I also wired up real-user field data instead of trusting the lab score, because PageSpeed numbers are noisy and the only phone that matters is the prospect's.
+
+## Results
+
+- Mobile PageSpeed moved from about 52 to about 90. Layout shift held at zero.
+- Thirteen live production routes from one template. No manual page duplication.
+- 23 automated tests across unit, end-to-end, accessibility, and visual regression. The brand-voice and performance gates run on every deploy.
+- Live on real ad traffic at [get.clarityrcm.com](https://get.clarityrcm.com), with a preview deploy on every pull request.
+
+**Stack:** Next.js (static prerender), TypeScript, Tailwind, HubSpot forms, Playwright and Vitest for testing, deployed on Vercel.
