@@ -1,0 +1,30 @@
+---
+title: Clarity Ad Landing Pages
+slug: clarity-landing-pages
+description: Five Next.js ad landing pages - a big Core Web Vitals win, a ModMed-contract positioning wedge, and a HubSpot form that survives mobile ad blockers.
+repo: ""
+url: https://get.clarityrcm.com
+stack:
+  - Next.js
+  - TypeScript
+  - Tailwind CSS
+  - HubSpot
+  - Core Web Vitals
+  - Vercel
+language: Web / Growth
+figma: ""
+---
+
+I built the landing pages behind get.clarityrcm.com, the site paid traffic lands on after a Google ad. After running an agency RFP, I brought the work in-house and shipped five pages on my own in Next.js with a full tracking stack. The job was equal parts engineering and growth: standardize a sprawling set of pages onto one canonical template, sharpen the copy, and make the whole thing fast enough that ad clicks actually convert.
+
+## A real page-speed win
+
+Marketing tags were dragging the pages down. The analytics suite, the ad tags, and the full HubSpot bundle all loaded too early and blocked first paint. I deferred them to load lazily, trimmed the icon imports, and moved the largest content into view far sooner. Mobile performance went from the low 50s to 90-plus on clean runs, with a large drop in load time. I added real-user monitoring so the number stays honest in production rather than just on a lab test.
+
+## Positioning, not just pages
+
+The pages are built around a ModMed-contract wedge. A practice on ModMed can keep its EMR and practice-management software and swap only the outsourced billing service to Clarity, with the same access an in-house billing team would have. The copy makes that switch feel small instead of scary, which is most of the conversion battle on a paid landing page. Every competitor claim went through a Lanham Act and FTC review before it went live.
+
+## A form that does not silently fail
+
+The lead form is a HubSpot embed, and on mobile it would sometimes render as a blank box when an ad blocker or DNS filter blocked HubSpot's host. I added a loading state and a first-party fallback CTA that appears if the embed never shows, so a blocked third party never costs a lead. Guarded with unit and end-to-end tests.

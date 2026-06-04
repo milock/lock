@@ -14,6 +14,14 @@ type ChatMessage = {
 const CANNED_REPLY =
   "Thanks for asking! This is a design preview - the live assistant (grounded in my résumé and writing) is coming soon.";
 
+// Starter prompts to seed the conversation. Clicking one sends it like any
+// typed message. Shown only before a thread exists.
+const STARTERS = [
+  "What has Michael shipped 0-to-1?",
+  "How does he use AI to run a marketing team?",
+  "Why health-tech?",
+];
+
 export function AskTile() {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -114,6 +122,27 @@ export function AskTile() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {!hasThread && (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {STARTERS.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              onClick={() => handleSend(prompt)}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "border border-black/[0.08] bg-black/[0.03] text-neutral-600",
+                "hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900",
+                "dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-300",
+                "dark:hover:border-white/20 dark:hover:bg-white/[0.1] dark:hover:text-white"
+              )}
+            >
+              {prompt}
+            </button>
+          ))}
         </div>
       )}
 

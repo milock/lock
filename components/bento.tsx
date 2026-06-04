@@ -19,6 +19,7 @@ import {
   projects,
 } from "@/lib/data";
 import { motion } from "framer-motion";
+import { Figma } from "lucide-react";
 import GitHubStars from "@/components/github-stars";
 import { ContactButtons, OpenToRoles } from "@/components/contact-button";
 import { AvatarDisc } from "@/components/avatar-disc";
@@ -79,6 +80,24 @@ function CompanyLogo({
       className="h-[22px] w-[22px] shrink-0 rounded-md bg-white object-contain p-px ring-1 ring-inset ring-black/[0.06] dark:ring-white/10"
       onError={() => setBroken(true)}
     />
+  );
+}
+
+// Small pill that labels each project card as marketing/brand work or a
+// vibe-coded build, so the mixed Projects row reads at a glance.
+function ProjectBadge({ type }: { type: "marketing" | "build" }) {
+  const isMarketing = type === "marketing";
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset",
+        isMarketing
+          ? "bg-violet-500/10 text-violet-600 ring-violet-500/20 dark:text-violet-300"
+          : "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20 dark:text-emerald-300"
+      )}
+    >
+      {isMarketing ? "Marketing" : "Vibe-coded"}
+    </span>
   );
 }
 
@@ -189,9 +208,20 @@ const features = [
                   company={role.company}
                   domain={role.logoDomain || undefined}
                 />
-                <span className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 dark:text-white">
-                  {role.company}
-                </span>
+                {role.url ? (
+                  <a
+                    href={role.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current dark:text-white"
+                  >
+                    {role.company}
+                  </a>
+                ) : (
+                  <span className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 dark:text-white">
+                    {role.company}
+                  </span>
+                )}
               </div>
 
               {/* One-line role title — clearly secondary to the company. */}
@@ -229,53 +259,75 @@ const features = [
     ),
   },
 
-  // Projects - moved into the prominent col-span-2 slot right after Experience.
-  // Cards link INTERNALLY to each project's own page (/projects/<slug>) with a
-  // subtle "→" hover affordance. Pairs with Experience (1 + 2 = 3).
+  // Projects - its own full-width row so the cards have room to breathe and the
+  // marquee can drift slowly. Each card uses a stretched link (the title's
+  // ::after covers the card) so the whole card navigates to /projects/<slug>,
+  // while a separate Figma link can still sit on top for design-led work.
   {
     Icon: "",
     name: "Projects",
-    description: "Open-source tools I built for the way I work.",
-    className: "col-span-3 md:col-span-2",
+    description: "Work I've shipped, from go-to-market to vibe-coded tools.",
+    className: "col-span-3",
     href: profile.links.github,
     cta: "All projects on GitHub",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[102%]">
+      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[101%]">
         <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent_0%,#000_6%,#000_50%,transparent_80%)]">
           <Marquee
-            className="absolute inset-x-0 top-0 h-full [--duration:30s] w-full items-start pt-5"
+            className="absolute inset-x-0 top-0 h-full [--duration:64s] w-full items-start pt-5"
             pauseOnHover
           >
             {projects.map((project, idx) => (
-              <a
+              <div
                 key={idx}
-                href={project.href}
                 className={cn(
-                  "group/proj relative w-72 cursor-pointer overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                  "group/proj relative w-72 overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
                   "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
                   "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                   "transform-gpu transition-all duration-300 ease-out"
                 )}
               >
                 <div className="flex items-baseline justify-between gap-2">
-                  <figcaption className="flex items-center gap-1.5 text-base font-bold dark:text-white">
+                  {/* Stretched link: ::after covers the whole card, so the
+                      entire tile is clickable while staying valid HTML. */}
+                  <a
+                    href={project.href}
+                    className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-neutral-800 after:absolute after:inset-0 dark:text-white"
+                  >
                     {project.name}
-                    {/* Subtle internal-nav affordance: arrow slides in on hover. */}
                     <span
                       aria-hidden
                       className="translate-x-[-3px] text-neutral-400 opacity-0 transition-all duration-300 group-hover/proj:translate-x-0 group-hover/proj:opacity-100 dark:text-neutral-300"
                     >
                       →
                     </span>
-                  </figcaption>
-                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
+                  </a>
+                  <span className="shrink-0 text-[10px] text-neutral-500 dark:text-neutral-400">
                     {project.language}
                   </span>
                 </div>
-                <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+
+                <div className="mt-2.5 flex items-center gap-1.5">
+                  <ProjectBadge type={project.type} />
+                  {project.figma && (
+                    // Sits above the stretched link (relative z-10) so it stays
+                    // independently clickable.
+                    <a
+                      href={profile.links.portfolio}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                    >
+                      <Figma className="h-3 w-3" />
+                      Figma
+                    </a>
+                  )}
+                </div>
+
+                <blockquote className="mt-2.5 text-xs text-neutral-500 dark:text-neutral-400">
                   {project.description}
                 </blockquote>
-              </a>
+              </div>
             ))}
           </Marquee>
         </div>
@@ -308,7 +360,7 @@ const features = [
   {
     Icon: "",
     name: "GitHub Stars",
-    description: "Live across my open-source repos.",
+    description: "Not a lot, but I'm proud of every single one.",
     className: "col-span-3 md:col-span-1",
     href: `${process.env.GITHUB_URL || "https://github.com/milock"}/${
       process.env.REPO_NAME || "humanizer"
@@ -436,7 +488,7 @@ const features = [
     Icon: "",
     name: "Vibe-coded by me",
     description: "No template, no agency. I built this site myself, with AI.",
-    className: "col-span-3",
+    className: "col-span-3 md:col-span-2",
     href: "/projects/lock",
     cta: "How I built it",
     background: (
@@ -468,21 +520,38 @@ const features = [
   },
 ];
 
+// Explicit visual order over the `features` array (indices below), with the
+// interactive Ask tile spliced in right after About so the chatbot sits high on
+// the page where Projects used to be. Projects then gets its own full row.
+//   0 Hero · 1 About · 2 Experience · 3 Projects · 4 Stack
+//   5 GitHub Stars · 6 AI-Native Ops · 7 Focus · 8 Contact · 9 Vibe-coded
+// Rows (3 cols): [Hero2+About1] · [Ask3] · [Exp1+Stack2] · [Projects3]
+//   · [Stars1+Focus2] · [AIOps3] · [Vibe2+Contact1]
+const BEFORE_ASK = [0, 1];
+const AFTER_ASK = [2, 4, 3, 5, 7, 6, 9, 8];
+
 export function Bento() {
   return (
     <>
       <BentoGrid>
-        {features.map((feature, idx) => (
-          <BentoCard key={idx} index={idx} {...feature} />
+        {BEFORE_ASK.map((featureIdx, i) => (
+          <BentoCard key={featureIdx} index={i} {...features[featureIdx]} />
         ))}
 
         {/* Featured "Ask this site anything" tile — full-width band that proves
             the AI-native positioning. Interactive, so it lives outside BentoCard
-            (whose overlay is pointer-events-none). col-span-3 = full grid width.
-            Reveals last in the stagger sequence. */}
-        <RevealCard index={features.length} className="col-span-3 row-span-1">
+            (whose overlay is pointer-events-none). col-span-3 = full grid width. */}
+        <RevealCard index={BEFORE_ASK.length} className="col-span-3 row-span-1">
           <AskTile />
         </RevealCard>
+
+        {AFTER_ASK.map((featureIdx, i) => (
+          <BentoCard
+            key={featureIdx}
+            index={BEFORE_ASK.length + 1 + i}
+            {...features[featureIdx]}
+          />
+        ))}
       </BentoGrid>
     </>
   );
