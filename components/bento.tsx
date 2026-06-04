@@ -22,7 +22,6 @@ import { motion } from "framer-motion";
 import {
   Figma,
   Github,
-  Linkedin,
   Target,
   Tags,
   Swords,
@@ -130,7 +129,9 @@ const features = [
     description: "",
     href: "",
     cta: "",
-    className: "col-span-3 md:col-span-2",
+    // Two rows on mobile so the big headline, the four pills, and both CTA rows
+    // all fit without the buttons clipping; one row on desktop as before.
+    className: "col-span-3 md:col-span-2 row-span-2 md:row-span-1",
     background: (
       <>
         <div
@@ -157,11 +158,13 @@ const features = [
     Icon: "",
     name: "",
     description: "",
-    className: "col-span-3 md:col-span-1",
-    // No BentoCard-level CTA: the LinkedIn action lives inside the centered
-    // composition so it sits directly under the name, not bottom-left.
-    href: "",
-    cta: "",
+    // order-first pulls the About card above the hero on mobile (the user's
+    // "flip these cards"); md resets to DOM order so desktop keeps hero-left.
+    className: "col-span-3 md:col-span-1 order-first md:order-none",
+    // Standard hover CTA like the other tiles, but centered under the name.
+    href: profile.links.linkedin,
+    cta: "Connect on LinkedIn",
+    ctaCenter: true,
     background: (
       <div className="absolute inset-0">
         {/* Illustrated avatar (black line-art on transparent) on a charcoal disc
@@ -178,15 +181,6 @@ const features = [
             <p className="text-sm text-neutral-500 dark:text-neutral-400">
               Health-tech product marketing leader
             </p>
-            <a
-              href={profile.links.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="pointer-events-auto mt-2 inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-black/[0.03] px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:border-black/20 hover:bg-black/[0.06] dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200 dark:hover:border-white/20 dark:hover:bg-white/[0.1]"
-            >
-              <Linkedin className="h-3.5 w-3.5" />
-              Connect on LinkedIn
-            </a>
           </div>
         </div>
 
@@ -331,66 +325,63 @@ const features = [
                   "transform-gpu transition-all duration-300 ease-out"
                 )}
               >
-                {/* Arrow lives in the fixed top-right corner, independent of
-                    the content, so it never lands mid-card when the title
-                    wraps. Fades in on hover. */}
+                {/* Top row: title (left) + language label (top-right). */}
+                <div className="flex items-baseline justify-between gap-2">
+                  {/* Stretched link: ::after covers the whole card, so the
+                      entire tile is clickable while staying valid HTML. */}
+                  <a
+                    href={project.href}
+                    className="text-sm font-bold text-neutral-800 after:absolute after:inset-0 dark:text-white"
+                  >
+                    {project.name}
+                  </a>
+                  <span className="shrink-0 text-[10px] text-neutral-500 dark:text-neutral-400">
+                    {project.language}
+                  </span>
+                </div>
+
+                {/* Arrow appears directly under the language label, top-right,
+                    on hover. */}
                 <span
                   aria-hidden
-                  className="absolute right-3.5 top-3 text-neutral-400 opacity-0 transition-opacity duration-300 group-hover/proj:opacity-100 dark:text-neutral-300"
+                  className="absolute right-4 top-8 text-neutral-400 opacity-0 transition-opacity duration-300 group-hover/proj:opacity-100 dark:text-neutral-300"
                 >
                   →
                 </span>
 
-                {/* Title + meta + description slide down a touch on hover while
-                    the corner arrow stays put. */}
-                <div className="transition-transform duration-300 ease-out group-hover/proj:translate-y-1">
-                  {/* Stretched link: ::after covers the whole card, so the
-                      entire tile is clickable while staying valid HTML. pr-6
-                      leaves room for the corner arrow. */}
-                  <a
-                    href={project.href}
-                    className="block pr-6 text-sm font-bold text-neutral-800 after:absolute after:inset-0 dark:text-white"
-                  >
-                    {project.name}
-                  </a>
-                  <div className="mt-1 text-[10px] text-neutral-500 dark:text-neutral-400">
-                    {project.language}
-                  </div>
-
-                  <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                    <ProjectBadge type={project.type} />
-                    {project.figma && (
-                      // Sits above the stretched link (relative z-10) so it
-                      // stays independently clickable.
-                      <a
-                        href={profile.links.portfolio}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
-                      >
-                        <Figma className="h-3 w-3" />
-                        Figma
-                      </a>
-                    )}
-                    {project.repo && (
-                      // Vibe-coded projects link straight to their repo, same
-                      // pattern as the Figma chip.
-                      <a
-                        href={project.repo}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
-                      >
-                        <Github className="h-3 w-3" />
-                        GitHub
-                      </a>
-                    )}
-                  </div>
-
-                  <blockquote className="mt-2.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    {project.description}
-                  </blockquote>
+                <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                  <ProjectBadge type={project.type} />
+                  {project.figma && (
+                    // Sits above the stretched link (relative z-10) so it
+                    // stays independently clickable.
+                    <a
+                      href={profile.links.portfolio}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                    >
+                      <Figma className="h-3 w-3" />
+                      Figma
+                    </a>
+                  )}
+                  {project.repo && (
+                    // Vibe-coded projects link straight to their repo, same
+                    // pattern as the Figma chip.
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                    >
+                      <Github className="h-3 w-3" />
+                      GitHub
+                    </a>
+                  )}
                 </div>
+
+                <blockquote className="mt-2.5 text-xs text-neutral-500 dark:text-neutral-400">
+                  {project.description}
+                </blockquote>
               </div>
             ))}
           </Marquee>
@@ -507,15 +498,15 @@ const features = [
                 "transform-gpu transition-all duration-300 ease-out"
               )}
             >
-              <figcaption className="flex items-center gap-2 text-lg font-bold dark:text-white">
+              <figcaption className="text-lg font-bold dark:text-white">
                 {FOCUS_ICONS[f.name] &&
                   (() => {
                     const Icon = FOCUS_ICONS[f.name];
                     return (
-                      <Icon className="h-4 w-4 shrink-0 text-neutral-400 dark:text-neutral-500" />
+                      <Icon className="mb-2 h-5 w-5 text-neutral-400 dark:text-neutral-500" />
                     );
                   })()}
-                {f.name}
+                <span className="block">{f.name}</span>
               </figcaption>
               <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 {f.body}
@@ -562,8 +553,9 @@ const features = [
     href: "",
     cta: "",
     background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_36%)] group-hover:scale-[101%]">
-        <div className="flex h-full w-full items-center justify-center p-4 pb-16 sm:items-center">
+      <>
+        <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_36%)] group-hover:scale-[101%]">
+          <div className="flex h-full w-full items-center justify-center p-4 pb-16 sm:items-center">
           <Terminal className="h-auto w-full max-w-md">
             <TypingAnimation>$ git log --oneline this-site</TypingAnimation>
             <AnimatedSpan>✔ Next.js + TypeScript + Tailwind</AnimatedSpan>
@@ -584,8 +576,13 @@ const features = [
               </span>
             </AnimatedSpan>
           </Terminal>
+          </div>
         </div>
-      </div>
+        {/* Scrim so "Vibe-coded by me" stays readable over the terminal,
+            especially on short mobile tiles. Theme-aware (light + dark), short
+            at rest and grows on hover as the heading rises. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] transition-[height] duration-300 ease-out group-hover:h-[58%] bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_56%,transparent_100%)]" />
+      </>
     ),
   },
 ];
@@ -611,7 +608,10 @@ export function Bento() {
         {/* Featured "Ask this site anything" tile — full-width band that proves
             the AI-native positioning. Interactive, so it lives outside BentoCard
             (whose overlay is pointer-events-none). col-span-3 = full grid width. */}
-        <RevealCard index={BEFORE_ASK.length} className="col-span-3 row-span-1">
+        <RevealCard
+          index={BEFORE_ASK.length}
+          className="col-span-3 row-span-2 sm:row-span-1"
+        >
           <AskTile />
         </RevealCard>
 
