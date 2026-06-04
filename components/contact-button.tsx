@@ -10,20 +10,27 @@ export function ContactButtons() {
   return <CtaButtons className="max-w-sm" />;
 }
 
-// Subtle status pill: "open to roles" linking to LinkedIn (replaces the old
-// availability indicator).
+// Status indicator: a glowing green dot linking to LinkedIn that expands to
+// reveal "open to roles" on hover.
 export function OpenToRoles() {
   return (
     <a
       href={profile.links.linkedin}
       target="_blank"
       rel="noreferrer"
-      className="absolute top-2 right-2 bg-background rounded-lg px-4 py-2 text-xs text-neutral-500 dark:text-neutral-300 max-w-3/4 w-fit"
+      aria-label="Open to roles"
+      title="Open to roles"
+      className="group absolute right-2 top-2 z-20 flex items-center rounded-full border border-emerald-400/20 bg-background/70 p-2 backdrop-blur transition-colors duration-300 ease-out hover:border-emerald-400/40"
     >
-      <div className="flex items-center gap-2">
-        <div className="w-3 h-3 rounded-full animate-pulse bg-emerald-400"></div>
-        <div>open to roles</div>
-      </div>
+      {/* Glowing green dot — a soft radar ping plus a steady glow. */}
+      <span className="relative flex h-2.5 w-2.5 shrink-0 items-center justify-center">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/70 motion-safe:animate-ping" />
+        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_2px_rgba(52,211,153,0.65)]" />
+      </span>
+      {/* Label stays collapsed to just the dot, then expands smoothly on hover. */}
+      <span className="max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium text-neutral-600 opacity-0 transition-all duration-300 ease-out group-hover:ml-2 group-hover:max-w-[140px] group-hover:opacity-100 dark:text-neutral-200">
+        open to roles
+      </span>
     </a>
   );
 }
