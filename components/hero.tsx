@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { HeartPulse, Rocket, Sparkles, MapPin } from "lucide-react";
+import { Rocket, Sparkles, MapPin } from "lucide-react";
 import Meteors from "@/components/magicui/meteors";
 import WordPullUp from "@/components/magicui/word-pull-up";
 import { FadeIn } from "@/components/magicui/fade-in";
@@ -13,7 +13,6 @@ import { profile } from "@/lib/data";
 // the hero reads as scannable identity tags instead of one long subhead. The
 // location rounds out the set.
 const HERO_PILLS = [
-  { label: "Health-tech product marketing leader", Icon: HeartPulse },
   { label: "Storytelling, positioning & 0-to-1 launches", Icon: Rocket },
   { label: "AI-native operator", Icon: Sparkles },
   { label: profile.locationLong, Icon: MapPin },
@@ -54,9 +53,9 @@ export default function Hero() {
             {HERO_PILLS.map(({ label, Icon }) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium leading-none border border-black/[0.08] bg-black/[0.03] text-neutral-700 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200"
+                className="inline-flex cursor-default items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium leading-none border border-black/[0.08] bg-black/[0.03] text-neutral-700 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200 dark:hover:border-white/20 dark:hover:bg-white/[0.1] dark:hover:text-white"
               >
-                <Icon className="h-3 w-3 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                <Icon className="h-3.5 w-3.5 shrink-0 text-neutral-500 transition-colors group-hover:text-current dark:text-neutral-400" />
                 {label}
               </span>
             ))}
@@ -64,7 +63,7 @@ export default function Hero() {
         </FadeIn>
 
         <FadeIn direction="down">
-          <div className="mt-6 w-full max-w-sm">
+          <div className="mt-6 w-full max-w-xl">
             <CtaButtons />
           </div>
         </FadeIn>

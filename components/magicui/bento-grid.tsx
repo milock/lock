@@ -14,9 +14,10 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        // Shorter rows on phones keep sparse tiles from leaving dead space;
-        // desktop keeps the original 22rem rhythm so the packed grid is intact.
-        "grid w-full auto-rows-[19rem] grid-cols-3 gap-2 sm:auto-rows-[21rem] md:auto-rows-[22rem] lg:gap-4",
+        // Tighter rows trim the dead band between a tile's top content and its
+        // bottom-anchored heading (the marquee/Stack tiles fill their height, so
+        // they stay full while the rest get less white space).
+        "grid w-full auto-rows-[17rem] grid-cols-3 gap-2 sm:auto-rows-[18rem] md:auto-rows-[19rem] lg:gap-4",
         className
       )}
     >
@@ -35,6 +36,7 @@ const BentoCard = ({
   cta,
   href2,
   cta2,
+  ctaCenter,
   index = 0,
 }: {
   name?: string;
@@ -47,6 +49,8 @@ const BentoCard = ({
   // Optional second CTA, rendered beside the first (e.g. GitHub + Figma).
   href2?: string;
   cta2?: string;
+  // Center the CTA row instead of left-aligning it (used by the About tile).
+  ctaCenter?: boolean;
   index?: number;
 }) => (
   <RevealCard
@@ -84,7 +88,8 @@ const BentoCard = ({
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        ctaCenter && "justify-center"
       )}
     >
       {href !== "" ? (
