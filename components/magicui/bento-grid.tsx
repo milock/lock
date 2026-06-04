@@ -72,17 +72,17 @@ const BentoCard = ({
       )}
     >
     <div>{background}</div>
-    {/* Readability scrim: an opaque-at-top, fade-to-transparent wash sitting
-        between the background art (z-0) and the header text (z-10). The art is
-        busiest at the top where the title sits, so the title/description get a
-        solid backing — most important on mobile, where the centered tile shows
-        its art at full strength. Only on tiles that actually have a header
-        (tiles that render their own content in `background`, like Hero/About,
-        pass no name and must not be washed out). */}
+    {/* Readability scrim: an opaque-at-BOTTOM, fade-up-to-transparent wash
+        sitting between the background art (z-0) and the header text (z-10).
+        justify-between pins the title/description to the bottom of the tile, so
+        the scrim backs the text there and leaves the top (e.g. the scrolling
+        Projects marquee) completely clear. Only on tiles that actually have a
+        header — tiles that render their own content in `background`
+        (Hero/About/Contact) pass no name and must not be washed. */}
     {name ? (
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-40 bg-gradient-to-b from-white via-white/85 to-transparent dark:from-background dark:via-background/80 dark:to-transparent sm:h-44"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-32 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-background dark:via-background/75 dark:to-transparent sm:h-36"
       />
     ) : null}
     <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
