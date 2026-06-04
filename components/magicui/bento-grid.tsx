@@ -106,7 +106,9 @@ const BentoCard = ({
 
     <div
       className={cn(
-        "pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        // z-20 keeps the CTA above the readability scrim (z-5) so the buttons
+        // never get dimmed by it.
+        "pointer-events-none absolute bottom-0 z-20 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
         ctaCenter && "justify-center"
       )}
     >
