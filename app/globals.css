@@ -120,7 +120,12 @@
       will-change: transform;
     }
 
-    .dark .tile-surface:hover {
+    /* `.is-active` mirrors `:hover` for touch devices that can't hover — a
+       small client helper adds it to whichever tile is centered in the
+       viewport (see CenterHover). It's only ever applied under (hover: none),
+       so it never double-fires on desktop. */
+    .dark .tile-surface:hover,
+    .dark .tile-surface.is-active {
       border-color: rgba(255, 255, 255, 0.18);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -128,7 +133,8 @@
         0 0 32px -14px rgba(190, 210, 255, 0.35);
     }
 
-    .tile-surface:hover {
+    .tile-surface:hover,
+    .tile-surface.is-active {
       box-shadow:
         0 0 0 1px rgba(0, 0, 0, 0.05),
         0 18px 40px -22px rgba(0, 0, 0, 0.28),
@@ -136,7 +142,8 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      .tile-surface:hover {
+      .tile-surface:hover,
+      .tile-surface.is-active {
         transform: translateY(-4px);
       }
     }
