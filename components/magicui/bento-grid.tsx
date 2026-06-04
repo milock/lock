@@ -72,6 +72,19 @@ const BentoCard = ({
       )}
     >
     <div>{background}</div>
+    {/* Readability scrim: an opaque-at-top, fade-to-transparent wash sitting
+        between the background art (z-0) and the header text (z-10). The art is
+        busiest at the top where the title sits, so the title/description get a
+        solid backing — most important on mobile, where the centered tile shows
+        its art at full strength. Only on tiles that actually have a header
+        (tiles that render their own content in `background`, like Hero/About,
+        pass no name and must not be washed out). */}
+    {name ? (
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-40 bg-gradient-to-b from-white via-white/85 to-transparent dark:from-background dark:via-background/80 dark:to-transparent sm:h-44"
+      />
+    ) : null}
     <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
       <div className="flex flex-col gap-2">
         <div>
