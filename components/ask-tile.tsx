@@ -80,7 +80,7 @@ export function AskTile() {
     >
       <div className="flex flex-col gap-1">
         <h2 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
-          Ask this site anything
+          Ask me anything
         </h2>
         <p className="text-neutral-500 dark:text-neutral-400">
           Curious how I work or what I&apos;ve shipped? Type a question.
@@ -125,28 +125,30 @@ export function AskTile() {
         </div>
       )}
 
-      {!hasThread && (
-        <div className="mt-5 flex flex-wrap gap-2">
-          {STARTERS.map((prompt) => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => handleSend(prompt)}
-              className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                "border border-black/[0.08] bg-black/[0.03] text-neutral-600",
-                "hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900",
-                "dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-300",
-                "dark:hover:border-white/20 dark:hover:bg-white/[0.1] dark:hover:text-white"
-              )}
-            >
-              {prompt}
-            </button>
-          ))}
-        </div>
-      )}
-
+      {/* Starter prompts hug the input directly above it (grouped in the same
+          bottom block) instead of floating in the middle of the tile. */}
       <div className="mt-5">
+        {!hasThread && (
+          <div className="mb-2.5 flex flex-wrap gap-2">
+            {STARTERS.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                onClick={() => handleSend(prompt)}
+                className={cn(
+                  "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                  "border border-black/[0.08] bg-black/[0.03] text-neutral-600",
+                  "hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900",
+                  "dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-300",
+                  "dark:hover:border-white/20 dark:hover:bg-white/[0.1] dark:hover:text-white"
+                )}
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        )}
+
         <PromptInputBox onSend={handleSend} isLoading={isLoading} />
       </div>
     </div>

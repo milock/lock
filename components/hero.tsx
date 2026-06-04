@@ -41,7 +41,7 @@ export default function Hero() {
           <Meteors number={32} />
         </div>
       )}
-      <div className="flex flex-col items-start justify-center h-full overflow-hidden p-6 z-50">
+      <div className="flex flex-col items-start justify-center h-full overflow-hidden p-8 sm:p-10 z-50">
         {/* Big, declarative H1. The positioning line drops to a subhead so the
             hero still says who he is without competing with the headline. */}
         <WordPullUp
@@ -50,13 +50,13 @@ export default function Hero() {
         />
 
         <FadeIn direction="down">
-          <div className="mt-4 flex max-w-lg flex-wrap gap-2">
+          <div className="mt-4 flex max-w-xl flex-wrap gap-1.5">
             {HERO_PILLS.map(({ label, Icon }) => (
               <span
                 key={label}
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium leading-none border border-black/[0.08] bg-black/[0.03] text-neutral-700 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200"
+                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium leading-none border border-black/[0.08] bg-black/[0.03] text-neutral-700 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200"
               >
-                <Icon className="h-3.5 w-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                <Icon className="h-3 w-3 shrink-0 text-neutral-500 dark:text-neutral-400" />
                 {label}
               </span>
             ))}

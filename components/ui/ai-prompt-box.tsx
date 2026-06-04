@@ -30,7 +30,7 @@ const MAX_TEXTAREA_HEIGHT = 200; // px — grows to here, then scrolls
 export function PromptInputBox({
   onSend,
   isLoading = false,
-  placeholder = "Ask this site anything about me…",
+  placeholder = "Ask me anything…",
   className,
 }: PromptInputBoxProps) {
   const [value, setValue] = React.useState("");

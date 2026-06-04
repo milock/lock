@@ -8,10 +8,10 @@ const PROJECTS = [
   { slug: "clarity-landing-pages", title: "Clarity Ad Landing Pages" },
   { slug: "sizzle-reel", title: "AAD 2026 Sizzle Reel" },
   { slug: "alejandro-proposal", title: "Alejandro Proposal Microsite" },
-  { slug: "humanizer", title: "humanizer" },
-  { slug: "polysearch", title: "polysearch" },
-  { slug: "thriftly", title: "thriftly" },
-  { slug: "lock", title: "lock" },
+  { slug: "humanizer", title: "Humanizer" },
+  { slug: "polysearch", title: "Polysearch" },
+  { slug: "thriftly", title: "Thriftly" },
+  { slug: "lock", title: "Lock" },
 ];
 
 test.describe("home page (bento landing)", () => {
@@ -39,9 +39,11 @@ test.describe("home page (bento landing)", () => {
     expect(bodyText).not.toContain("By the numbers");
   });
 
-  test('About tile shows "I build the thing from nothing"', async ({ page }) => {
+  test("About tile shows the health-tech leader title", async ({ page }) => {
     await expect(
-      page.getByText("I build the thing from nothing", { exact: false }).first(),
+      page
+        .getByText("Health-tech product marketing leader", { exact: false })
+        .first(),
     ).toBeVisible();
   });
 
