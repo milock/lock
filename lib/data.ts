@@ -165,7 +165,7 @@ export const projects: Project[] = [
     name: "Polysearch",
     slug: "polysearch",
     description:
-      "Open architecture for multi-source research that verifies its own citations.",
+      "Pip-installable multi-source research pipeline that verifies its own citations.",
     repo: "https://github.com/milock/polysearch",
     url: "https://github.com/milock/polysearch",
     language: "Python",
