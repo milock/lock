@@ -176,7 +176,7 @@ export const projects: Project[] = [
     name: "AAD 2026 Sizzle Reel",
     slug: "sizzle-reel",
     description:
-      "Silent, stats-led brand reel for the AAD booth, at a fraction of cost.",
+      "Silent, stats-led brand reel for the AAD booth. I wrote and directed it.",
     url: "https://www.youtube.com/watch?v=zdlme_KTkIQ",
     language: "Event Marketing",
     href: "/projects/sizzle-reel",
