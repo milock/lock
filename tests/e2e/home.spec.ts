@@ -47,9 +47,9 @@ test.describe("home page (bento landing)", () => {
     ).toBeVisible();
   });
 
-  test('there are at least 2 "Let\'s talk" links/buttons', async ({ page }) => {
-    // Hero CTA + Contact tile CTA both render the shared "Let's talk" action.
-    const count = await page.getByText("Let's talk", { exact: false }).count();
+  test('there are at least 2 "Email" CTAs', async ({ page }) => {
+    // Hero CTA + Contact tile CTA both render the shared "Email" action.
+    const count = await page.getByText("Email", { exact: true }).count();
     expect(count).toBeGreaterThanOrEqual(2);
   });
 

@@ -36,6 +36,8 @@ const BentoCard = ({
   cta,
   href2,
   cta2,
+  ctaIcon,
+  cta2Icon,
   ctaCenter,
   index = 0,
 }: {
@@ -49,6 +51,9 @@ const BentoCard = ({
   // Optional second CTA, rendered beside the first (e.g. GitHub + Figma).
   href2?: string;
   cta2?: string;
+  // Optional leading logos for each CTA.
+  ctaIcon?: ReactNode;
+  cta2Icon?: ReactNode;
   // Center the CTA row instead of left-aligning it (used by the About tile).
   ctaCenter?: boolean;
   index?: number;
@@ -100,6 +105,7 @@ const BentoCard = ({
           className="pointer-events-auto group/Arrow"
         >
           <a href={href}>
+            {ctaIcon}
             {cta}
             <ArrowRightIcon className="ml-2 h-4 w-4 lg:group-hover/Arrow:translate-x-1 transition-transform duration-300" />
           </a>
@@ -115,6 +121,7 @@ const BentoCard = ({
           className="pointer-events-auto group/Arrow2"
         >
           <a href={href2} target="_blank" rel="noreferrer">
+            {cta2Icon}
             {cta2}
             <ArrowRightIcon className="ml-2 h-4 w-4 lg:group-hover/Arrow2:translate-x-1 transition-transform duration-300" />
           </a>
