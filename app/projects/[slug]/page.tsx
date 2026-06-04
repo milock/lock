@@ -5,6 +5,7 @@ import {
   ArrowLeftIcon,
   GitHubLogoIcon,
   ArrowTopRightIcon,
+  FigmaLogoIcon,
 } from "@radix-ui/react-icons";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
@@ -117,6 +118,17 @@ export default function ProjectPage({ params }: PageProps) {
               >
                 Live site
                 <ArrowTopRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            )}
+            {project.figma && (
+              <a
+                href={project.figma}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+              >
+                <FigmaLogoIcon className="h-4 w-4" />
+                View in Figma
               </a>
             )}
           </div>

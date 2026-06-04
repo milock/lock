@@ -12,6 +12,8 @@ export interface ProjectFrontmatter {
   url: string;
   stack: string[];
   language: string;
+  // Optional Figma portfolio link, surfaced as a button on design-led projects.
+  figma: string;
 }
 
 export interface ProjectMeta extends ProjectFrontmatter {}
@@ -40,6 +42,7 @@ function readProject(slug: string): Project | null {
     url: String(data.url ?? ""),
     stack: Array.isArray(data.stack) ? data.stack.map(String) : [],
     language: String(data.language ?? ""),
+    figma: String(data.figma ?? ""),
   };
 
   return { ...frontmatter, content };

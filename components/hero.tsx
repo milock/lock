@@ -2,12 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { HeartPulse, Rocket, Sparkles, MapPin } from "lucide-react";
 import Meteors from "@/components/magicui/meteors";
 import WordPullUp from "@/components/magicui/word-pull-up";
 import { FadeIn } from "@/components/magicui/fade-in";
-import BlurIn from "@/components/magicui/blur-in";
 import { CtaButtons } from "@/components/cta-buttons";
 import { profile } from "@/lib/data";
+
+// The positioning line, broken into individual pills each with its own icon, so
+// the hero reads as scannable identity tags instead of one long subhead. The
+// location rounds out the set.
+const HERO_PILLS = [
+  { label: "Health-tech product marketing leader", Icon: HeartPulse },
+  { label: "Storytelling, positioning & 0-to-1 launches", Icon: Rocket },
+  { label: "AI-native operator", Icon: Sparkles },
+  { label: profile.locationLong, Icon: MapPin },
+];
 
 export default function Hero() {
   // Mounted-gate avoids a hydration mismatch (Meteors reads window on mount and
@@ -40,20 +50,24 @@ export default function Hero() {
         />
 
         <FadeIn direction="down">
-          <p className="mt-2 text-base font-medium tracking-tight text-neutral-700 dark:text-neutral-200 sm:text-lg">
-            {profile.headline}
-          </p>
+          <div className="mt-4 flex max-w-lg flex-wrap gap-2">
+            {HERO_PILLS.map(({ label, Icon }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium leading-none border border-black/[0.08] bg-black/[0.03] text-neutral-700 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-200"
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
+                {label}
+              </span>
+            ))}
+          </div>
         </FadeIn>
 
-        <div className="mt-3 text-lg text-neutral-500 dark:text-neutral-400 lg:px-1 w-full">
-          <BlurIn className="w-3/4 sm:w-2/3">{profile.tagline}</BlurIn>
-
-          <FadeIn direction="down">
-            <div className="mt-6 w-full max-w-sm">
-              <CtaButtons />
-            </div>
-          </FadeIn>
-        </div>
+        <FadeIn direction="down">
+          <div className="mt-6 w-full max-w-sm">
+            <CtaButtons />
+          </div>
+        </FadeIn>
       </div>
     </div>
   );

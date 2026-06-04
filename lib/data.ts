@@ -7,6 +7,7 @@ export const profile = {
   tagline:
     "I build the function, the launch, and the AI system that runs both.",
   location: "San Diego, CA",
+  locationLong: "San Diego, California",
   email: "themichaellock@gmail.com",
   avatar: "/images/notion-face.png",
   links: {
@@ -32,6 +33,7 @@ export const experience = [
     period: "2025-Present",
     badges: ["Founding marketer", "$20M ARR"],
     logoDomain: "clarityrcm.com",
+    url: "https://clarityrcm.com",
     metric:
       "Built the function 0-to-1: 300% more qualified inbound and $7M in closed-won ARR (up 35% YoY).",
   },
@@ -41,6 +43,7 @@ export const experience = [
     period: "2023-2025",
     badges: ["Series D", "$50M ARR"],
     logoDomain: "elationhealth.com",
+    url: "https://www.elationhealth.com",
     metric:
       "Led 0-to-1 GTM for a clinical AI scribe ($3M ARR yr 1) and a new billing product ($5M ARR).",
   },
@@ -50,6 +53,7 @@ export const experience = [
     period: "2022-2023",
     badges: ["PE-backed", "$36M→$72M"],
     logoDomain: "360training.com",
+    url: "https://www.360training.com",
     metric:
       "Built PMM 0-to-4; took an acquired HIPAA product line to $10M ARR; helped 2x the business $36M to $72M.",
   },
@@ -59,6 +63,7 @@ export const experience = [
     period: "2018-2022",
     badges: ["Founder", "$2M raised"],
     logoDomain: "",
+    url: "",
     metric:
       "Fractional PMM for 30+ clients; reusable launch frameworks adopted as their internal standards.",
   },
@@ -68,6 +73,7 @@ export const experience = [
     period: "2016-2018",
     badges: ["NASDAQ: META", "0→500K MAU"],
     logoDomain: "meta.com",
+    url: "https://about.meta.com",
     metric: "Scaled Facebook Gaming 0 to 500K MAU.",
   },
   {
@@ -76,12 +82,30 @@ export const experience = [
     period: "2015-2016",
     badges: ["Consulting"],
     logoDomain: "accenture.com",
+    url: "https://www.accenture.com",
     metric:
       "Financial operations on the Meta finance BPO; converted into a full-time role at Meta.",
   },
 ];
 
-export const projects = [
+// `type` drives the card badge: "marketing" = go-to-market / brand / creative
+// work; "build" = something I designed and shipped in code (vibe-coded, mostly
+// on GitHub). `figma` surfaces a portfolio link on design-led projects.
+export type ProjectType = "marketing" | "build";
+
+export type Project = {
+  name: string;
+  slug: string;
+  description: string;
+  language: string;
+  href: string;
+  type: ProjectType;
+  url?: string;
+  repo?: string;
+  figma?: boolean;
+};
+
+export const projects: Project[] = [
   {
     name: "Elation AI Scribe Launch",
     slug: "elation-scribe",
@@ -89,15 +113,28 @@ export const projects = [
       "0-to-1 GTM for the first clinical AI scribe built inside the EMR - positioned to justify a premium and sell the agentic vision early.",
     language: "Product Marketing",
     href: "/projects/elation-scribe",
+    type: "marketing",
   },
   {
-    name: "Clarity RCM Website & Landing Pages",
+    name: "Clarity Website Refresh",
     slug: "clarity-website",
     description:
-      "Built and refreshed Clarity's ad landing pages - a big Core Web Vitals win, a ModMed positioning wedge, and a HubSpot form that survives mobile ad blockers.",
+      "Repositioned Clarity's marketing site - new messaging, a sharper service-page ecosystem, and a brand that finally matches a $20M business.",
+    url: "https://clarityrcm.com",
+    language: "Messaging & Brand",
+    href: "/projects/clarity-website",
+    type: "marketing",
+    figma: true,
+  },
+  {
+    name: "Clarity Ad Landing Pages",
+    slug: "clarity-landing-pages",
+    description:
+      "Five Next.js ad landing pages - a big Core Web Vitals win, a ModMed positioning wedge, and a HubSpot form that survives mobile ad blockers.",
     url: "https://get.clarityrcm.com",
     language: "Web / Growth",
-    href: "/projects/clarity-website",
+    href: "/projects/clarity-landing-pages",
+    type: "build",
   },
   {
     name: "AAD 2026 Sizzle Reel",
@@ -107,6 +144,8 @@ export const projects = [
     url: "https://www.youtube.com/watch?v=zdlme_KTkIQ",
     language: "Event Marketing",
     href: "/projects/sizzle-reel",
+    type: "marketing",
+    figma: true,
   },
   {
     name: "Alejandro Proposal Microsite",
@@ -116,6 +155,8 @@ export const projects = [
     url: "https://alejandro-proposal.vercel.app",
     language: "Web",
     href: "/projects/alejandro-proposal",
+    type: "build",
+    figma: true,
   },
   {
     name: "humanizer",
@@ -126,6 +167,7 @@ export const projects = [
     url: "https://github.com/milock/humanizer",
     language: "Markdown",
     href: "/projects/humanizer",
+    type: "build",
   },
   {
     name: "polysearch",
@@ -136,6 +178,7 @@ export const projects = [
     url: "https://github.com/milock/polysearch",
     language: "Python",
     href: "/projects/polysearch",
+    type: "build",
   },
   {
     name: "thriftly",
@@ -146,6 +189,7 @@ export const projects = [
     url: "https://thriftly.xyz",
     language: "TypeScript",
     href: "/projects/thriftly",
+    type: "build",
   },
   {
     name: "lock",
@@ -153,9 +197,10 @@ export const projects = [
     description:
       "This site - a Next.js dark bento built and shipped solo. Open source.",
     repo: "https://github.com/milock/lock",
-    url: "https://lock-alpha-sooty.vercel.app",
+    url: "https://michael-lock.com",
     language: "TypeScript",
     href: "/projects/lock",
+    type: "build",
   },
 ];
 

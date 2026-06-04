@@ -98,7 +98,10 @@ const BentoCard = ({
         ""
       )}
     </div>
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+    {/* Hover wash is dark-mode only: on the light theme a darkening overlay
+        made the black tile text harder to read, so light tiles stay bright on
+        hover and lean on the shared .tile-surface lift/glow instead. */}
+    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:dark:bg-neutral-800/10" />
     </div>
   </RevealCard>
 );

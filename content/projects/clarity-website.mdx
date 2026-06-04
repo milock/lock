@@ -1,29 +1,29 @@
 ---
-title: Clarity RCM Website & Landing Pages
+title: Clarity Website Refresh
 slug: clarity-website
-description: Built and refreshed Clarity RCM's ad landing pages - a big Core Web Vitals win, a ModMed-contract positioning wedge, and a HubSpot form that survives mobile ad blockers.
+description: Repositioned Clarity's marketing site - new messaging, a sharper service-page ecosystem, and a brand that finally matches a $20M business.
 repo: ""
-url: https://get.clarityrcm.com
+url: https://clarityrcm.com
 stack:
-  - Next.js
-  - TypeScript
-  - Tailwind CSS
-  - HubSpot
-  - Core Web Vitals
-  - Vercel
-language: Web / Growth
+  - Messaging
+  - Positioning
+  - Brand
+  - Web
+  - Figma
+language: Messaging & Brand
+figma: https://www.figma.com/design/SYgmqCRoefFFdwums5367F/Michael-s-Portfolio?t=KmZ5JjplH7FqLfwL-1
 ---
 
-I led the build and refresh of Clarity RCM's marketing landing pages, the site behind get.clarityrcm.com that paid traffic lands on. It shipped to production in spring 2026. The job was equal parts engineering and growth: standardize a sprawling set of pages onto one canonical template, sharpen the copy, and make the whole thing fast enough that ad clicks actually convert.
+When I joined as the founding marketer, Clarity's site read like a startup that had outgrown its own website. The company was already serving 200-plus dermatology practices and processing real volume, but the marketing site still sounded small and generic. I led the refresh: the messaging, the positioning, and the structure of the pages, working alongside our designer to bring it to life.
 
-## A real page-speed win
+## Messaging first, pages second
 
-Marketing tags were dragging the pages down. The analytics suite, the ad tags, and the full HubSpot bundle all loaded too early and blocked first paint. I deferred them to load lazily, trimmed the icon imports, and moved the largest content into view far sooner. Mobile performance went from the low 50s to 90-plus on clean runs, with a large drop in load time. I added real-user monitoring so the number stays honest in production rather than just on a lab test.
+The real work here was positioning, long before any pixels moved. Clarity is revenue cycle management built only for independent dermatology, and the old site buried that under generic billing language. I rewrote the core narrative around what actually wins deals: a single specialty, a real operating philosophy, and proof in the numbers. Every page now ladders up to that story instead of listing features.
 
-## Positioning, not just pages
+## A service ecosystem, not a pile of pages
 
-The pages are built around a ModMed-contract wedge. A practice on ModMed can keep its EMR and practice-management software and swap only the outsourced billing service to Clarity, with the same access an in-house billing team would have. The copy makes that switch feel small instead of scary, which is most of the conversion battle on a paid landing page.
+I restructured the offering into a clear ecosystem - the core RCM service, patient services, ClarityPay, and the ClarityOS layer on top - so a prospect can see the whole picture and where they fit. Each service page is built to carry its own search intent and its own sales conversation, rather than competing with the others for the same generic terms.
 
-## A form that does not silently fail
+## Brand that matches the business
 
-The lead form is a HubSpot embed, and on mobile it would sometimes render as a blank box when an ad blocker or DNS filter blocked HubSpot's host. I added a loading state and a first-party fallback CTA that appears if the embed never shows, so a blocked third party never costs a lead. Guarded with unit and end-to-end tests.
+The visual language got a lift to match the new positioning: cleaner type, a more confident layout system, and design components I prototyped in Figma before they shipped. The goal was simple - look like the category leader Clarity is becoming, not the scrappy vendor it started as.
