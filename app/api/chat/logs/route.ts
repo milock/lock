@@ -30,7 +30,10 @@ export async function GET(req: Request) {
 
   const sections = convos
     .map((c) => {
-      const when = new Date(c.created_at).toLocaleString();
+      const when = new Date(c.created_at).toLocaleString("en-US", {
+        timeZone: "America/Los_Angeles",
+        timeZoneName: "short",
+      });
       const meta = `${when} · ${c.turns} msg · ${c.ip_hash ?? "—"}`;
       const msgs = c.messages
         .map(

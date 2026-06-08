@@ -12,10 +12,9 @@ import { cn } from "@/lib/utils";
 // typed message. Shown only before a thread exists.
 const STARTERS = [
   "What have you shipped 0-to-1?",
-  "How do you use AI to run a marketing team?",
   "How do you get up to speed in a new domain?",
-  "How do you stay organized and focused?",
-  "Why health-tech?",
+  "How do you use AI?",
+  "How do you stay organized?",
 ];
 
 // Shown if the request fails (no key, rate limit, network). Keeps the tile
