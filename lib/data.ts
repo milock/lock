@@ -159,7 +159,7 @@ export const projects: Project[] = [
     language: "Web",
     href: "/projects/alejandro-proposal",
     type: "build",
-    figma: true,
+    figma: false,
   },
   {
     name: "Polysearch",
