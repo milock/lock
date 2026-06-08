@@ -35,7 +35,7 @@ export const experience = [
     logoDomain: "clarityrcm.com",
     url: "https://clarityrcm.com",
     metric:
-      "Built the function 0-to-1: 300% more qualified inbound and $7M in closed-won ARR (up 35% YoY).",
+      "Built the marketing function on top of founder-led sales: 300% more qualified inbound, $7M closed-won ARR (up 35% YoY).",
   },
   {
     company: "Elation Health",
@@ -132,7 +132,7 @@ export const projects: Project[] = [
     name: "Humanizer",
     slug: "humanizer",
     description:
-      "A rules-based writing scrub that cleans AI tells and shows its work. OSS.",
+      "A rules-based scrub that protects your voice and facts while clearing AI tells. OSS.",
     repo: "https://github.com/milock/humanizer",
     url: "https://github.com/milock/humanizer",
     language: "Markdown",

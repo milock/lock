@@ -8,7 +8,7 @@ Senior Product Marketer - Healthcare and clinical/technical products - Storytell
 ## Experience
 
 ### Clarity RCM - Head of Marketing (Founding Marketer) - San Francisco, California - 2025 to Present
-- Built Clarity's positioning, messaging, and brand narrative from scratch, and produced the foundational assets that carry it: website, sales decks, and collateral. The work drove a 300% increase in qualified inbound, a 30% increase in win rate, and $7M in closed-won ARR (35% increase year over year).
+- Founder-led sales built Clarity's early base with no marketing function. I built that function from scratch - positioning, messaging, brand narrative, and the foundational assets that carry it (website, sales decks, collateral) - plus the inbound and win-rate engine that now compounds on top of that base: a 300% increase in qualified inbound, a 30% increase in win rate, and $7M in closed-won ARR (up 35% year over year).
 - Launched The Practice Layer, a weekly healthcare-industry newsletter, built a fully automated AI content generation pipeline, and grew it from zero to over 5,000 subscribers at a 53% open rate (3x the 16% category benchmark). This channel generated over $1.5M in pipeline within the first 3 months.
 - Managed a $150K events budget plus external vendors and agencies (PR, creative, video) to scale output without adding headcount, resulting in $3M ARR from new logos.
 - Spotted a reporting gap for practice users, validated demand, and vibe-coded a working prototype dashboard; it secured engineering investment and a roadmap commitment.

@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 const STARTERS = [
   "What have you shipped 0-to-1?",
   "How do you use AI to run a marketing team?",
+  "How do you get up to speed in a new domain?",
+  "How do you stay organized and focused?",
   "Why health-tech?",
 ];
 

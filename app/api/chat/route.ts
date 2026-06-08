@@ -160,7 +160,7 @@ export async function POST(req: Request) {
     model: anthropic("claude-haiku-4-5"),
     system: systemPrompt(),
     messages: await convertToModelMessages(slice),
-    temperature: 0.4,
+    temperature: 0.3,
     maxOutputTokens: 600,
     onFinish: async ({ text }) => {
       await logConversation({
