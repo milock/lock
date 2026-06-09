@@ -205,6 +205,25 @@ export const projects: Project[] = [
     href: "/projects/lock",
     type: "build",
   },
+  {
+    name: "ClarityOS Teaser Video",
+    slug: "clarityos-teaser",
+    description:
+      "4-act product teaser for the ClarityOS launch. I wrote and directed it.",
+    url: "https://www.youtube.com/watch?v=blr2TJk_XO8",
+    language: "Product Marketing",
+    href: "/projects/clarityos-teaser",
+    type: "marketing",
+  },
+  {
+    name: "Personal Memory System",
+    slug: "memory-system",
+    description:
+      "Long-term memory for my AI assistant: sync pipeline in, MCP server out.",
+    language: "TypeScript",
+    href: "/projects/memory-system",
+    type: "build",
+  },
 ];
 
 // Used by the number-ticker metrics tile.

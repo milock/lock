@@ -1,0 +1,64 @@
+---
+title: Personal Memory System
+slug: memory-system
+description: Two-part long-term memory infrastructure that gives my AI assistant durable recall across seven sources. A sync pipeline writes, a custom MCP server reads.
+repo: ""
+url: ""
+stack:
+  - TypeScript
+  - Trigger.dev
+  - Qdrant
+  - OpenAI Embeddings
+  - MCP
+  - Vercel
+language: TypeScript
+figma: ""
+---
+
+This is the memory layer underneath my AI assistant. It is two services I designed and built: a sync pipeline that indexes my work surface into a vector store, and a custom MCP server my assistant connects to so it can recall any of it on demand. It has run in production since April 2026.
+
+The code is private. Unlike my open-sourced tools, this one is wired into my actual email, meetings, and notes, so it stays in a private repo. What follows is how it works and why I made the calls I made.
+
+## Problem
+
+LLM context is ephemeral. Every session starts cold. My assistant runs my marketing function, research, competitive monitoring, content, but on its own it cannot remember last month's meeting, an email thread from Tuesday, or a framework it already learned and wrote down. The obvious workaround is to paste the relevant context in by hand at the start of every session. That does not scale, and it puts the burden on me to remember what the assistant needs to remember.
+
+So I needed durable memory: a place where everything that happens on my work surface gets stored, and a way for the assistant to pull back exactly the right piece when a question calls for it.
+
+## Solution
+
+Two services, split on purpose.
+
+The write side is a sync pipeline. It indexes seven sources on a cloud schedule and funnels all of them through one path into a single vector store, with the plumbing to skip work it has already done and to keep one bad source from taking down the rest.
+
+The read side is a custom MCP server my assistant and my scheduled cloud agents connect to as a cloud connector. It exposes a small set of tools for searching that store, getting a synthesized answer with sources, filtering by where a memory came from or when it happened, and writing new memories back.
+
+Splitting write and read into two independently deployable services means I can change how memory gets indexed without touching how it gets read, and the other way around. The pipeline runs on a cron. The server runs on demand. They have different failure modes and different deploy cadences, so they live apart.
+
+## Approach
+
+A few decisions carry the weight here.
+
+**A deliberate memory model.** Not everything belongs in a vector store. Episodic memory, what happened in a meeting or an email, cannot be re-derived later, so that goes in the store. Stable company facts, the kind of thing that lives in a markdown file and rarely changes, stay as files that a plain text search handles better and cheaper than embeddings. The assistant routes each question to the right place. Right tool for each kind of memory, rather than dumping everything into one bucket and hoping retrieval sorts it out.
+
+**Seven sources, one path in.** The pipeline indexes four episodic sources (Gmail, Slack, Fathom meeting summaries, Granola meeting notes) and three semantic ones (a private repo of distilled frameworks and research, past newsletter editions, and published blog posts, the last two pulled over RSS). It runs every three hours on weekdays, six times a day. Everything funnels through one embed-and-upsert path so the hard parts are written once and shared.
+
+**Idempotency by design.** Each memory gets a deterministic ID, an md5 of its source plus its original ID, so the same item always maps to the same point in the store. Re-running the pipeline never creates duplicates. On top of that, a content hash means an item that has not changed since the last sync skips embedding entirely, so I'm not paying the embedding API to re-process things that are already current. Safe to re-run, cheap to re-run.
+
+**Hybrid retrieval.** Every memory gets two vectors: a dense semantic embedding that captures meaning, and a sparse keyword vector that captures exact terms, computed on my side before upload. Both live in one Qdrant collection. At query time the two are fused with reciprocal rank fusion, so a search catches both the conceptually similar memory and the one that just happens to share the right keyword. A recency boost sits on top: older memories decay in the ranking, up to a 30% penalty past a year, so last week's meeting outranks a stale note that happens to match the words. Pure semantic search misses exact matches; pure keyword search misses paraphrase. Running both and fusing them is what makes recall feel reliable instead of lucky.
+
+**An annotation layer.** Items can carry a distilled what, why, where, and learned. Those fields get prepended to the raw text before embedding, so the lesson I pulled out of a meeting outranks the raw transcript when I search for it later. The distilled version is usually what I actually want back.
+
+**Resilience that fits a cron job.** Every external call has exponential backoff. When a batch trips a token limit, it bisects and recurses instead of failing the whole run. One source going down never blocks the other six. Anything that does fail pings me on Slack so I find out from a notification, not from a gap in recall weeks later. There were 127 unit tests at launch.
+
+The read side has its own guardrails. Its answer tool runs a search, then synthesizes a response with gpt-4o-mini and attributes every claim back to its source. A score threshold filters weak matches out before synthesis so the model is not reasoning over noise, and output gets truncated to stay inside tool-result size limits. Auth is stateless OAuth 2.1: Google login issues a 30-day JWT, and there is no persistent client store, which is the right shape for a serverless server where the identity check itself does the security work.
+
+**The timestamp lesson.** The first version stamped every memory with the time it was synced, not the time the underlying thing actually happened. It looked fine and it was quietly broken. Ask it "what did we discuss in March" and it would return things that were synced in March, regardless of when the meeting or email actually occurred. The recency boost was ranking on sync time too, so freshness was meaningless. The fix was a one-shot repair task that re-derived the real timestamp for every existing point and rewrote it in place, without re-embedding anything, since the vectors were correct and only the metadata was wrong. The lesson stuck: in a memory system, the time something actually happened is load-bearing for both filtering and ranking, and getting it wrong fails silently.
+
+This system replaced an earlier version I had built in n8n: three workflows, three sources, a six-hour cadence. I outgrew it. I needed more sources, real per-source failure isolation, and proper dedupe, and the rewrite to Trigger.dev and a custom server gave me all three.
+
+## Results
+
+In production for about two months. Seven sources, synced six times a day. 127 tests at launch. It powers both my interactive assistant and the scheduled cloud agents that run overnight, including the research pipeline and competitive bot elsewhere on this site, which query this memory as their long-term store.
+
+The practical payoff is the thing I notice every day. I can ask my assistant what I discussed with a specific person and get the actual conversation back. I can ask it to apply a framework it learned weeks ago and it recalls the distilled version I saved, down to the specifics. None of that requires me to load anything in first. The memory is already there before I ask, which was the whole reason to build it.
