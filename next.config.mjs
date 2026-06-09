@@ -20,6 +20,21 @@ const nextConfig = {
       { source: "/projects/:slug.md", destination: "/md/projects/:slug" },
     ];
   },
+  // The proposal project was renamed (slug change); keep old links working.
+  async redirects() {
+    return [
+      {
+        source: "/projects/alejandro-proposal",
+        destination: "/projects/client-proposal",
+        permanent: true,
+      },
+      {
+        source: "/projects/alejandro-proposal.md",
+        destination: "/projects/client-proposal.md",
+        permanent: true,
+      },
+    ];
+  },
 	images: {
     remotePatterns: [
       {

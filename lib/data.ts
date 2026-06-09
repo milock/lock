@@ -105,40 +105,9 @@ export type Project = {
   figma?: boolean;
 };
 
-// Ordered to alternate marketing and build cards as evenly as a 3:6 split
-// allows (M B B M B B M B B), so the badges never clump. Descriptions are kept
-// to a uniform ~65-72 characters so every card wraps to the same two lines.
+// Curated order (Michael's call, June 2026). Descriptions are kept to a
+// uniform ~65-72 characters so every card wraps to the same two lines.
 export const projects: Project[] = [
-  {
-    name: "Elation AI Scribe Launch",
-    slug: "elation-scribe",
-    description:
-      "0-to-1 GTM for the first AI scribe built inside the EMR. $3M ARR year one.",
-    language: "Product Marketing",
-    href: "/projects/elation-scribe",
-    type: "marketing",
-  },
-  {
-    name: "Clarity Ad Landing Pages",
-    slug: "clarity-landing-pages",
-    description:
-      "The Next.js ad-landing platform our paid search runs on. 52 to 90 on mobile.",
-    url: "https://get.clarityrcm.com",
-    language: "Web / Growth",
-    href: "/projects/clarity-landing-pages",
-    type: "build",
-  },
-  {
-    name: "Humanizer",
-    slug: "humanizer",
-    description:
-      "A rules-based scrub that protects your voice and facts while clearing AI tells. OSS.",
-    repo: "https://github.com/milock/humanizer",
-    url: "https://github.com/milock/humanizer",
-    language: "Markdown",
-    href: "/projects/humanizer",
-    type: "build",
-  },
   {
     name: "Clarity Website Refresh",
     slug: "clarity-website",
@@ -151,13 +120,51 @@ export const projects: Project[] = [
     figma: true,
   },
   {
-    name: "Alejandro Proposal Microsite",
-    slug: "alejandro-proposal",
+    name: "ClarityOS Teaser Video",
+    slug: "clarityos-teaser",
+    description:
+      "4-act product teaser for the ClarityOS launch. I wrote and directed it.",
+    url: "https://www.youtube.com/watch?v=blr2TJk_XO8",
+    language: "Product Marketing",
+    href: "/projects/clarityos-teaser",
+    type: "marketing",
+  },
+  {
+    name: "Personal Memory System",
+    slug: "memory-system",
+    description:
+      "Long-term memory for my AI assistant: sync pipeline in, MCP server out.",
+    language: "TypeScript",
+    href: "/projects/memory-system",
+    type: "build",
+  },
+  {
+    name: "Elation AI Scribe Launch",
+    slug: "elation-scribe",
+    description:
+      "0-to-1 GTM for the first AI scribe built inside the EMR. $3M ARR year one.",
+    language: "Product Marketing",
+    href: "/projects/elation-scribe",
+    type: "marketing",
+  },
+  {
+    name: "Thriftly",
+    slug: "thriftly",
+    description:
+      "Ranks every US Goodwill 0-100 on donation quality, from Census data.",
+    repo: "https://github.com/milock/thriftly",
+    url: "https://thriftly.xyz",
+    language: "TypeScript",
+    href: "/projects/thriftly",
+    type: "build",
+  },
+  {
+    name: "Client Proposal",
+    slug: "client-proposal",
     description:
       "The proposal built as the bilingual, interactive site it was pitching.",
-    url: "https://alejandro-proposal.vercel.app",
     language: "Web",
-    href: "/projects/alejandro-proposal",
+    href: "/projects/client-proposal",
     type: "build",
     figma: false,
   },
@@ -184,17 +191,6 @@ export const projects: Project[] = [
     figma: true,
   },
   {
-    name: "Thriftly",
-    slug: "thriftly",
-    description:
-      "Ranks every US Goodwill 0-100 on donation quality, from Census data.",
-    repo: "https://github.com/milock/thriftly",
-    url: "https://thriftly.xyz",
-    language: "TypeScript",
-    href: "/projects/thriftly",
-    type: "build",
-  },
-  {
     name: "Lock",
     slug: "lock",
     description:
@@ -206,22 +202,24 @@ export const projects: Project[] = [
     type: "build",
   },
   {
-    name: "ClarityOS Teaser Video",
-    slug: "clarityos-teaser",
+    name: "Clarity Ad Landing Pages",
+    slug: "clarity-landing-pages",
     description:
-      "4-act product teaser for the ClarityOS launch. I wrote and directed it.",
-    url: "https://www.youtube.com/watch?v=blr2TJk_XO8",
-    language: "Product Marketing",
-    href: "/projects/clarityos-teaser",
-    type: "marketing",
+      "The Next.js ad-landing platform our paid search runs on. 52 to 90 on mobile.",
+    url: "https://get.clarityrcm.com",
+    language: "Web / Growth",
+    href: "/projects/clarity-landing-pages",
+    type: "build",
   },
   {
-    name: "Personal Memory System",
-    slug: "memory-system",
+    name: "Humanizer",
+    slug: "humanizer",
     description:
-      "Long-term memory for my AI assistant: sync pipeline in, MCP server out.",
-    language: "TypeScript",
-    href: "/projects/memory-system",
+      "A rules-based scrub that protects your voice and facts while clearing AI tells. OSS.",
+    repo: "https://github.com/milock/humanizer",
+    url: "https://github.com/milock/humanizer",
+    language: "Markdown",
+    href: "/projects/humanizer",
     type: "build",
   },
 ];

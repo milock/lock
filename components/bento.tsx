@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import GitHubStars from "@/components/github-stars";
 import { ContactButtons } from "@/components/contact-button";
-import { PageActions } from "@/components/page-actions";
+import { PageActionsCompact } from "@/components/page-actions";
 import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
 import { RevealCard } from "@/components/reveal-card";
@@ -146,7 +146,10 @@ const features = [
 
         <div className="absolute right-0 top-0 z-50">
           <FadeIn direction="down">
-            <ThemeToggle />
+            <div className="flex items-center">
+              <PageActionsCompact mdPath="/llms.txt" />
+              <ThemeToggle />
+            </div>
           </FadeIn>
         </div>
       </>
@@ -188,16 +191,6 @@ const features = [
           </div>
         </div>
 
-        <FadeIn
-          direction="right"
-          framerProps={{
-            show: { transition: { delay: 1.5 } },
-          }}
-        >
-          <div className="absolute right-2 top-2 z-20">
-            <PageActions mdPath="/index.md" />
-          </div>
-        </FadeIn>
       </div>
     ),
   },

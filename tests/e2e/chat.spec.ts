@@ -66,10 +66,10 @@ test.describe("chat API (grounded assistant)", () => {
     });
     expect(res.status()).toBe(200);
     const text = streamedText(await res.text()).toLowerCase();
-    // It must NOT actually answer the weather...
-    expect(text).not.toMatch(
-      /sunny|raining|cloudy|forecast|degrees|celsius|fahrenheit/
-    );
+    // It must NOT actually answer the weather. (Topic words like "forecast"
+    // can legitimately appear while declining - "weather forecasts aren't in
+    // my wheelhouse" - so only match terms that imply a real answer.)
+    expect(text).not.toMatch(/sunny|raining|cloudy|degrees|celsius|fahrenheit/);
     // ...and should point back to his work or how to reach him.
     expect(text).toMatch(
       /work|experience|project|background|resume|reach|email|linkedin/

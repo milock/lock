@@ -91,8 +91,13 @@ export function homeMarkdown(): string {
   ].join("\n");
 }
 
-/** The root llms.txt: a concise index linking to every Markdown page. */
+/** The root llms.txt: the home page's content plus an index of every
+ *  Markdown page, so one fetch gives a model both the resume and the map. */
 export function llmsIndex(): string {
+  const exp = experience
+    .map((e) => `- **${e.company}** — ${e.title} (${e.period}). ${e.metric}`)
+    .join("\n");
+
   const projects = getAllProjects()
     .map(
       (p) => `- [${p.title}](${BASE}/projects/${p.slug}.md): ${p.description}`
@@ -104,13 +109,21 @@ export function llmsIndex(): string {
     ``,
     `> ${profile.tagline}`,
     ``,
-    `${profile.headline}. Based in ${profile.locationLong}. This is the llms.txt for ${BASE} — a guide for language models, with a Markdown version of every page linked below.`,
+    `${profile.headline}. Based in ${profile.locationLong}. This is the llms.txt for ${BASE} — the home page's content plus a Markdown version of every page, linked under Pages below.`,
     ``,
-    `## Overview`,
+    `## About`,
+    ``,
+    about,
+    ``,
+    `## Experience`,
+    ``,
+    exp,
+    ``,
+    `## Pages`,
     ``,
     `- [Home — resume, experience, and selected work](${BASE}/index.md)`,
     ``,
-    `## Projects`,
+    `### Projects`,
     ``,
     projects,
     ``,

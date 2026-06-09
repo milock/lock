@@ -7,7 +7,7 @@ const PROJECTS = [
   { slug: "clarity-website", title: "Clarity Website Refresh" },
   { slug: "clarity-landing-pages", title: "Clarity Ad Landing Pages" },
   { slug: "sizzle-reel", title: "AAD 2026 Sizzle Reel" },
-  { slug: "alejandro-proposal", title: "Alejandro Proposal Microsite" },
+  { slug: "client-proposal", title: "Client Proposal Microsite" },
   { slug: "humanizer", title: "Humanizer" },
   { slug: "polysearch", title: "Polysearch" },
   { slug: "thriftly", title: "Thriftly" },

@@ -7,6 +7,8 @@ import {
   CopyIcon,
   ArrowTopRightIcon,
 } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+import { useHoverMenu } from "@/components/use-hover-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +17,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// "Copy page" split button for project pages: the label copies the page's
-// markdown, the chevron opens copy / view-as-markdown / open-in-ChatGPT /
-// open-in-Claude. `mdPath` is the page's markdown route (e.g.
-// "/projects/thriftly.md", served by app/md via rewrite).
+// "Copy page" actions: copy the page's markdown, view it raw, or open it in
+// ChatGPT / Claude. Two forms:
+//   - default: split button (label copies, chevron opens the menu) — project pages
+//   - compact: icon-only button styled like the theme toggle that opens the
+//     menu on hover — home page (where mdPath is /llms.txt)
+// `mdPath` is the page's markdown route, served by app/md via rewrite.
 
 function OpenAIMark({ className }: { className?: string }) {
   return (
@@ -36,13 +40,7 @@ function ClaudeMark({ className }: { className?: string }) {
   );
 }
 
-export function PageActions({
-  mdPath,
-  className = "",
-}: {
-  mdPath: string;
-  className?: string;
-}) {
+function useCopyMarkdown(mdPath: string) {
   const [copied, setCopied] = useState(false);
 
   async function copyMarkdown() {
@@ -58,11 +56,138 @@ export function PageActions({
     }
   }
 
-  function aiUrl(base: string) {
-    const mdUrl = `${window.location.origin}${mdPath}`;
-    const q = encodeURIComponent(`Read ${mdUrl} and answer questions about the content.`);
-    return `${base}?q=${q}`;
-  }
+  return { copied, copyMarkdown };
+}
+
+function aiUrl(base: string, mdPath: string) {
+  const mdUrl = `${window.location.origin}${mdPath}`;
+  const q = encodeURIComponent(`Read ${mdUrl} and answer questions about the content.`);
+  return `${base}?q=${q}`;
+}
+
+function MenuItems({
+  mdPath,
+  copied,
+  copyMarkdown,
+}: {
+  mdPath: string;
+  copied: boolean;
+  copyMarkdown: () => void;
+}) {
+  return (
+    <>
+      <DropdownMenuItem onClick={copyMarkdown} className="gap-3 py-2.5">
+        {copied ? (
+          <CheckIcon className="h-4 w-4 shrink-0 text-emerald-500" />
+        ) : (
+          <CopyIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+        )}
+        <span className="flex flex-col">
+          <span>{copied ? "Copied" : "Copy page"}</span>
+          <span className="text-xs text-muted-foreground">
+            Copy page as Markdown for LLMs
+          </span>
+        </span>
+      </DropdownMenuItem>
+      <DropdownMenuItem asChild className="gap-3 py-2.5">
+        <a href={mdPath} target="_blank" rel="noreferrer">
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border border-muted-foreground/60 font-mono text-[8px] font-bold leading-none text-muted-foreground">
+            M↓
+          </span>
+          <span className="flex flex-col">
+            <span className="inline-flex items-center gap-1">
+              View as Markdown
+              <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
+            </span>
+            <span className="text-xs text-muted-foreground">
+              View this page as plain text
+            </span>
+          </span>
+        </a>
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        className="gap-3 py-2.5"
+        onClick={() => window.open(aiUrl("https://chat.openai.com/", mdPath), "_blank")}
+      >
+        <OpenAIMark className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="flex flex-col">
+          <span className="inline-flex items-center gap-1">
+            Open in ChatGPT
+            <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Ask ChatGPT about this page
+          </span>
+        </span>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="gap-3 py-2.5"
+        onClick={() => window.open(aiUrl("https://claude.ai/new", mdPath), "_blank")}
+      >
+        <ClaudeMark className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="flex flex-col">
+          <span className="inline-flex items-center gap-1">
+            Open in Claude
+            <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Ask Claude about this page
+          </span>
+        </span>
+      </DropdownMenuItem>
+    </>
+  );
+}
+
+/** Icon-only form that matches the theme toggle and opens on hover. */
+export function PageActionsCompact({ mdPath }: { mdPath: string }) {
+  const { copied, copyMarkdown } = useCopyMarkdown(mdPath);
+  const { open, setOpen, enter, leave, pointerDown } = useHoverMenu();
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger
+        asChild
+        onPointerEnter={enter}
+        onPointerLeave={leave}
+        onPointerDown={pointerDown}
+        onClick={(e) => {
+          // Mouse: the menu is already open from hover, so a click on the
+          // copy icon copies. Touch (no hover) keeps tap = toggle menu.
+          const pt = (e.nativeEvent as PointerEvent).pointerType;
+          if (pt === "mouse" || pt === undefined) copyMarkdown();
+        }}
+      >
+        <Button variant="none" size="icon" aria-label="Copy page / open in AI">
+          {copied ? (
+            <CheckIcon className="h-[1.1rem] w-[1.1rem] text-emerald-500" />
+          ) : (
+            <CopyIcon className="h-[1.1rem] w-[1.1rem]" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="w-64"
+        onPointerEnter={enter}
+        onPointerLeave={leave}
+      >
+        <MenuItems mdPath={mdPath} copied={copied} copyMarkdown={copyMarkdown} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/** Split-button form used on project pages. */
+export function PageActions({
+  mdPath,
+  className = "",
+}: {
+  mdPath: string;
+  className?: string;
+}) {
+  const { copied, copyMarkdown } = useCopyMarkdown(mdPath);
 
   return (
     <div
@@ -89,62 +214,7 @@ export function PageActions({
           <ChevronDownIcon className="h-3.5 w-3.5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-64">
-          <DropdownMenuItem onClick={copyMarkdown} className="gap-3 py-2.5">
-            <CopyIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <span className="flex flex-col">
-              <span>Copy page</span>
-              <span className="text-xs text-muted-foreground">
-                Copy page as Markdown for LLMs
-              </span>
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="gap-3 py-2.5">
-            <a href={mdPath} target="_blank" rel="noreferrer">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] border border-muted-foreground/60 font-mono text-[8px] font-bold leading-none text-muted-foreground">
-                M↓
-              </span>
-              <span className="flex flex-col">
-                <span className="inline-flex items-center gap-1">
-                  View as Markdown
-                  <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  View this page as plain text
-                </span>
-              </span>
-            </a>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="gap-3 py-2.5"
-            onClick={() => window.open(aiUrl("https://chat.openai.com/"), "_blank")}
-          >
-            <OpenAIMark className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <span className="flex flex-col">
-              <span className="inline-flex items-center gap-1">
-                Open in ChatGPT
-                <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
-              </span>
-              <span className="text-xs text-muted-foreground">
-                Ask ChatGPT about this page
-              </span>
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="gap-3 py-2.5"
-            onClick={() => window.open(aiUrl("https://claude.ai/new"), "_blank")}
-          >
-            <ClaudeMark className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <span className="flex flex-col">
-              <span className="inline-flex items-center gap-1">
-                Open in Claude
-                <ArrowTopRightIcon className="h-3 w-3 text-muted-foreground" />
-              </span>
-              <span className="text-xs text-muted-foreground">
-                Ask Claude about this page
-              </span>
-            </span>
-          </DropdownMenuItem>
+          <MenuItems mdPath={mdPath} copied={copied} copyMarkdown={copyMarkdown} />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
