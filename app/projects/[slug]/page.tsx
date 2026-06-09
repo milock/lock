@@ -64,6 +64,11 @@ export default function ProjectPage({ params }: PageProps) {
 
   const hasLiveSite =
     project.url && project.url !== project.repo && !project.url.includes("github.com");
+  // Label the external link by what it actually is - YouTube urls get a
+  // video-appropriate label instead of "Live site".
+  const liveLabel = project.url?.includes("youtube.com")
+    ? "Watch the video"
+    : "Live site";
 
   return (
     <div className="relative min-h-screen bg-background">
@@ -131,7 +136,7 @@ export default function ProjectPage({ params }: PageProps) {
                 rel="noreferrer"
                 className="group inline-flex items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
               >
-                Live site
+                {liveLabel}
                 <ArrowTopRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             )}
