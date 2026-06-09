@@ -11,6 +11,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
 import { mdxOptions } from "@/lib/mdx-options";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import { PageActions } from "@/components/page-actions";
 import {
   MemoryArchitectureDiagram,
   IngestFlowDiagram,
@@ -76,13 +77,16 @@ export default function ProjectPage({ params }: PageProps) {
       </div>
 
       <main className="relative mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
-        <Link
-          href="/"
-          className="group mb-10 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-          Back
-        </Link>
+        <div className="mb-10 flex items-center justify-between">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            Back
+          </Link>
+          <PageActions mdPath={`/projects/${params.slug}.md`} />
+        </div>
 
         <header className="mb-12">
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">

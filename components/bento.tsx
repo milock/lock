@@ -32,7 +32,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import GitHubStars from "@/components/github-stars";
-import { ContactButtons, OpenToRoles } from "@/components/contact-button";
+import { ContactButtons } from "@/components/contact-button";
+import { PageActions } from "@/components/page-actions";
 import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
 import { RevealCard } from "@/components/reveal-card";
@@ -193,7 +194,9 @@ const features = [
             show: { transition: { delay: 1.5 } },
           }}
         >
-          <OpenToRoles />
+          <div className="absolute right-2 top-2 z-20">
+            <PageActions mdPath="/index.md" />
+          </div>
         </FadeIn>
       </div>
     ),
