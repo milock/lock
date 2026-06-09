@@ -15,11 +15,11 @@ language: TypeScript
 figma: ""
 ---
 
-This is the memory layer underneath my AI assistant. It is two services I designed and built: a sync pipeline that indexes my work surface into a vector store, and a custom MCP server my assistant connects to so it can recall any of it on demand. It has run in production since April 2026.
+This is the memory layer underneath my AI assistant. It's two services I designed and built: a sync pipeline that indexes my work surface into a vector store, and a custom MCP server my assistant connects to so it can recall any of it on demand. It has run in production since April 2026.
 
 ## Problem
 
-LLM context is ephemeral. Every session starts cold. My assistant runs my marketing function, research, competitive monitoring, content, but on its own it cannot remember last month's meeting, an email thread from Tuesday, or a framework it already learned and wrote down. The obvious workaround is to paste the relevant context in by hand at the start of every session. That does not scale, and it puts the burden on me to remember what the assistant needs to remember.
+LLM context is ephemeral. Every session starts cold. My assistant runs my marketing function, research, competitive monitoring, content, but on its own it can't remember last month's meeting, an email thread from Tuesday, or a framework it already learned and wrote down. The obvious workaround is to paste the relevant context in by hand at the start of every session. That doesn't scale, and it puts the burden on me to remember what the assistant needs to remember.
 
 So I needed durable memory: a place where everything that happens on my work surface gets stored, and a way for the assistant to pull back exactly the right piece when a question calls for it.
 
