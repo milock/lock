@@ -11,9 +11,20 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
 import { mdxOptions } from "@/lib/mdx-options";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import {
+  MemoryArchitectureDiagram,
+  IngestFlowDiagram,
+  RetrievalFlowDiagram,
+} from "@/components/memory-diagrams";
 
-// Custom components available to MDX project bodies (e.g. responsive video embeds).
-const mdxComponents = { YouTubeEmbed };
+// Custom components available to MDX project bodies (e.g. responsive video
+// embeds, schematic diagrams).
+const mdxComponents = {
+  YouTubeEmbed,
+  MemoryArchitectureDiagram,
+  IngestFlowDiagram,
+  RetrievalFlowDiagram,
+};
 
 interface PageProps {
   params: { slug: string };

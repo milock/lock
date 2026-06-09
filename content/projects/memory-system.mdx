@@ -33,6 +33,8 @@ The read side is a custom MCP server my assistant and my scheduled cloud agents 
 
 Splitting write and read into two independently deployable services means I can change how memory gets indexed without touching how it gets read, and the other way around. The pipeline runs on a cron. The server runs on demand. They have different failure modes and different deploy cadences, so they live apart.
 
+<MemoryArchitectureDiagram />
+
 ## Approach
 
 A few decisions carry the weight here.
@@ -43,7 +45,11 @@ A few decisions carry the weight here.
 
 **Idempotency by design.** Each memory gets a deterministic ID, an md5 of its source plus its original ID, so the same item always maps to the same point in the store. Re-running the pipeline never creates duplicates. On top of that, a content hash means an item that has not changed since the last sync skips embedding entirely, so I'm not paying the embedding API to re-process things that are already current. Safe to re-run, cheap to re-run.
 
+<IngestFlowDiagram />
+
 **Hybrid retrieval.** Every memory gets two vectors: a dense semantic embedding that captures meaning, and a sparse keyword vector that captures exact terms, computed on my side before upload. Both live in one Qdrant collection. At query time the two are fused with reciprocal rank fusion, so a search catches both the conceptually similar memory and the one that just happens to share the right keyword. A recency boost sits on top: older memories decay in the ranking, up to a 30% penalty past a year, so last week's meeting outranks a stale note that happens to match the words. Pure semantic search misses exact matches; pure keyword search misses paraphrase. Running both and fusing them is what makes recall feel reliable instead of lucky.
+
+<RetrievalFlowDiagram />
 
 **An annotation layer.** Items can carry a distilled what, why, where, and learned. Those fields get prepended to the raw text before embedding, so the lesson I pulled out of a meeting outranks the raw transcript when I search for it later. The distilled version is usually what I actually want back.
 
