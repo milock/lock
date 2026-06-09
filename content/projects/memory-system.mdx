@@ -17,8 +17,6 @@ figma: ""
 
 This is the memory layer underneath my AI assistant. It is two services I designed and built: a sync pipeline that indexes my work surface into a vector store, and a custom MCP server my assistant connects to so it can recall any of it on demand. It has run in production since April 2026.
 
-The code is private. Unlike my open-sourced tools, this one is wired into my actual email, meetings, and notes, so it stays in a private repo. What follows is how it works and why I made the calls I made.
-
 ## Problem
 
 LLM context is ephemeral. Every session starts cold. My assistant runs my marketing function, research, competitive monitoring, content, but on its own it cannot remember last month's meeting, an email thread from Tuesday, or a framework it already learned and wrote down. The obvious workaround is to paste the relevant context in by hand at the start of every session. That does not scale, and it puts the burden on me to remember what the assistant needs to remember.
