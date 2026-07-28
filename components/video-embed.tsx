@@ -26,7 +26,7 @@ export function VideoEmbed({
       style={{ aspectRatio }}
     >
       <video
-        className="absolute inset-0 h-full w-full"
+        className="absolute inset-0 h-full w-full rounded-xl"
         src={src}
         poster={poster}
         title={title}
