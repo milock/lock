@@ -11,6 +11,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
 import { mdxOptions } from "@/lib/mdx-options";
 import { YouTubeEmbed } from "@/components/youtube-embed";
+import { VideoEmbed } from "@/components/video-embed";
 import { PageActions } from "@/components/page-actions";
 import {
   MemoryArchitectureDiagram,
@@ -22,6 +23,7 @@ import {
 // embeds, schematic diagrams).
 const mdxComponents = {
   YouTubeEmbed,
+  VideoEmbed,
   MemoryArchitectureDiagram,
   IngestFlowDiagram,
   RetrievalFlowDiagram,
