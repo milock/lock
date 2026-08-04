@@ -18,9 +18,10 @@ export function AvatarDisc({ className }: { className?: string }) {
         className={cn(
           "group/disc relative grid place-items-center overflow-hidden rounded-full",
           "h-24 w-24 sm:h-28 sm:w-28",
-          // Warm near-white disc so the black line-art portrait reads clearly;
-          // matches the cream signature disc used elsewhere in the bento.
-          "bg-[radial-gradient(120%_120%_at_30%_20%,#ffffff_0%,#faf3e6_55%,#f1e8d7_100%)]",
+          // White disc in light mode; the site's off-white cream in dark mode
+          // (same #faf3e6 as the signature disc) so the black line-art portrait
+          // always sits on a light surface.
+          "bg-white dark:bg-[#faf3e6]",
           // Soft dark hairline keeps the light disc from bleeding into light
           // tiles; the drop shadow lifts it off dark ones.
           "ring-1 ring-black/10 ring-inset",
