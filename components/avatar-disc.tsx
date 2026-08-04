@@ -18,10 +18,10 @@ export function AvatarDisc({ className }: { className?: string }) {
         className={cn(
           "group/disc relative grid place-items-center overflow-hidden rounded-full",
           "h-24 w-24 sm:h-28 sm:w-28",
-          // White disc in light mode; the site's off-white cream in dark mode
-          // (same #faf3e6 as the signature disc) so the black line-art portrait
-          // always sits on a light surface.
-          "bg-white dark:bg-[#faf3e6]",
+          // White disc in light mode; dark mode matches the heading text color
+          // (neutral-200). The portrait's face is transparent, so the disc
+          // color fills the face uniformly in both themes.
+          "bg-white dark:bg-neutral-200",
           // Soft dark hairline keeps the light disc from bleeding into light
           // tiles; the drop shadow lifts it off dark ones.
           "ring-1 ring-black/10 ring-inset",
