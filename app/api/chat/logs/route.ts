@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import { readConversations } from "@/lib/db";
 
 export const runtime = "nodejs";
@@ -11,12 +12,14 @@ function esc(s: string): string {
 }
 
 // Private, token-gated view of visitor conversations:
-//   /api/chat/logs?key=YOUR_LOGS_TOKEN
+//   Authorization: Bearer YOUR_LOGS_TOKEN (never put the token in a URL)
 export async function GET(req: Request) {
   const token = process.env.LOGS_TOKEN;
-  const key = new URL(req.url).searchParams.get("key") || "";
-  if (!token || key !== token) {
-    return new Response("unauthorized", { status: 401 });
+  const key = req.headers.get("authorization")?.match(/^Bearer (\S+)$/i)?.[1];
+  const headers = { "cache-control": "no-store", "referrer-policy": "no-referrer", "x-content-type-options": "nosniff" };
+  const digest = (s: string) => createHash("sha256").update(s).digest();
+  if (!token || !key || !timingSafeEqual(digest(key), digest(token))) {
+    return new Response("unauthorized", { status: 401, headers });
   }
 
   let convos;
@@ -25,6 +28,7 @@ export async function GET(req: Request) {
   } catch {
     return new Response("logs unavailable (is DATABASE_URL set?)", {
       status: 500,
+      headers,
     });
   }
 
@@ -70,6 +74,7 @@ export async function GET(req: Request) {
 
   return new Response(html, {
     headers: {
+      ...headers,
       "content-type": "text/html; charset=utf-8",
       "cache-control": "no-store",
     },

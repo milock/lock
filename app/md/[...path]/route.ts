@@ -14,11 +14,11 @@ export function generateStaticParams() {
   ];
 }
 
-export function GET(
+export async function GET(
   _req: Request,
-  { params }: { params: { path?: string[] } }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
-  const segs = params.path ?? [];
+  const segs = (await params).path ?? [];
 
   let body: string | null = null;
   if (segs.length === 1 && segs[0] === "home") {

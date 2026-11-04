@@ -3,12 +3,17 @@
 export const RESUME = `# Michael Lock
 
 San Diego, California - themichaellock@gmail.com - linkedin.com/in/michael--lock/
-Senior Product Marketer - Healthcare and clinical/technical products - Storytelling, positioning, and 0-to-1 launches.
+Principal Product Marketer at Super Green - Healthcare and clinical/technical products - Positioning, narrative, and 0-to-1 launches.
 
 ## Experience
 
-### Clarity RCM - Head of Marketing (Founding Marketer) - San Francisco, California - 2025 to Present
-- Founder-led sales built Clarity's early base with no marketing function. I built that function from scratch - positioning, messaging, brand narrative, and the foundational assets that carry it (website, sales decks, collateral) - plus the inbound and win-rate engine that now compounds on top of that base: a 300% increase in qualified inbound, a 30% increase in win rate, and $7M in closed-won ARR (up 35% year over year).
+### Super Green - Principal Product Marketer - August 24, 2026 to Present
+- Current employer. Super Green is a go-to-market studio for health-tech startups.
+- I own narrative and positioning for health-tech clients, then partner with in-house creative to execute.
+- My work includes positioning, sales decks, website messaging, case studies, and customer and technical content.
+
+### Clarity RCM - Head of Marketing (Founding Marketer) - San Francisco, California - Previous role, started 2025
+- Founder-led sales built Clarity's early base with no marketing function. I built that function from scratch - positioning, messaging, brand narrative, and the foundational assets that carry it (website, sales decks, collateral) - plus the inbound and win-rate engine I built on top of that base: a 300% increase in qualified inbound, a 30% increase in win rate, and $7M in closed-won ARR (up 35% year over year).
 - Launched The Practice Layer, a weekly healthcare-industry newsletter, built a fully automated AI content generation pipeline, and grew it from zero to over 5,000 subscribers at a 53% open rate (3x the 16% category benchmark). This channel generated over $1.5M in pipeline within the first 3 months.
 - Managed a $150K events budget plus external vendors and agencies (PR, creative, video) to scale output without adding headcount, resulting in $3M ARR from new logos.
 - Spotted a reporting gap for practice users, validated demand, and vibe-coded a working prototype dashboard; it secured engineering investment and a roadmap commitment.

@@ -13,17 +13,17 @@ Learning a new corner of an industry is the thing I keep doing on purpose, every
 
 Fresh eyes help early. I haven't absorbed the assumptions everyone inside already shares, so I tend to ask the questions that get skipped. Curiosity plus a credible ramp beats faking fluency, every time. And customer discovery is the spine of all of it. If I haven't talked to a customer in a few weeks, I'm not really doing the job.
 
-## Why I want a hands-on, craft-heavy seat
+## What I do now
 
-I've run the function already. Strategy, hiring, the org chart. I've done that job and I don't want a bigger version of it. I want range and craft. A hands-on seat gives me more shots on goal and puts me next to people I'll learn from.
+I'm Principal Product Marketer at Super Green, a go-to-market studio for health-tech startups. I joined on August 24, 2026. My part is the story: positioning, narrative, and messaging. I work on sales decks, website messaging, case studies, and customer and technical content, then partner with our creative team to bring the work to life.
 
-I do my best work at the front edge of something, and I'm happiest in the actual work. The positioning, the narrative, the build. Not managing a calendar. For me, ambition means broader and sharper, not higher up the org chart.
+The work draws on what I've done in-house across healthcare compliance, clinical software, and revenue cycle management. I like getting into a complex product, talking to the people who use it, and finding the explanation that makes the value clear without losing the substance.
 
 ## How I stay organized and handle volume
 
-I know the parts I'm not naturally great at. The high-volume, repeatable, easy-to-drop-a-ball stuff. So I built around them. I run my whole marketing function on a multi-agent AI system I built myself, covering research, competitive monitoring, and content.
+I know the parts I'm not naturally great at. The high-volume, repeatable, easy-to-drop-a-ball stuff. So I built around them. I use a multi-agent AI system I built to support research, writing, and keeping track of work.
 
-Here's one piece of it. I have a competitive-research agent on a schedule that scrapes competitors every week, diffs the results against the prior week, and posts a ranked list of the top things to watch into Slack. I open-sourced two of the tools. When something keeps slipping, my instinct is to go build the thing that catches it rather than promise myself I'll be more careful. I systematize the repeatable parts so my attention can go to the craft.
+I've open-sourced Humanizer and Polysearch so other people can use parts of that workflow. When something keeps slipping, my instinct is to build a way to catch it. I systematize the repeatable parts so my attention can go to the craft.
 
 ## A launch I'm proud of (the Elation AI scribe)
 
@@ -47,16 +47,10 @@ Reframe before you reach for a feature list. Earn the premium by selling the out
 
 I bring evidence, I disagree directly but with care, and I know when to defer. The version I'm proud of is when the work or the relationship came out stronger because I pushed. Pushing without evidence is just friction, so I do the homework first.
 
-## Why I'd make a move
-
-I finished the build. The function runs. Nothing's on fire, so I'm not running from anything, I'm walking toward the next thing. I want range and craft next.
-
-What pulls me toward a company is the mission or category, ideally something I haven't seen done well yet. More surface area and more shots on goal than I've had. A high craft bar in the people I'd work with. And a place that's AI-native by default, instead of one I'd have to drag an old org toward.
-
 ## Where I am and how I work
 
-I'm in San Diego on Pacific time. I already work East-Coast-leaning hours and I'm happy to anchor to Eastern for team or client overlap. Travel every month or two is a plus for me, not a problem.
+I'm based in San Diego, California. I work with distributed teams and partner with creative colleagues to execute the positioning and narrative work.
 
 ## How I show up
 
-I'm a curious, humble operator. I reframe before I pitch, I build AI systems to do more with less, and I name my gaps honestly instead of papering over them. I ask real questions. Curiosity is what gets me hired. The credentials just get me in the room.`;
+I'm a curious, humble operator. I reframe before I pitch, I build AI systems to do more with less, and I name my gaps honestly instead of papering over them. I ask real questions. I want to understand the product and the people using it before I decide how to tell the story.`;

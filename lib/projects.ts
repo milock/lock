@@ -28,6 +28,7 @@ function getProjectFiles(): string[] {
 }
 
 function readProject(slug: string): Project | null {
+  if (!/^[a-z0-9-]+$/.test(slug)) return null;
   const fullPath = path.join(PROJECTS_DIR, `${slug}.mdx`);
   if (!fs.existsSync(fullPath)) return null;
 

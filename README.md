@@ -73,6 +73,7 @@ pnpm dev          # http://localhost:3000
 pnpm build        # production build
 pnpm start        # serve the production build
 pnpm test:e2e     # run the Playwright suite
+pnpm test:security # offline input/auth regression tests
 ```
 
 ## Content
@@ -95,3 +96,34 @@ Copy `.env.example` to `.env.local` and fill it in. `.env.local` is gitignored â
 ## License
 
 MIT â€” see [`LICENSE`](LICENSE). The content and personal branding are mine; the code is free to learn from.
+
+## Chat operations
+
+Set `ANTHROPIC_API_KEY` as a server-only production variable in Vercel. A changed
+variable takes effect on a new deployment. If the key is not scoped to a workspace,
+also set `ANTHROPIC_WORKSPACE_ID` to the intended `wrkspc_...` ID. Use an Anthropic workspace spending
+limit and retain the edge rate-limit rule; application limits are per instance.
+
+Optional conversation logging uses `DATABASE_URL`. The admin endpoint now accepts
+`Authorization: Bearer <LOGS_TOKEN>` only. URLs containing `?key=` no longer work.
+Rotate an existing `LOGS_TOKEN` when deploying this change because previous URLs
+may have been retained in browser history and request logs. All admin responses
+are marked `no-store` and `no-referrer`.
+
+`CHAT_IP_HASH_SECRET` is optional. Set a separate random secret to enable keyed IP
+hashes; otherwise new records omit IP hashes. Old database records are unchanged.
+The chat displays a retention notice. A database retention period still needs to
+be chosen; this update does not delete conversations.
+
+Security dependency overrides are in `pnpm-workspace.yaml`. Keep this file with
+the lockfile. Browser tests require `pnpm exec playwright install chromium`.
+
+## Refreshing the resume
+
+The downloadable PDF is generated from `lib/knowledge/resume.ts`, so the chat and
+resume use the same factual career history. Run `python3 scripts/build-resume.py`
+with ReportLab installed, then visually review both pages of
+`public/michael-lock-resume.pdf`. Homepage profile/experience lives in `lib/data.ts`.
+Current-role details were refreshed on November 4, 2026 from Michael's supplied
+role and profile. Historical achievement figures retain their previously
+published resume wording; no new client names or outcomes were added.

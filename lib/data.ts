@@ -3,9 +3,9 @@
 export const profile = {
   name: "Michael Lock",
   headline:
-    "Health-tech product marketing leader · Storytelling, positioning & 0-to-1 launches · AI-native operator",
+    "Principal Product Marketer at Super Green · Positioning and narrative for health-tech",
   tagline:
-    "I build the function, the launch, and the AI system that runs both.",
+    "I help health-tech teams explain what they do, why it matters, and why someone should choose them.",
   location: "San Diego, CA",
   locationLong: "San Diego, California",
   email: "themichaellock@gmail.com",
@@ -24,13 +24,23 @@ export const profile = {
 
 // Short, first-person bio (condensed from LinkedIn About).
 export const about =
-  "I build the thing from nothing: the marketing function, the product launch, and now the AI system that runs the work. I've stood up product marketing from zero at three companies, led two 0-to-1 launches to $8M+ combined ARR, and I run a marketing function on a self-built multi-agent system, with two of the tools open-sourced. Deep healthcare and vertical SaaS.";
+  "I'm Principal Product Marketer at Super Green, a go-to-market studio for health-tech startups. I work on positioning and narrative, then partner with our creative team to bring the story into decks, websites, and customer content. Before that, I built marketing functions and launched healthcare products at Clarity RCM, Elation Health, and 360training. I also build AI tools for research, writing, and the day-to-day work around them.";
 
+// Current role confirmed by Michael on 2026-11-04. No client names included.
 export const experience = [
+  {
+    company: "Super Green",
+    title: "Principal Product Marketer",
+    period: "Aug 2026-Present",
+    badges: ["Health-tech"],
+    logoDomain: "super.green",
+    url: "https://super.green",
+    metric: "Own narrative and positioning for health-tech startups, partnering with in-house creative to execute.",
+  },
   {
     company: "Clarity RCM",
     title: "Head of Marketing (Founding Marketer)",
-    period: "2025-Present",
+    period: "Previous role · started 2025",
     badges: ["Founding marketer", "$20M ARR"],
     logoDomain: "clarityrcm.com",
     url: "https://clarityrcm.com",
@@ -205,7 +215,7 @@ export const projects: Project[] = [
     name: "Clarity Ad Landing Pages",
     slug: "clarity-landing-pages",
     description:
-      "The Next.js ad-landing platform our paid search runs on. 52 to 90 on mobile.",
+      "The Next.js landing platform I built at Clarity. Mobile score: 52 to 90.",
     url: "https://get.clarityrcm.com",
     language: "Web / Growth",
     href: "/projects/clarity-landing-pages",
@@ -244,6 +254,7 @@ export const stack: StackTool[] = [
   // AI / build
   { name: "Claude", slug: "anthropic" },
   { name: "OpenAI", slug: null },
+  { name: "Codex", slug: null },
   { name: "Cursor", slug: "cursor" },
   { name: "Python", slug: "python" },
   { name: "TypeScript", slug: "typescript" },
@@ -278,11 +289,11 @@ export const stack: StackTool[] = [
 
 // Michael's focus areas (rendered in the focus-areas marquee tile).
 export const focusAreas = [
-  { name: "Go-to-Market", body: "0-to-1 launches, positioning, and category strategy." },
+  { name: "Go-to-Market", body: "Positioning, narrative, and launches for health-tech teams." },
   { name: "Pricing & Packaging", body: "Good-better-best architecture; attach-rate and ARPA lift." },
   { name: "Competitive Intel", body: "Teardowns, battlecards, and win/loss that move win rates." },
-  { name: "AI-Native Ops", body: "Multi-agent workflows that deliver a team's output, solo." },
-  { name: "Demand & Content", body: "A weekly newsletter grown from zero to 5,000+ subscribers." },
+  { name: "AI-Native Ops", body: "Research and writing workflows, with human judgment at each handoff." },
+  { name: "Demand & Content", body: "Customer stories, technical content, and a clear editorial point of view." },
   { name: "Product", body: "A self-built prototype that became a funded roadmap product." },
 ];
 

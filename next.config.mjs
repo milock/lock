@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-Frame-Options", value: "DENY" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Content-Security-Policy", value: "object-src 'none'; base-uri 'self'; frame-ancestors 'none'" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+    ] }];
+  },
   // Restore scroll position on browser back/forward instead of jumping to the
   // top — so returning from a project page lands roughly where you left off.
   experimental: {

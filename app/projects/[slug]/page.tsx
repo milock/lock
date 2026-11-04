@@ -30,15 +30,16 @@ const mdxComponents = {
 };
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const project = getProjectBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) return {};
 
   return {
@@ -60,8 +61,9 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-export default function ProjectPage({ params }: PageProps) {
-  const project = getProjectBySlug(params.slug);
+export default async function ProjectPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) notFound();
 
   const hasLiveSite =
@@ -92,7 +94,7 @@ export default function ProjectPage({ params }: PageProps) {
             <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
             Back
           </Link>
-          <PageActions mdPath={`/projects/${params.slug}.md`} />
+          <PageActions mdPath={`/projects/${slug}.md`} />
         </div>
 
         <header className="mb-12">

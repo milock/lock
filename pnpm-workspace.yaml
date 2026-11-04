@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: false
+overrides:
+  postcss@<8.5.32: ^8.5.32
+  '@babel/core@<7.29.6': ^7.29.6
+  '@babel/helpers@<7.26.10': ^7.26.10
+  browserslist@<4.28.7: ^4.28.7
+  postcss-selector-parser@<6.1.5: ^6.1.5

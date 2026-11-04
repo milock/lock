@@ -39,10 +39,10 @@ test.describe("home page (bento landing)", () => {
     expect(bodyText).not.toContain("By the numbers");
   });
 
-  test("About tile shows the health-tech leader title", async ({ page }) => {
+  test("About tile shows the current Super Green role", async ({ page }) => {
     await expect(
       page
-        .getByText("Health-tech product marketing leader", { exact: false })
+        .getByText("Principal Product Marketer at Super Green", { exact: false })
         .first(),
     ).toBeVisible();
   });

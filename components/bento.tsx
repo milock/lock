@@ -186,7 +186,7 @@ const features = [
               {profile.name}
             </div>
             <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Health-tech product marketing leader
+              Principal Product Marketer at Super Green
             </p>
           </div>
         </div>
@@ -195,11 +195,11 @@ const features = [
     ),
   },
 
-  // Experience - Clarity → Meta
+  // Experience - current role and prior work
   {
     Icon: "",
     name: "Experience",
-    description: "Where I've built and what it returned.",
+    description: "Current role and the work that led here.",
     href: profile.links.linkedin,
     cta: "Full history on LinkedIn",
     ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
@@ -399,7 +399,7 @@ const features = [
     Icon: "",
     name: "Stack",
     description:
-      "The AI-native and go-to-market tools I build the function on.",
+      "The tools I use for research, writing, design, and building.",
     href: profile.links.github,
     cta: "See the open-source tools",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
@@ -455,7 +455,7 @@ const features = [
     Icon: "",
     name: "AI-Native Ops",
     description:
-      "A self-built multi-agent system that delivers a team's output, solo.",
+      "AI workflows for research, writing, and keeping track of the work.",
     href: profile.links.github,
     cta: "See some of the tools",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,

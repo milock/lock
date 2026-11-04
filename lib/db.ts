@@ -1,5 +1,5 @@
 import { neon } from "@neondatabase/serverless";
-import { createHash } from "crypto";
+import { createHmac } from "crypto";
 
 // Lazily resolve the SQL client so the app builds/runs fine without a DB
 // configured — logging just no-ops when DATABASE_URL is absent.
@@ -13,7 +13,7 @@ export type LoggedMessage = { role: string; text: string };
 
 /**
  * Fire-and-forget conversation logging. Stores one snapshot per turn keyed by
- * the conversation's first message id; the admin view keeps the longest
+ * the conversation's first message id; the admin view keeps the latest
  * snapshot per key. The visitor IP is hashed (never stored raw). Any failure is
  * swallowed — logging must never affect the chat response.
  */
@@ -23,12 +23,12 @@ export async function logConversation(opts: {
   userAgent: string | null;
   messages: LoggedMessage[];
 }): Promise<void> {
-  const db = sql();
-  if (!db) return;
   try {
+    const db = sql();
+    if (!db) return;
     const ipHash =
-      opts.ip && opts.ip !== "unknown"
-        ? createHash("sha256").update(opts.ip).digest("hex").slice(0, 16)
+      opts.ip && opts.ip !== "unknown" && process.env.CHAT_IP_HASH_SECRET
+        ? createHmac("sha256", process.env.CHAT_IP_HASH_SECRET).update(opts.ip).digest("hex").slice(0, 16)
         : null;
     await db`
       INSERT INTO chat_logs (conv_key, ip_hash, user_agent, turns, messages)
@@ -49,15 +49,19 @@ export type Conversation = {
   messages: LoggedMessage[];
 };
 
-/** Latest (longest) snapshot per conversation, newest first. */
+/** Latest snapshot per conversation, newest first. */
 export async function readConversations(limit = 300): Promise<Conversation[]> {
   const db = sql();
   if (!db) return [];
   const rows = (await db`
-    SELECT DISTINCT ON (COALESCE(conv_key, id::text))
-      created_at, conv_key, ip_hash, user_agent, turns, messages
-    FROM chat_logs
-    ORDER BY COALESCE(conv_key, id::text), turns DESC, created_at DESC
+    SELECT * FROM (
+      SELECT DISTINCT ON (COALESCE(conv_key, id::text))
+        created_at, conv_key, ip_hash, user_agent, turns, messages
+      FROM chat_logs
+      ORDER BY COALESCE(conv_key, id::text), created_at DESC, turns DESC
+    ) latest
+    ORDER BY created_at DESC
+    LIMIT ${Math.max(1, Math.min(300, Math.floor(limit) || 300))}
   `) as unknown as Conversation[];
   rows.sort(
     (a, b) =>

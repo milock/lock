@@ -13,7 +13,7 @@ const BASE_URL = (
   process.env.NEXT_PUBLIC_BASE_URL || "https://michael-lock.com"
 ).replace(/\/$/, "");
 
-const title = `${profile.name} — Product Marketing & Marketing Leader`;
+const title = `${profile.name} · Principal Product Marketer`;
 const description = profile.tagline;
 
 export const metadata: Metadata = {

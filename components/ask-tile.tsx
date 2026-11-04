@@ -7,6 +7,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { PromptInputBox } from "@/components/ui/ai-prompt-box";
 import { cn } from "@/lib/utils";
+import { requestHistory, safeInternalHref } from "@/lib/chat-security";
 
 // Starter prompts to seed the conversation. Clicking one sends it like any
 // typed message. Shown only before a thread exists.
@@ -73,7 +74,7 @@ function renderAssistant(raw: string): React.ReactNode {
     // Only ever render http(s) or internal "/" links. Anything else (e.g. a
     // javascript: or data: URL the model could be coaxed into emitting) is
     // shown as plain text, never as a clickable href.
-    const internal = href.startsWith("/");
+    const internal = safeInternalHref(href);
     const safe = internal || /^https?:\/\//i.test(href);
     if (!safe) {
       out.push(m[0]);
@@ -147,7 +148,10 @@ function AssistantBubble({ raw, typing }: { raw: string; typing: boolean }) {
 
 export function AskTile() {
   const { messages, sendMessage, status, error, setMessages } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      prepareSendMessagesRequest: ({ messages }) => ({ body: { conversationId: messages[0]?.id, messages: requestHistory(messages) } }),
+    }),
   });
 
   const isLoading = status === "submitted" || status === "streaming";
@@ -349,6 +353,9 @@ export function AskTile() {
         )}
 
         <PromptInputBox onSend={send} isLoading={isLoading} />
+        <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+          Messages may be saved to improve this assistant. Please avoid sensitive information.
+        </p>
       </div>
     </motion.div>
   );
