@@ -48,7 +48,7 @@ export function FadeIn({
 
   return (
     <motion.div
-      initial="hidden"
+      initial={false}
       animate="show"
       viewport={{ once: true }}
       variants={FADE_ANIMATION_VARIANTS}

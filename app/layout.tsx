@@ -69,6 +69,7 @@ export default function RootLayout({
           {/* Snappy hover labels site-wide; skipDelay lets you glide between
               adjacent buttons without re-waiting the open delay each time. */}
           <TooltipProvider delayDuration={200} skipDelayDuration={300}>
+            <a href="#main-content" className="skip-link">Skip to content</a>
             {children}
           </TooltipProvider>
         </ThemeProvider>

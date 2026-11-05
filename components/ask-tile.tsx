@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -17,11 +18,6 @@ const STARTERS = [
   "How do you use AI?",
   "How do you stay organized?",
 ];
-
-// Shown if the request fails (no key, rate limit, network). Keeps the tile
-// friendly instead of surfacing a raw error.
-const FALLBACK =
-  "I'm having trouble responding right now. Email me at themichaellock@gmail.com and I'll get right back to you.";
 
 // Pull the raw text out of a UI message's parts.
 function rawText(message: { parts: Array<{ type: string; text?: string }> }) {
@@ -147,7 +143,7 @@ function AssistantBubble({ raw, typing }: { raw: string; typing: boolean }) {
 }
 
 export function AskTile() {
-  const { messages, sendMessage, status, error, setMessages } = useChat({
+  const { messages, sendMessage, status, error, setMessages, stop, clearError } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
       prepareSendMessagesRequest: ({ messages }) => ({ body: { conversationId: messages[0]?.id, messages: requestHistory(messages) } }),
@@ -186,7 +182,7 @@ export function AskTile() {
       if (messages.length) {
         window.sessionStorage.setItem(STORE_KEY, JSON.stringify(messages));
       } else {
-        window.sessionStorage.removeItem(STORE_KEY);
+        try { window.sessionStorage.removeItem(STORE_KEY); } catch { /* Storage may be disabled. */ }
       }
     } catch {
       // ignore quota / serialization issues
@@ -253,6 +249,7 @@ export function AskTile() {
         "dark:bg-background dark:[border:1px_solid_rgba(255,255,255,.1)]"
       )}
     >
+      <div className="flex flex-wrap items-start justify-between gap-2">
       <div className="flex flex-col gap-1">
         <h2 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
           Ask me anything
@@ -262,11 +259,25 @@ export function AskTile() {
         </p>
       </div>
 
+      {(hasThread || error) && <Button variant="ghost" size="sm" onClick={() => {
+        if (isLoading) { stop(); return; }
+        setMessages([]);
+        clearError();
+        restoredIds.current.clear();
+        try { window.sessionStorage.removeItem(STORE_KEY); } catch { /* Storage may be disabled. */ }
+        document.getElementById("ai-prompt-input")?.focus();
+      }}>{isLoading ? "Stop reply" : "New conversation"}</Button>}
+      </div>
+
       {/* The thread fills all the space between the header and the input and
           scrolls internally, so a taller card means more visible answer. When
           empty it just holds the space, keeping the input pinned to the bottom. */}
       <div
         ref={threadRef}
+        role="log"
+        aria-label="Conversation"
+        aria-live="polite"
+        aria-busy={isLoading}
         className={cn(
           "min-h-0 flex-1 space-y-3 overflow-y-auto pr-1",
           // Only claim vertical space once there's something to show, so the
@@ -282,7 +293,7 @@ export function AskTile() {
             // The latest assistant message types out live; everything else
             // (past turns, restored-from-storage) renders instantly.
             const typing =
-              !isUser &&
+              !isUser && !reduceMotion &&
               message.id === lastId &&
               !restoredIds.current.has(message.id);
             return (
@@ -295,7 +306,7 @@ export function AskTile() {
               >
                 <div
                   className={cn(
-                    "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                    "max-w-[90%] break-words [overflow-wrap:anywhere] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
                     isUser
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-secondary-foreground"
@@ -309,7 +320,7 @@ export function AskTile() {
 
           {awaitingReply && (
             <div className="flex justify-start">
-              <div className="flex items-center gap-1.5 rounded-2xl bg-secondary px-3.5 py-2.5">
+              <div role="status" aria-label="Writing a reply" className="flex items-center gap-1.5 rounded-2xl bg-secondary px-3.5 py-2.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse" />
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse [animation-delay:150ms]" />
                 <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 motion-safe:animate-pulse [animation-delay:300ms]" />
@@ -318,9 +329,9 @@ export function AskTile() {
           )}
 
           {error && (
-            <div className="flex justify-start">
+            <div role="alert" className="flex justify-start">
               <div className="max-w-[85%] rounded-2xl bg-secondary px-3.5 py-2 text-sm leading-relaxed text-secondary-foreground">
-                {FALLBACK}
+                I&apos;m having trouble responding right now. <a href="mailto:themichaellock@gmail.com" className={LINK_CLASS}>Email Michael</a> or try another question.
               </div>
             </div>
           )}
@@ -339,7 +350,7 @@ export function AskTile() {
                 type="button"
                 onClick={() => send(prompt)}
                 className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                  "min-h-11 rounded-xl px-3 py-2 text-xs font-medium transition-colors",
                   "border border-black/[0.08] bg-black/[0.03] text-neutral-600",
                   "hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900",
                   "dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-neutral-300",

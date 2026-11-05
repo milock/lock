@@ -3,7 +3,7 @@ import { TrexRunner } from "@/components/trex-runner";
 
 export default function Home() {
   return (
-    <>
+    <main id="main-content">
       <div className="w-full flex items-center justify-center max-w-5xl mx-auto">
         <div className="flex w-full flex-col items-center overflow-hidden">
           <div className="w-full py-2  px-2 lg:py-10 lg:px-4">
@@ -15,6 +15,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 }

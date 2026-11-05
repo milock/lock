@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Rocket, Sparkles, MapPin } from "lucide-react";
+import { Rocket, Sparkles, MapPin, ArrowDown } from "lucide-react";
 import Meteors from "@/components/magicui/meteors";
 import WordPullUp from "@/components/magicui/word-pull-up";
 import { FadeIn } from "@/components/magicui/fade-in";
@@ -40,12 +40,12 @@ export default function Hero() {
           <Meteors number={32} />
         </div>
       )}
-      <div className="flex flex-col items-start justify-center h-full overflow-hidden p-8 sm:p-10 z-50">
+      <div className="flex flex-col items-start justify-center h-full overflow-hidden px-6 py-10 sm:p-10 z-50">
         {/* Big, declarative H1. The positioning line drops to a subhead so the
             hero still says who he is without competing with the headline. */}
         <WordPullUp
           words="Let's cook."
-          className="text-left text-6xl leading-[1.05] md:text-7xl lg:text-7xl"
+          className="text-left text-5xl leading-[1.05] md:text-7xl lg:text-7xl"
         />
 
         <FadeIn direction="down">
@@ -65,6 +65,9 @@ export default function Hero() {
         <FadeIn direction="down">
           <div className="mt-6 w-full max-w-xl">
             <CtaButtons row />
+            <a href="#projects" className="mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-medium underline underline-offset-4">
+              Explore projects <ArrowDown className="h-4 w-4" aria-hidden />
+            </a>
           </div>
         </FadeIn>
       </div>

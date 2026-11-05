@@ -26,15 +26,15 @@ const BlurIn = ({
   const combinedVariants = variant || defaultVariants;
 
   return (
-    <motion.h1
-      initial="hidden"
+    <motion.div
+      initial={false}
       animate="visible"
       transition={{ duration }}
       variants={combinedVariants}
       className={cn(className, "")}
     >
       {children}
-    </motion.h1>
+    </motion.div>
   );
 };
 

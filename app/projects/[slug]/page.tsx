@@ -85,11 +85,11 @@ export default async function ProjectPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.4)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.4)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_20%,transparent_80%)]" />
       </div>
 
-      <main className="relative mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
+      <main id="main-content" className="relative mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
         <div className="mb-10 flex items-center justify-between">
           <Link
             href="/"
-            className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="group inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
             Back
@@ -127,7 +127,7 @@ export default async function ProjectPage({ params }: PageProps) {
                 href={project.repo}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-border bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
               >
                 <GitHubLogoIcon className="h-4 w-4" />
                 View repo
@@ -138,7 +138,7 @@ export default async function ProjectPage({ params }: PageProps) {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
               >
                 {liveLabel}
                 <ArrowTopRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -149,7 +149,7 @@ export default async function ProjectPage({ params }: PageProps) {
                 href={project.figma}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
               >
                 <FigmaLogoIcon className="h-4 w-4" />
                 View in Figma
@@ -171,7 +171,7 @@ export default async function ProjectPage({ params }: PageProps) {
         <div className="mt-16 border-t border-border/60 pt-6">
           <Link
             href="/"
-            className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="group inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
             Back to home

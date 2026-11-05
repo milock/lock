@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { RefObject, useEffect, useId, useState } from "react";
 
 export interface AnimatedBeamProps {
@@ -43,6 +43,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   endXOffset = 0,
   endYOffset = 0,
 }) => {
+  const reduceMotion = useReducedMotion();
   const id = useId();
   const [pathD, setPathD] = useState("");
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
@@ -158,7 +159,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
             y1: "0%",
             y2: "0%",
           }}
-          animate={{
+          animate={reduceMotion ? { x1: "0%", x2: "100%", y1: "0%", y2: "0%" } : {
             x1: gradientCoordinates.x1,
             x2: gradientCoordinates.x2,
             y1: gradientCoordinates.y1,
@@ -168,7 +169,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
             delay,
             duration,
             ease: [0.16, 1, 0.3, 1], // https://easings.net/#easeOutExpo
-            repeat: Infinity,
+            repeat: reduceMotion ? 0 : Infinity,
             repeatDelay: 0,
           }}
         >

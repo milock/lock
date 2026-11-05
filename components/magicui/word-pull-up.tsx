@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useReducedMotion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 interface WordPullUpProps {
@@ -28,13 +28,14 @@ export default function WordPullUp({
   },
   className,
 }: WordPullUpProps) {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.h1
       variants={wrapperFramerProps}
-      initial="hidden"
+      initial={reduceMotion ? false : "hidden"}
       animate="show"
       className={cn(
-        "font-display text-center text-6xl md:text-7xl lg:text-8xl font-bold leading-[5rem] tracking-tighter drop-shadow-sm",
+        "font-display text-center text-6xl md:text-7xl lg:text-8xl font-bold leading-[5rem] tracking-[-0.04em] drop-shadow-sm",
         className
       )}
     >

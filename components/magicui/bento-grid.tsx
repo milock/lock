@@ -17,7 +17,7 @@ const BentoGrid = ({
         // Tighter rows trim the dead band between a tile's top content and its
         // bottom-anchored heading (the marquee/Stack tiles fill their height, so
         // they stay full while the rest get less white space).
-        "grid w-full auto-rows-[17rem] grid-cols-3 gap-2 sm:auto-rows-[18rem] md:auto-rows-[19rem] lg:gap-4",
+        "grid w-full auto-rows-[minmax(22rem,auto)] grid-cols-3 gap-2 sm:auto-rows-[minmax(22rem,auto)] md:auto-rows-[minmax(22rem,auto)] lg:gap-4",
         className
       )}
     >
@@ -27,6 +27,7 @@ const BentoGrid = ({
 };
 
 const BentoCard = ({
+  id,
   name,
   className,
   background,
@@ -41,6 +42,7 @@ const BentoCard = ({
   ctaCenter,
   index = 0,
 }: {
+  id?: string;
   name?: string;
   className?: string;
   background?: ReactNode;
@@ -63,6 +65,7 @@ const BentoCard = ({
     className={cn("col-span-3", className)}
   >
     <div
+      id={id}
       className={cn(
         "tile-surface group relative flex h-full flex-col justify-between overflow-hidden",
         // light styles
@@ -85,34 +88,34 @@ const BentoCard = ({
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-32 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-background dark:via-background/75 dark:to-transparent sm:h-36"
       />
     ) : null}
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
+    {name && <div className={cn("pointer-events-none z-10 flex flex-col gap-1 p-6 pb-16", cta2 && "pb-28 min-[360px]:pb-16")}>
       <div className="flex flex-col gap-2">
         <div>
-          {Icon !== "" ? (
+          {Icon ? (
             <Icon className="h-12 w-12 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
           ) : (
             ""
           )}
         </div>
 
-        <div className="text-3xl font-semibold text-neutral-700 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_14px_hsl(var(--background))] dark:text-neutral-300">
+        <h2 className="text-3xl font-semibold text-neutral-700 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_14px_hsl(var(--background))] dark:text-neutral-300">
           {name}
-        </div>
+        </h2>
       </div>
       <p className="w-full text-neutral-500 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_12px_hsl(var(--background))] dark:text-neutral-400">
         {description}
       </p>
-    </div>
+    </div>}
 
     <div
       className={cn(
         // z-20 keeps the CTA above the readability scrim (z-5) so the buttons
         // never get dimmed by it.
-        "pointer-events-none absolute bottom-0 z-20 flex w-full translate-y-10 transform-gpu flex-row items-center gap-1 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none absolute bottom-0 z-20 flex w-full flex-row flex-wrap items-center gap-1 px-4 pb-3",
         ctaCenter && "justify-center"
       )}
     >
-      {href !== "" ? (
+      {href && cta ? (
         <Button
           variant="ghost"
           asChild

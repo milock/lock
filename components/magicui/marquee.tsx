@@ -27,13 +27,15 @@ export default function Marquee({
 }: MarqueeProps) {
   return (
     <div
+      tabIndex={scrollable ? 0 : undefined}
+      role={scrollable ? "region" : undefined}
       {...props}
       className={cn(
         "group flex p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
         scrollable
           ? vertical
-            ? "overflow-y-auto overflow-x-hidden overscroll-y-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            : "overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            ? "overflow-y-auto overflow-x-hidden overscroll-y-contain [scrollbar-width:thin]"
+            : "overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:thin]"
           : "overflow-hidden",
         {
           "flex-row": !vertical,
@@ -42,15 +44,19 @@ export default function Marquee({
         className
       )}
     >
-      {Array(repeat)
+      {Array(scrollable ? 1 : repeat)
         .fill(0)
         .map((_, i) => (
           <div
             key={i}
+            aria-hidden={i > 0 ? true : undefined}
+            inert={i > 0 ? true : undefined}
             className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
-              "animate-marquee flex-row": !vertical,
-              "animate-marquee-vertical flex-col": vertical,
-              "group-hover:[animation-play-state:paused]": pauseOnHover,
+              "flex-row": !vertical,
+              "animate-marquee": !vertical && !scrollable,
+              "flex-col": vertical,
+              "animate-marquee-vertical": vertical && !scrollable,
+              "group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]": pauseOnHover,
               "[animation-direction:reverse]": reverse,
             })}
           >

@@ -6,133 +6,30 @@ import { cn } from "@/lib/utils";
 import { Mail, Linkedin, Github, Download, Figma } from "lucide-react";
 import { profile } from "@/lib/data";
 
-// Shared press feel for the icon buttons: a tiny scale-down on click so the
-// tap registers physically, paired with the per-icon hover lift below.
-const PRESS = "transition-transform duration-200 motion-safe:active:scale-90";
-
-// Primary "Let's talk" (email) plus secondary actions (Résumé / GitHub /
-// LinkedIn / Figma). Two layouts:
-//   - row:   one compact wrapping row (used by the WIDE hero card).
-//   - stack: "Let's talk" full-width on top, the rest in a row below (used by
-//            the NARROW Contact tile, where a single row would wrap awkwardly).
-export function CtaButtons({
-  className,
-  row = false,
-}: {
-  className?: string;
-  row?: boolean;
-}) {
-  const github = (
-    <SimpleTooltip label="GitHub">
-      <a
-        href={profile.links.github}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="GitHub"
-        className={row ? undefined : "shrink-0"}
-      >
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="GitHub"
-          className={cn("group/gh", PRESS, row && "h-12 w-12")}
-        >
-          <Github className="h-4 w-4 transition-transform duration-300 group-hover/gh:-translate-y-px" />
-        </Button>
-      </a>
-    </SimpleTooltip>
+export function CtaButtons({ className, row = false }: { className?: string; row?: boolean }) {
+  const socialLinks = [
+    { label: "GitHub", href: profile.links.github, Icon: Github },
+    { label: "LinkedIn", href: profile.links.linkedin, Icon: Linkedin },
+    { label: "Figma portfolio", href: profile.links.portfolio, Icon: Figma },
+  ];
+  const resume = (
+    <Button asChild variant="outline" className={cn("h-12 gap-2", !row && "min-w-0 flex-1 px-2")}>
+      <a href={profile.links.resume} download><Download className="h-4 w-4" /><span>Résumé</span></a>
+    </Button>
   );
-
-  const linkedin = (
-    <SimpleTooltip label="LinkedIn">
-      <a
-        href={profile.links.linkedin}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="LinkedIn"
-        className={row ? undefined : "shrink-0"}
-      >
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="LinkedIn"
-          className={cn("group/li", PRESS, row && "h-12 w-12")}
-        >
-          <Linkedin className="h-4 w-4 transition-transform duration-300 group-hover/li:-translate-y-px" />
-        </Button>
-      </a>
-    </SimpleTooltip>
-  );
-
-  const figma = (
-    <SimpleTooltip label="Figma portfolio">
-      <a
-        href={profile.links.portfolio}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Figma portfolio"
-        className={row ? undefined : "shrink-0"}
-      >
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="Figma portfolio"
-          className={cn("group/pf", PRESS, row && "h-12 w-12")}
-        >
-          <Figma className="h-4 w-4 transition-transform duration-300 group-hover/pf:-translate-y-px" />
-        </Button>
-      </a>
-    </SimpleTooltip>
-  );
-
-  const letsTalk = (
-    <a href={profile.links.email} className={row ? undefined : "block"}>
-      <Button
-        size="lg"
-        variant="default"
-        className={cn(
-          "group/talk h-12 gap-2 text-base font-semibold shadow-sm",
-          row ? "px-5" : "w-full"
-        )}
-      >
-        <Mail className="h-5 w-5 transition-transform duration-300 group-hover/talk:-translate-y-px" />
-        <span>Email</span>
+  const socials = socialLinks.map(({ label, href, Icon }) => (
+    <SimpleTooltip key={label} label={label}>
+      <Button asChild variant="outline" size="icon" className="h-11 w-11 shrink-0">
+        <a href={href} target="_blank" rel="noreferrer" aria-label={label}><Icon className="h-4 w-4" /></a>
       </Button>
-    </a>
-  );
-
-  if (row) {
-    return (
-      <div className={cn("flex w-full flex-wrap items-center gap-2", className)}>
-        {letsTalk}
-        <a href={profile.links.resume} download>
-          <Button variant="outline" size="lg" className="group/resume h-12 gap-2">
-            <Download className="h-4 w-4 transition-transform duration-300 group-hover/resume:translate-y-px" />
-            <span>Résumé</span>
-          </Button>
-        </a>
-        {github}
-        {linkedin}
-        {figma}
-      </div>
-    );
-  }
-
-  // Stacked (narrow) layout.
+    </SimpleTooltip>
+  ));
   return (
-    <div className={cn("flex w-full flex-col gap-3", className)}>
-      {letsTalk}
-      <div className="flex items-center gap-2">
-        <a href={profile.links.resume} download className="flex-1">
-          <Button variant="outline" size="default" className="group/resume w-full gap-2">
-            <Download className="h-4 w-4 transition-transform duration-300 group-hover/resume:translate-y-px" />
-            <span>Résumé</span>
-          </Button>
-        </a>
-        {github}
-        {linkedin}
-        {figma}
-      </div>
+    <div className={cn(row ? "flex flex-wrap items-center gap-2" : "flex w-full flex-col gap-3", className)}>
+      <Button asChild size="lg" className={cn("h-12 gap-2 text-base font-semibold", row ? "px-5" : "w-full")}>
+        <a href={profile.links.email}><Mail className="h-5 w-5" /><span>Email</span></a>
+      </Button>
+      {row ? <>{resume}<div className="flex items-center gap-2">{socials}</div></> : <div className="flex items-center gap-1">{resume}{socials}</div>}
     </div>
   );
 }

@@ -8,7 +8,13 @@ const nextConfig = {
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
       { key: "Content-Security-Policy", value: "object-src 'none'; base-uri 'self'; frame-ancestors 'none'" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-    ] }];
+    ] }, {
+      // Only the self-hosted game may be embedded, and only by this origin.
+      source: "/t-rex/index.html", headers: [
+        { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        { key: "Content-Security-Policy", value: "object-src 'none'; base-uri 'self'; frame-ancestors 'self'" },
+      ],
+    }];
   },
   // Restore scroll position on browser back/forward instead of jumping to the
   // top — so returning from a project page lands roughly where you left off.

@@ -7,7 +7,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
-import { ArrowUp, Loader2, Mic, Paperclip } from "lucide-react";
+import { ArrowUp, Loader2 } from "lucide-react";
+import { MAX_INPUT_CHARS } from "@/lib/chat-security";
 import { cn } from "@/lib/utils";
 
 interface PromptInputBoxProps {
@@ -23,8 +24,7 @@ const MAX_TEXTAREA_HEIGHT = 200; // px — grows to here, then scrolls
  * PromptInputBox — a dark "AI console" prompt input.
  *
  * Design-only: it surfaces the message to `onSend` and renders a loading state,
- * but performs no network calls itself. The left-side affordance icons are
- * decorative stubs for the design. SSR-safe by construction: no module-level
+ * but performs no network calls itself. SSR-safe by construction: no module-level
  * access to `document` or `window`.
  */
 export function PromptInputBox({
@@ -58,7 +58,7 @@ export function PromptInputBox({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Enter sends; Shift+Enter inserts a newline.
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
       event.preventDefault();
       submit();
     }
@@ -81,78 +81,21 @@ export function PromptInputBox({
         id="ai-prompt-input"
         ref={textareaRef}
         rows={1}
+        maxLength={MAX_INPUT_CHARS}
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={isLoading}
         className={cn(
-          "block w-full resize-none bg-transparent px-4 pt-4 pb-2 text-sm leading-relaxed",
+          "block w-full resize-none bg-transparent px-4 pt-4 pb-2 text-base leading-relaxed",
           "text-foreground placeholder:text-muted-foreground",
           "focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
         )}
       />
 
       <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1">
-        <TooltipProvider delayDuration={200}>
-          <div className="flex items-center gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  disabled
-                  aria-label="Attach"
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-lg",
-                    "text-muted-foreground transition-colors",
-                    "hover:bg-foreground/[.06] hover:text-foreground",
-                    "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
-                  )}
-                >
-                  <Paperclip className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="top"
-                sideOffset={6}
-                className={cn(
-                  "z-50 rounded-md border border-border bg-popover px-2 py-1",
-                  "text-xs text-popover-foreground shadow-md"
-                )}
-              >
-                Attach
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  disabled
-                  aria-label="Voice"
-                  className={cn(
-                    "flex h-8 w-8 items-center justify-center rounded-lg",
-                    "text-muted-foreground transition-colors",
-                    "hover:bg-foreground/[.06] hover:text-foreground",
-                    "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
-                  )}
-                >
-                  <Mic className="h-4 w-4" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="top"
-                sideOffset={6}
-                className={cn(
-                  "z-50 rounded-md border border-border bg-popover px-2 py-1",
-                  "text-xs text-popover-foreground shadow-md"
-                )}
-              >
-                Voice
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </TooltipProvider>
+        <span className="text-xs text-muted-foreground">Enter to send · Shift + Enter for a new line</span>
 
         <TooltipProvider delayDuration={200}>
           <Tooltip>
@@ -163,7 +106,7 @@ export function PromptInputBox({
                 disabled={!canSend}
                 aria-label="Send message"
                 className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
                   "bg-primary text-primary-foreground",
                   "transition-[transform,opacity,background-color] duration-200",
                   "motion-safe:hover:scale-105 motion-safe:active:scale-95",

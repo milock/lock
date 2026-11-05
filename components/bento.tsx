@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { AnimatedBeamMultipleOutputs } from "@/components/animated-beam-multiple-outputs";
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
-import BlurIn from "@/components/magicui/blur-in";
+
 import { FadeIn } from "@/components/magicui/fade-in";
 import Hero from "@/components/hero";
 import Marquee from "@/components/magicui/marquee";
@@ -20,6 +20,7 @@ import {
 } from "@/lib/data";
 import { motion } from "framer-motion";
 import {
+  ArrowUpRight,
   Figma,
   Github,
   Linkedin,
@@ -37,7 +38,7 @@ import { PageActionsCompact } from "@/components/page-actions";
 import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
 import { RevealCard } from "@/components/reveal-card";
-import { CenterHover } from "@/components/center-hover";
+
 import {
   Terminal,
   TypingAnimation,
@@ -106,7 +107,7 @@ function ProjectBadge({ type }: { type: "marketing" | "build" }) {
         "inline-flex items-center rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset",
         isMarketing
           ? "bg-violet-500/10 text-violet-600 ring-violet-500/20 dark:text-violet-300"
-          : "bg-emerald-500/10 text-emerald-600 ring-emerald-500/20 dark:text-emerald-300"
+          : "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20 dark:text-emerald-300"
       )}
     >
       {isMarketing ? "Marketing" : "Vibe-coded"}
@@ -132,9 +133,8 @@ const features = [
     description: "",
     href: "",
     cta: "",
-    // Two rows on mobile so the big headline, the four pills, and both CTA rows
-    // all fit without the buttons clipping; one row on desktop as before.
-    className: "col-span-3 md:col-span-2 row-span-2 md:row-span-1",
+    // Reserve room for the wrapped headline, contact actions and project jump.
+    className: "col-span-3 md:col-span-2 min-h-[26rem] sm:min-h-0",
     background: (
       <>
         <div
@@ -177,7 +177,7 @@ const features = [
         {/* Illustrated avatar (black line-art on transparent) on a charcoal disc
             so it pops against the dark tile - the personal-brand moment. The
             avatar, name, title and LinkedIn link form one centered group. */}
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center transition-all duration-300 ease-out group-hover:-translate-y-7">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center transition-all duration-300 ease-out -translate-y-5">
           <div className="transition-transform duration-300 ease-out group-hover:scale-[1.03]">
             <AvatarDisc />
           </div>
@@ -185,8 +185,8 @@ const features = [
             <div className="text-3xl font-semibold leading-tight text-neutral-700 dark:text-neutral-200">
               {profile.name}
             </div>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Principal Product Marketer at Super Green
+            <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+              Principal Product Marketer <br />at Super Green
             </p>
           </div>
         </div>
@@ -214,7 +214,8 @@ const features = [
         <Marquee
           vertical
           scrollable
-          className="absolute inset-x-0 top-0 h-full [--duration:36s] [--gap:0.75rem] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_7%,#000_52%,transparent_82%)] w-full px-1"
+          aria-label="Experience"
+          className="absolute inset-x-0 top-0 h-[calc(100%-10rem)] [--gap:0.75rem] w-full px-4 pt-4"
           pauseOnHover
         >
           {experience.map((role, idx) => (
@@ -252,13 +253,13 @@ const features = [
               </div>
 
               {/* One-line role title — clearly secondary to the company. */}
-              <div className="mt-1 truncate whitespace-nowrap text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              <div className="mt-1 text-xs font-medium text-neutral-600 dark:text-neutral-400">
                 {role.title}
               </div>
 
               {/* Refined trust badges — consistent padding, subtle fill/border,
                   no-wrap so the row never breaks awkwardly. */}
-              <div className="mt-2.5 flex items-center gap-1.5 overflow-hidden">
+              <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
                 {role.badges.map((badge) => (
                   <span
                     key={badge}
@@ -275,7 +276,7 @@ const features = [
 
               {/* Hairline divider, then the metric as quiet supporting text. */}
               <div className="mt-2.5 border-t border-gray-950/[.06] pt-2 dark:border-gray-50/[.08]">
-                <p className="text-[11px] leading-snug text-neutral-500 dark:text-neutral-400">
+                <p className="text-[11px] leading-snug text-neutral-600 dark:text-neutral-400">
                   {role.metric}
                 </p>
               </div>
@@ -289,7 +290,7 @@ const features = [
             it works in light AND dark) behind that lower text. It's short at
             rest (more cards visible) and grows on hover as the heading rises.
             Scoped to this tile so it never clips the other tiles' content. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] transition-[height] duration-300 ease-out group-hover:h-[70%] bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_58%,transparent_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_58%,transparent_100%)]" />
       </motion.div>
     ),
   },
@@ -301,8 +302,9 @@ const features = [
   {
     Icon: "",
     name: "Projects",
+    id: "projects",
     description: "Work I've shipped, from go-to-market to vibe-coded tools.",
-    className: "col-span-3",
+    className: "col-span-3 min-h-[26rem] min-[360px]:min-h-0",
     href: profile.links.github,
     cta: "GitHub",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
@@ -311,17 +313,18 @@ const features = [
     cta2Icon: <Figma className="mr-2 h-4 w-4" />,
     background: (
       <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[101%]">
-        <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent_0%,#000_6%,#000_50%,transparent_80%)]">
+        <div className="absolute inset-x-0 top-0 h-[calc(100%-9rem)]">
           <Marquee
             scrollable
-            className="absolute inset-x-0 top-0 h-full [--duration:64s] w-full items-start pt-5"
+          aria-label="Projects"
+            className="absolute inset-x-0 top-0 h-full w-full items-start p-4"
             pauseOnHover
           >
             {projects.map((project, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  "group/proj relative w-72 overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                  "group/proj relative w-[min(18rem,calc(100vw-4rem))] overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
                   "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
                   "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                   "transform-gpu transition-all duration-300 ease-out"
@@ -337,21 +340,12 @@ const features = [
                   >
                     {project.name}
                   </a>
-                  <span className="shrink-0 text-[10px] text-neutral-500 dark:text-neutral-400">
+                  <span className="shrink-0 text-[10px] text-neutral-600 dark:text-neutral-400">
                     {project.language}
                   </span>
                 </div>
 
-                {/* Arrow appears directly under the language label, top-right,
-                    on hover. A real link (z-10 over the stretched card link) so
-                    clicking the arrow itself navigates, with a slide nudge. */}
-                <a
-                  href={project.href}
-                  aria-label={`Open ${project.name}`}
-                  className="absolute right-3 top-7 z-10 rounded p-1 text-neutral-400 opacity-0 transition-all duration-300 group-hover/proj:translate-x-0.5 group-hover/proj:opacity-100 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-white"
-                >
-                  →
-                </a>
+                <ArrowUpRight aria-hidden className="pointer-events-none absolute right-3 top-8 h-4 w-4 text-muted-foreground" />
 
                 <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                   <ProjectBadge type={project.type} />
@@ -362,7 +356,7 @@ const features = [
                       href={profile.links.portfolio}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                      className="relative z-10 inline-flex min-h-8 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
                     >
                       <Figma className="h-3 w-3" />
                       Figma
@@ -375,7 +369,7 @@ const features = [
                       href={project.repo}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative z-10 inline-flex items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                      className="relative z-10 inline-flex min-h-8 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
                     >
                       <Github className="h-3 w-3" />
                       GitHub
@@ -383,7 +377,7 @@ const features = [
                   )}
                 </div>
 
-                <blockquote className="mt-2.5 text-xs text-neutral-500 dark:text-neutral-400">
+                <blockquote className="mt-2.5 text-xs text-neutral-600 dark:text-neutral-400">
                   {project.description}
                 </blockquote>
               </div>
@@ -403,9 +397,9 @@ const features = [
     href: profile.links.github,
     cta: "See the open-source tools",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
-    className: "col-span-3 md:col-span-2",
+    className: "col-span-3 lg:col-span-2",
     background: (
-      <div className="absolute inset-x-0 top-0 h-[78%] origin-top px-6 pt-6 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_45%)] group-hover:scale-[1.02]">
+      <div tabIndex={0} role="region" aria-label="Tool stack" className="absolute inset-x-0 top-0 h-[calc(100%-9rem)] overflow-y-auto px-4 pt-5">
         <FadeIn
           direction="up"
           className="flex h-full w-full items-start justify-center"
@@ -483,7 +477,7 @@ const features = [
     href: profile.links.linkedin,
     cta: "More on LinkedIn",
     ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
-    className: "col-span-3 md:col-span-2",
+    className: "col-span-3 lg:col-span-2",
     background: (
       <motion.div
         initial={{ opacity: 0 }}
@@ -493,7 +487,8 @@ const features = [
       >
         <Marquee
           scrollable
-          className="absolute inset-x-0 top-0 h-full items-start pt-5 [--duration:40s] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_7%,#000_50%,transparent_80%)] w-full"
+          aria-label="Focus areas"
+          className="absolute inset-x-0 top-0 h-[calc(100%-9rem)] items-start p-4 w-full"
           pauseOnHover
         >
           {defaultDomains.map((f, idx) => (
@@ -516,7 +511,7 @@ const features = [
                   })()}
                 <span className="block">{f.name}</span>
               </figcaption>
-              <blockquote className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
+              <blockquote className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
                 {f.body}
               </blockquote>
             </div>
@@ -531,7 +526,7 @@ const features = [
     Icon: "",
     name: "",
     description: "",
-    className: "col-span-3 md:col-span-1",
+    className: "col-span-3 lg:col-span-1",
     href: "",
     cta: "",
     background: (
@@ -541,7 +536,7 @@ const features = [
       >
         <div className="absolute inset-0 z-50 flex flex-col justify-center items-start gap-4 p-6">
           <div className="text-4xl md:text-5xl font-semibold text-neutral-700 dark:text-neutral-300">
-            <BlurIn duration={0.5}>Get in touch.</BlurIn>
+            <h2>Get in touch.</h2>
           </div>
           <ContactButtons />
         </div>
@@ -557,19 +552,19 @@ const features = [
     Icon: "",
     name: "Vibe-coded by me",
     description: "Like it? It's open source.",
-    className: "col-span-3 md:col-span-2",
+    className: "col-span-3 lg:col-span-2",
     href: "/projects/lock",
     cta: "How I built it",
     background: (
       <>
-        <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_8%,#000_36%)] group-hover:scale-[101%]">
-          <div className="flex h-full w-full items-center justify-center p-4 pb-16 sm:items-center">
+        <div className="absolute h-[calc(100%-10rem)] w-full left-0 top-0 overflow-auto rounded-md">
+          <div className="flex h-full w-full items-start justify-center p-4 sm:items-center">
           <Terminal className="h-auto w-full max-w-md">
             <TypingAnimation>$ git log --oneline this-site</TypingAnimation>
             <AnimatedSpan>✔ Next.js + TypeScript + Tailwind</AnimatedSpan>
             <AnimatedSpan>✔ Designed, built and shipped solo</AnimatedSpan>
             <AnimatedSpan>✔ AI as the pair, me on the wheel</AnimatedSpan>
-            <AnimatedSpan className="flex items-center gap-2 text-green-500">
+            <AnimatedSpan className="flex items-center gap-2 text-green-700 dark:text-green-400">
               ✓ Vibe-coded. Live.
               {/* Small Notion-face signature on a cream disc - a quiet "made by me" mark. */}
               <span className="grid h-6 w-6 place-items-center overflow-hidden rounded-full bg-[#faf3e6] ring-1 ring-inset ring-black/10">
@@ -589,7 +584,7 @@ const features = [
         {/* Scrim so "Vibe-coded by me" stays readable over the terminal,
             especially on short mobile tiles. Theme-aware (light + dark), short
             at rest and grows on hover as the heading rises. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] transition-[height] duration-300 ease-out group-hover:h-[58%] bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_56%,transparent_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%]  bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_56%,transparent_100%)]" />
       </>
     ),
   },
@@ -612,8 +607,6 @@ export function Bento() {
     // size to its own content between two grids instead of being stretched to a
     // fixed 2-row cell.
     <div className="flex w-full flex-col gap-2 lg:gap-4">
-      {/* Touch-only: activates the centered tile's hover state as you scroll. */}
-      <CenterHover />
 
       <BentoGrid>
         {BEFORE_ASK.map((featureIdx, i) => (

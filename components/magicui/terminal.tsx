@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react"
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, useReducedMotion } from "framer-motion"
 import type { MotionProps } from "framer-motion"
 
 import { cn } from "@/lib/utils"
@@ -41,6 +41,7 @@ export const AnimatedSpan = ({
   startOnView = false,
   ...props
 }: AnimatedSpanProps) => {
+  const reduceMotion = useReducedMotion()
   const elementRef = useRef<HTMLDivElement | null>(null)
   const isInView = useInView(elementRef as React.RefObject<Element>, {
     amount: 0.3,
@@ -59,14 +60,14 @@ export const AnimatedSpan = ({
     }
   }, [sequence?.activeIndex, sequence?.sequenceStarted, hasStarted, itemIndex])
 
-  const shouldAnimate = sequence ? hasStarted : startOnView ? isInView : true
+  const shouldAnimate = reduceMotion || (sequence ? hasStarted : startOnView ? isInView : true)
 
   return (
     <motion.div
       ref={elementRef}
-      initial={{ opacity: 0, y: -5 }}
+      initial={false}
       animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: -5 }}
-      transition={{ duration: 0.3, delay: sequence ? 0 : delay / 1000 }}
+      transition={{ duration: reduceMotion ? 0 : 0.3, delay: sequence ? 0 : delay / 1000 }}
       className={cn("grid text-sm font-normal tracking-tight", className)}
       onAnimationComplete={() => {
         if (!sequence) return
@@ -102,6 +103,7 @@ export const TypingAnimation = ({
     throw new Error("TypingAnimation: children must be a string. Received:")
   }
 
+  const reduceMotion = useReducedMotion()
   const [displayedText, setDisplayedText] = useState<string>("")
   const [started, setStarted] = useState(false)
   const elementRef = useRef<HTMLSpanElement | null>(null)
@@ -143,7 +145,7 @@ export const TypingAnimation = ({
   ])
 
   useEffect(() => {
-    if (!started) return
+    if (reduceMotion || !started) return
 
     let i = 0
     const typingEffect = setInterval(() => {
@@ -161,7 +163,7 @@ export const TypingAnimation = ({
     return () => {
       clearInterval(typingEffect)
     }
-  }, [children, duration, started, sequence, itemIndex])
+  }, [children, duration, started, sequence, itemIndex, reduceMotion])
 
   return (
     <motion.span
@@ -169,7 +171,7 @@ export const TypingAnimation = ({
       className={cn("text-sm font-normal tracking-tight", className)}
       {...props}
     >
-      {displayedText}
+      {reduceMotion ? children : displayedText}
     </motion.span>
   )
 }
@@ -232,8 +234,8 @@ export const Terminal = ({
           <div className="h-2 w-2 rounded-full bg-green-500"></div>
         </div>
       </div>
-      <pre className="p-4">
-        <code className="grid gap-y-1 overflow-auto">{wrappedChildren}</code>
+      <pre tabIndex={0} aria-label="Build notes" className="overflow-x-auto p-4">
+        <code className="grid min-w-max gap-y-1">{wrappedChildren}</code>
       </pre>
     </div>
   )

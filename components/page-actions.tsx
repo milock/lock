@@ -196,7 +196,7 @@ export function PageActions({
       <button
         type="button"
         onClick={copyMarkdown}
-        className="inline-flex items-center gap-1.5 rounded-l-lg px-3 py-1.5 transition-colors hover:bg-accent"
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-l-lg px-3 py-1.5 transition-colors hover:bg-accent"
         aria-label="Copy page as Markdown"
       >
         {copied ? (
@@ -208,7 +208,7 @@ export function PageActions({
       </button>
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="inline-flex items-center rounded-r-lg border-l border-foreground/15 px-1.5 transition-colors hover:bg-accent data-[state=open]:bg-accent"
+          className="inline-flex min-h-11 min-w-11 justify-center items-center rounded-r-lg border-l border-foreground/15 px-1.5 transition-colors hover:bg-accent data-[state=open]:bg-accent"
           aria-label="Page actions"
         >
           <ChevronDownIcon className="h-3.5 w-3.5" />
