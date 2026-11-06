@@ -234,8 +234,8 @@ export const Terminal = ({
           <div className="h-2 w-2 rounded-full bg-green-500"></div>
         </div>
       </div>
-      <pre tabIndex={0} aria-label="Build notes" className="overflow-x-auto p-4">
-        <code className="grid min-w-max gap-y-1">{wrappedChildren}</code>
+      <pre tabIndex={0} aria-label="Build notes" className="whitespace-pre-wrap break-words p-4">
+        <code className="grid min-w-0 gap-y-1">{wrappedChildren}</code>
       </pre>
     </div>
   )

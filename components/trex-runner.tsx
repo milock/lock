@@ -19,7 +19,7 @@ export function TrexRunner() {
         />
       </div>
       <p className="mt-2 text-center text-xs text-muted-foreground">
-        You made it to the bottom. Click the strip and hit space. 🦖
+        You made it to the bottom. Tap the game to play, or click it and press space. 🦖
       </p>
     </section>
   );

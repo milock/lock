@@ -30,7 +30,7 @@ export default function Hero() {
   const showMeteors = mounted && !reduceMotion;
 
   return (
-    <div className="relative flex h-full w-full mx-auto items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+    <div className="relative flex min-h-[26rem] w-full mx-auto sm:min-h-[22rem] items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
       {/* Restored template ambient field — meteors streak diagonally behind the
           positioning. Absolute background layer (z-0); the text block stays z-50
           so it always sits on top. Decorative only (pointer-events-none on each
@@ -40,7 +40,7 @@ export default function Hero() {
           <Meteors number={32} />
         </div>
       )}
-      <div className="flex flex-col items-start justify-center h-full overflow-hidden px-6 py-10 sm:p-10 z-50">
+      <div className="flex flex-col items-start justify-center px-6 py-12 sm:p-10 z-50">
         {/* Big, declarative H1. The positioning line drops to a subhead so the
             hero still says who he is without competing with the headline. */}
         <WordPullUp

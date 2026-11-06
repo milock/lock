@@ -37,6 +37,7 @@ import { ContactButtons } from "@/components/contact-button";
 import { PageActionsCompact } from "@/components/page-actions";
 import { AvatarDisc } from "@/components/avatar-disc";
 import { AskTile } from "@/components/ask-tile";
+import { HorizontalRail } from "@/components/horizontal-rail";
 import { RevealCard } from "@/components/reveal-card";
 
 import {
@@ -139,7 +140,7 @@ const features = [
       <>
         <div
           id="hero"
-          className="absolute right-0 top-0 h-full w-full border-none transition-all duration-300 ease-out"
+          className="relative w-full"
         >
           <Hero />
         </div>
@@ -203,26 +204,14 @@ const features = [
     href: profile.links.linkedin,
     cta: "Full history on LinkedIn",
     ctaIcon: <Linkedin className="mr-2 h-4 w-4" />,
-    className: "col-span-3 md:col-span-1",
-    background: (
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.7, delay: 0.15 }}
-      >
-        <Marquee
-          vertical
-          scrollable
-          aria-label="Experience"
-          className="absolute inset-x-0 top-0 h-[calc(100%-10rem)] [--gap:0.75rem] w-full px-4 pt-4"
-          pauseOnHover
-        >
+    className: "col-span-3 lg:col-span-1",
+    content: (
+      <HorizontalRail label="Experience">
           {experience.map((role, idx) => (
             <div
               key={idx}
               className={cn(
-                "group/exp relative w-full cursor-default overflow-hidden rounded-xl border px-3.5 py-3",
+                "group/exp relative min-w-0 cursor-default rounded-xl border px-3.5 py-3",
                 "border-gray-950/[.08] bg-white",
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.06]",
                 "transform-gpu transition-all duration-300 ease-out",
@@ -241,12 +230,12 @@ const features = [
                     href={role.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current dark:text-white"
+                    className="min-w-0 flex-1 text-sm font-bold leading-tight text-neutral-800 underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current dark:text-white"
                   >
                     {role.company}
                   </a>
                 ) : (
-                  <span className="min-w-0 flex-1 truncate text-sm font-bold leading-tight text-neutral-800 dark:text-white">
+                  <span className="min-w-0 flex-1 text-sm font-bold leading-tight text-neutral-800 dark:text-white">
                     {role.company}
                   </span>
                 )}
@@ -276,27 +265,17 @@ const features = [
 
               {/* Hairline divider, then the metric as quiet supporting text. */}
               <div className="mt-2.5 border-t border-gray-950/[.06] pt-2 dark:border-gray-50/[.08]">
-                <p className="text-[11px] leading-snug text-neutral-600 dark:text-neutral-400">
+                <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {role.metric}
                 </p>
               </div>
             </div>
           ))}
-        </Marquee>
-
-        {/* Experience is a VERTICAL marquee, so cards fill the full height and
-            the heading/description/CTA slide up over them on hover. This scrim
-            re-asserts the tile surface color (theme-aware via --background, so
-            it works in light AND dark) behind that lower text. It's short at
-            rest (more cards visible) and grows on hover as the heading rises.
-            Scoped to this tile so it never clips the other tiles' content. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_58%,transparent_100%)]" />
-      </motion.div>
+      </HorizontalRail>
     ),
   },
 
-  // Projects - its own full-width row so the cards have room to breathe and the
-  // marquee can drift slowly. Each card uses a stretched link (the title's
+  // Projects use a native horizontal rail. Each card has a stretched link (the title's
   // ::after covers the card) so the whole card navigates to /projects/<slug>,
   // while a separate Figma link can still sit on top for design-led work.
   {
@@ -304,39 +283,32 @@ const features = [
     name: "Projects",
     id: "projects",
     description: "Work I've shipped, from go-to-market to vibe-coded tools.",
-    className: "col-span-3 min-h-[26rem] min-[360px]:min-h-0",
+    className: "col-span-3",
     href: profile.links.github,
     cta: "GitHub",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
     href2: profile.links.portfolio,
     cta2: "Figma portfolio",
     cta2Icon: <Figma className="mr-2 h-4 w-4" />,
-    background: (
-      <div className="absolute h-full w-full left-0 top-0 origin-top rounded-md transition-all duration-300 ease-out group-hover:scale-[101%]">
-        <div className="absolute inset-x-0 top-0 h-[calc(100%-9rem)]">
-          <Marquee
-            scrollable
-          aria-label="Projects"
-            className="absolute inset-x-0 top-0 h-full w-full items-start p-4"
-            pauseOnHover
-          >
+    content: (
+      <HorizontalRail label="Projects">
             {projects.map((project, idx) => (
               <div
                 key={idx}
                 className={cn(
-                  "group/proj relative w-[min(18rem,calc(100vw-4rem))] overflow-hidden rounded-xl border p-4 motion-safe:hover:-translate-y-1",
+                  "group/proj relative min-w-0 rounded-xl border p-4 ",
                   "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] hover:border-gray-950/[.2]",
                   "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15] dark:hover:border-gray-50/[.2]",
                   "transform-gpu transition-all duration-300 ease-out"
                 )}
               >
                 {/* Top row: title (left) + language label (top-right). */}
-                <div className="flex items-baseline justify-between gap-2">
+                <div className="flex flex-col gap-1">
                   {/* Stretched link: ::after covers the whole card, so the
                       entire tile is clickable while staying valid HTML. */}
                   <a
                     href={project.href}
-                    className="text-sm font-bold text-neutral-800 after:absolute after:inset-0 dark:text-white"
+                    className="pr-5 text-base font-semibold leading-snug text-neutral-800 after:absolute after:inset-0 dark:text-white"
                   >
                     {project.name}
                   </a>
@@ -345,7 +317,7 @@ const features = [
                   </span>
                 </div>
 
-                <ArrowUpRight aria-hidden className="pointer-events-none absolute right-3 top-8 h-4 w-4 text-muted-foreground" />
+                <ArrowUpRight aria-hidden className="pointer-events-none absolute right-3 top-4 h-4 w-4 text-muted-foreground" />
 
                 <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                   <ProjectBadge type={project.type} />
@@ -356,7 +328,7 @@ const features = [
                       href={profile.links.portfolio}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative z-10 inline-flex min-h-8 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                      className="relative z-10 inline-flex min-h-11 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
                     >
                       <Figma className="h-3 w-3" />
                       Figma
@@ -369,7 +341,7 @@ const features = [
                       href={project.repo}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative z-10 inline-flex min-h-8 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
+                      className="relative z-10 inline-flex min-h-11 items-center gap-1 rounded-full px-2 py-[3px] text-[10px] font-medium leading-none ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 transition-colors hover:bg-black/[0.08] dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15 dark:hover:bg-white/[0.14]"
                     >
                       <Github className="h-3 w-3" />
                       GitHub
@@ -377,14 +349,12 @@ const features = [
                   )}
                 </div>
 
-                <blockquote className="mt-2.5 text-xs text-neutral-600 dark:text-neutral-400">
+                <blockquote className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {project.description}
                 </blockquote>
               </div>
             ))}
-          </Marquee>
-        </div>
-      </div>
+      </HorizontalRail>
     ),
   },
 
@@ -398,16 +368,7 @@ const features = [
     cta: "See the open-source tools",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
     className: "col-span-3 lg:col-span-2",
-    background: (
-      <div tabIndex={0} role="region" aria-label="Tool stack" className="absolute inset-x-0 top-0 h-[calc(100%-9rem)] overflow-y-auto px-4 pt-5">
-        <FadeIn
-          direction="up"
-          className="flex h-full w-full items-start justify-center"
-        >
-          <Technologies />
-        </FadeIn>
-      </div>
-    ),
+    content: <Technologies />,
   },
 
   // GitHub Stars - live, points at humanizer. Pairs with Stack (2 + 1 = 3).
@@ -415,7 +376,7 @@ const features = [
     Icon: "",
     name: "GitHub Stars",
     description: "Not a lot, but I'm proud of every single one.",
-    className: "col-span-3 md:col-span-1",
+    className: "col-span-3 lg:col-span-1",
     href: profile.links.github,
     cta: "View my GitHub",
     ctaIcon: <Github className="mr-2 h-4 w-4" />,
@@ -555,10 +516,8 @@ const features = [
     className: "col-span-3 lg:col-span-2",
     href: "/projects/lock",
     cta: "How I built it",
-    background: (
-      <>
-        <div className="absolute h-[calc(100%-10rem)] w-full left-0 top-0 overflow-auto rounded-md">
-          <div className="flex h-full w-full items-start justify-center p-4 sm:items-center">
+    content: (
+      <div className="px-4">
           <Terminal className="h-auto w-full max-w-md">
             <TypingAnimation>$ git log --oneline this-site</TypingAnimation>
             <AnimatedSpan>✔ Next.js + TypeScript + Tailwind</AnimatedSpan>
@@ -579,13 +538,7 @@ const features = [
               </span>
             </AnimatedSpan>
           </Terminal>
-          </div>
-        </div>
-        {/* Scrim so "Vibe-coded by me" stays readable over the terminal,
-            especially on short mobile tiles. Theme-aware (light + dark), short
-            at rest and grows on hover as the heading rises. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%]  bg-[linear-gradient(to_top,hsl(var(--background))_0%,hsl(var(--background))_56%,transparent_100%)]" />
-      </>
+      </div>
     ),
   },
 ];

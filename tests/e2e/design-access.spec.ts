@@ -62,3 +62,20 @@ test('a long streamed reply stays inside the chat and can be reset', async ({ pa
   await page.getByRole('button', { name: 'New conversation' }).click();
   await expect(conversation).not.toContainText('A long answer about the work.');
 });
+
+test('narrow layout grows with enlarged text', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto('/');
+  await page.evaluate(() => { document.documentElement.style.fontSize = '20px'; });
+  const hero = page.locator('#hero');
+  const heading = page.getByRole('heading', { level: 1 });
+  const heroBox = (await hero.boundingBox())!;
+  const headingBox = (await heading.boundingBox())!;
+  expect(headingBox.y).toBeGreaterThanOrEqual(heroBox.y);
+  expect(headingBox.y + headingBox.height).toBeLessThanOrEqual(heroBox.y + heroBox.height);
+  const resume = page.locator('#contact a[download]');
+  expect(await resume.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  const stackAction = page.getByRole('link', { name: 'See the open-source tools' });
+  expect(await stackAction.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

@@ -34,7 +34,7 @@ function ToolChip({ tool }: { tool: StackTool }) {
   return (
     <div
       className={[
-        "group/chip flex items-center gap-2 rounded-full px-3 py-1.5",
+        "group/chip flex min-h-11 items-center gap-2 rounded-full px-3 py-1.5",
         "text-xs font-medium transition-colors duration-200 ease-out",
         // Light: dark text on a faint dark wash so chips read on white.
         "border border-black/[0.08] bg-black/[0.03] text-neutral-700",
@@ -60,6 +60,7 @@ function ToolChip({ tool }: { tool: StackTool }) {
             width={20}
             height={20}
             loading="lazy"
+            onError={() => setBroken(true)}
             className="h-5 w-5 shrink-0 opacity-90 transition-opacity duration-200 group-hover/chip:opacity-100 dark:hidden"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -82,17 +83,14 @@ function ToolChip({ tool }: { tool: StackTool }) {
 
 export default function Technologies() {
   return (
-    <div className="flex h-full w-full items-start justify-center">
-      <div
-        className="flex max-w-2xl flex-wrap content-start justify-center gap-2 px-2 py-1"
-        role="list"
-        aria-label="AI-native and go-to-market tool stack"
-      >
-        {stack.map((tool) => (
-          <div role="listitem" key={tool.name}>
-            <ToolChip tool={tool} />
-          </div>
-        ))}
+    <div>
+      <p className="mb-2 px-5 text-xs text-muted-foreground sm:px-6">Swipe or scroll to browse</p>
+      <div role="region" aria-label="Tool stack" tabIndex={0} className="horizontal-rail px-4 pb-3 pt-1">
+        <div className="grid w-max grid-flow-col grid-rows-3 items-stretch gap-2" role="list" aria-label="AI-native and go-to-market tool stack">
+          {stack.map((tool) => (
+            <div role="listitem" key={tool.name}><ToolChip tool={tool} /></div>
+          ))}
+        </div>
       </div>
     </div>
   );

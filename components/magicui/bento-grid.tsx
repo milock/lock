@@ -31,6 +31,7 @@ const BentoCard = ({
   name,
   className,
   background,
+  content,
   Icon,
   description,
   href,
@@ -46,6 +47,7 @@ const BentoCard = ({
   name?: string;
   className?: string;
   background?: ReactNode;
+  content?: ReactNode;
   Icon?: any;
   description?: string;
   href?: string;
@@ -74,7 +76,13 @@ const BentoCard = ({
         "dark:bg-background dark:[border:1px_solid_rgba(255,255,255,.1)]"
       )}
     >
-    <div>{background}</div>
+    {content ? <>
+      <div className="px-5 pb-4 pt-5 sm:px-6 sm:pt-6">
+        <h2 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">{name}</h2>
+        <p className="mt-1 text-neutral-600 dark:text-neutral-400">{description}</p>
+      </div>
+      <div className="min-w-0 flex-1">{content}</div>
+    </> : <div>{background}</div>}
     {/* Readability scrim: an opaque-at-BOTTOM, fade-up-to-transparent wash
         sitting between the background art (z-0) and the header text (z-10).
         justify-between pins the title/description to the bottom of the tile, so
@@ -82,13 +90,13 @@ const BentoCard = ({
         Projects marquee) completely clear. Only on tiles that actually have a
         header — tiles that render their own content in `background`
         (Hero/About/Contact) pass no name and must not be washed. */}
-    {name ? (
+    {name && !content ? (
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-32 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-background dark:via-background/75 dark:to-transparent sm:h-36"
       />
     ) : null}
-    {name && <div className={cn("pointer-events-none z-10 flex flex-col gap-1 p-6 pb-16", cta2 && "pb-28 min-[360px]:pb-16")}>
+    {name && !content && <div className={cn("pointer-events-none z-10 flex flex-col gap-1 p-6 pb-16", cta2 && "pb-28 min-[360px]:pb-16")}>
       <div className="flex flex-col gap-2">
         <div>
           {Icon ? (
@@ -111,7 +119,8 @@ const BentoCard = ({
       className={cn(
         // z-20 keeps the CTA above the readability scrim (z-5) so the buttons
         // never get dimmed by it.
-        "pointer-events-none absolute bottom-0 z-20 flex w-full flex-row flex-wrap items-center gap-1 px-4 pb-3",
+        "pointer-events-none z-20 flex w-full flex-row flex-wrap items-center gap-1 px-4 pb-3",
+        content ? "relative pt-3" : "absolute bottom-0",
         ctaCenter && "justify-center"
       )}
     >
@@ -120,7 +129,7 @@ const BentoCard = ({
           variant="ghost"
           asChild
           size="sm"
-          className="pointer-events-auto group/Arrow"
+          className="pointer-events-auto group/Arrow h-auto min-h-11 max-w-full whitespace-normal py-2 text-left [&_svg]:shrink-0"
         >
           <a href={href}>
             {ctaIcon}
@@ -136,7 +145,7 @@ const BentoCard = ({
           variant="ghost"
           asChild
           size="sm"
-          className="pointer-events-auto group/Arrow2"
+          className="pointer-events-auto group/Arrow2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-left [&_svg]:shrink-0"
         >
           <a href={href2} target="_blank" rel="noreferrer">
             {cta2Icon}

@@ -13,7 +13,7 @@ export function CtaButtons({ className, row = false }: { className?: string; row
     { label: "Figma portfolio", href: profile.links.portfolio, Icon: Figma },
   ];
   const resume = (
-    <Button asChild variant="outline" className={cn("h-12 gap-2", !row && "min-w-0 flex-1 px-2")}>
+    <Button asChild variant="outline" className={cn("h-12 gap-2", !row && "basis-24 flex-1 px-2")}>
       <a href={profile.links.resume} download><Download className="h-4 w-4" /><span>Résumé</span></a>
     </Button>
   );
@@ -29,7 +29,7 @@ export function CtaButtons({ className, row = false }: { className?: string; row
       <Button asChild size="lg" className={cn("h-12 gap-2 text-base font-semibold", row ? "px-5" : "w-full")}>
         <a href={profile.links.email}><Mail className="h-5 w-5" /><span>Email</span></a>
       </Button>
-      {row ? <>{resume}<div className="flex items-center gap-2">{socials}</div></> : <div className="flex items-center gap-1">{resume}{socials}</div>}
+      {row ? <>{resume}<div className="flex items-center gap-2">{socials}</div></> : <div className="flex flex-wrap items-center gap-2">{resume}<div className="flex items-center gap-2">{socials}</div></div>}
     </div>
   );
 }
