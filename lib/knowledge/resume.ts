@@ -13,6 +13,7 @@ Principal Product Marketer at Super Green - Healthcare and clinical/technical pr
 - My work includes positioning, sales decks, website messaging, case studies, and customer and technical content.
 
 ### Clarity RCM - Head of Marketing (Founding Marketer) - San Francisco, California - Previous role, started 2025
+- Clarity RCM is a dermatology revenue cycle management company.
 - Founder-led sales built Clarity's early base with no marketing function. I built that function from scratch - positioning, messaging, brand narrative, and the foundational assets that carry it (website, sales decks, collateral) - plus the inbound and win-rate engine I built on top of that base: a 300% increase in qualified inbound, a 30% increase in win rate, and $7M in closed-won ARR (up 35% year over year).
 - Launched The Practice Layer, a weekly healthcare-industry newsletter, built a fully automated AI content generation pipeline, and grew it from zero to over 5,000 subscribers at a 53% open rate (3x the 16% category benchmark). This channel generated over $1.5M in pipeline within the first 3 months.
 - Managed a $150K events budget plus external vendors and agencies (PR, creative, video) to scale output without adding headcount, resulting in $3M ARR from new logos.
@@ -24,10 +25,10 @@ Principal Product Marketer at Super Green - Healthcare and clinical/technical pr
 - Designed and rolled out a good-better-best pricing and packaging architecture that lifted attach rate nearly 40% and expanded ARPA roughly 1.75x within two quarters; the framework stayed in use after I left.
 
 ### 360training - Product Marketing Lead, Healthcare Vertical - Austin, Texas - 2022 to 2023
-- Built the PMM function from zero to a team of four, and stood up the healthcare vertical's GTM and competitive-intelligence motion. The team overhauled B2B positioning, achieving 40% operating margin and $7M incremental ARR for the business unit.
+- Built the PMM function from zero to a team of four, and stood up the healthcare vertical's GTM and competitive-intelligence motion. The team overhauled B2B positioning, achieving 40% operating margin and $7M incremental ARR for the business unit. My site also says I helped double the business from $36M to $72M.
 - Owned GTM for an acquired HIPAA compliance exam product line, taking it to $10M ARR within 12 months as the fastest-growing line in the portfolio.
 
-### ExSite - Fractional Product Marketing - Austin, Texas - 2018 to 2022
+### ExSite - Founder, Fractional Product Marketing - Austin, Texas - 2018 to 2022
 - Directed end-to-end GTM and built reusable launch frameworks (positioning canvas, ICP methodology, messaging frameworks, launch-readiness checklists) for over 30 clients, adopted as their internal standards; generated 70%+ repeat and referral business.
 
 ### Meta - Product Operations Analyst, Platform - Austin, Texas - 2016 to 2018

@@ -251,10 +251,10 @@ export function AskTile() {
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
       <div className="flex flex-col gap-1">
-        <h2 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
+        <h2 className="text-2xl font-semibold tracking-[-0.02em] text-neutral-950 sm:text-[1.75rem] sm:leading-tight dark:text-white">
           Ask me anything
         </h2>
-        <p className="text-neutral-500 dark:text-neutral-400">
+        <p className="text-neutral-600 dark:text-neutral-400">
           Curious how I work or what I&apos;ve shipped? Type a question.
         </p>
       </div>
@@ -364,9 +364,6 @@ export function AskTile() {
         )}
 
         <PromptInputBox onSend={send} isLoading={isLoading} />
-        <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-          Messages may be saved to improve this assistant. Please avoid sensitive information.
-        </p>
       </div>
     </motion.div>
   );

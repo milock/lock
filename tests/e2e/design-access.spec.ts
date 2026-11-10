@@ -7,7 +7,8 @@ test('reduced-motion visitors can see and navigate the page', async ({ page }) =
   await expect(page.locator('.group\\/tile').first()).toHaveCSS('opacity', '1');
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('a button')).toHaveCount(0);
-  await expect(page.getByRole('region', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.locator('#projects')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filter projects' })).toBeVisible();
   await expect(page.locator('a[href="/projects/thriftly"]')).toHaveCount(1);
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();

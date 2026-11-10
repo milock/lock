@@ -25,7 +25,11 @@ export const mdxOptions: MDXRemoteProps["options"] = {
         {
           behavior: "wrap",
           properties: {
-            className: ["no-underline hover:underline"],
+            // Styled in the project-page block at the end of app/globals.css.
+            // Tailwind utilities here would never be generated, since lib/ is
+            // outside the content globs, which is why headings rendered as
+            // underlined links before.
+            className: ["heading-anchor"],
           },
         },
       ],

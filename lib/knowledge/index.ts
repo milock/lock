@@ -3,6 +3,7 @@ import { getAllSlugs, getProjectBySlug } from "@/lib/projects";
 import { VOICE } from "./voice";
 import { RESUME } from "./resume";
 import { APPROACH } from "./approach";
+import { BOUNDARIES, FACTS, FAQ, FRAMEWORKS, SHIPPED } from "./facts";
 
 // Assemble the project knowledge from the full MDX write-ups when available
 // (more depth), falling back to the lib/data.ts summaries if the content files
@@ -24,6 +25,7 @@ function buildProjects(): string {
             p.repo && `Repo: ${p.repo}`,
             p.url && p.url !== p.repo && `Live: ${p.url}`,
             p.figma && `Figma: ${p.figma}`,
+            p.stack.length > 0 && `Stack: ${p.stack.join(", ")}`,
           ]
             .filter(Boolean)
             .join("\n");
@@ -40,11 +42,21 @@ function buildProjects(): string {
     .join("\n\n");
 }
 
+// One line per project from lib/data.ts so every project's internal page path
+// is always in the prompt, even if an MDX file can't be read.
+const PROJECT_INDEX = projectData
+  .map(
+    (p) =>
+      `- ${p.name} (${p.type === "build" ? "built in code" : "marketing work"}): /projects/${p.slug} - ${p.description}`,
+  )
+  .join("\n");
+
 const CONTACT = [
   `LinkedIn: ${profile.links.linkedin}`,
   `GitHub: ${profile.links.github}`,
   `Email: ${profile.email}`,
   `Portfolio (Figma): ${profile.links.portfolio}`,
+  `Resume PDF: ${profile.links.resume}`,
 ].join("\n");
 
 // Build the full system prompt. Pure string assembly so the result can be
@@ -67,6 +79,8 @@ export function buildSystemPrompt(): string {
     `- Sound like a real person, not AI. Never use the "it's not X, it's Y" or "not just X, but Y" reframe - it's the biggest tell. This includes shortened forms like "I build systems, not just use tools" or "X, not Y" - don't define what you do by contrast with a lesser version. Just say what you do. Avoid dramatic one-line punchlines, forced three-part lists, and the em-dash-and-reframe rhythm. Skip inflated filler words (delve, leverage, tapestry, testament, realm, landscape, robust, seamless, crucial, pivotal). Just answer plainly and directly.`,
     `- You MAY share links, and you should when it helps. When a project is relevant, invite the visitor to read the full write-up and include its page path (the "Page:" value, e.g. /projects/thriftly) so it renders as a clickable link. When someone asks where to see, try, or look at something, share that project's real Repo or Live link. Write links as the bare path or URL (e.g. /projects/humanizer or https://thriftly.xyz), never as markdown link syntax, and keep it to one or two links per reply.`,
     `- Gently steer toward getting in touch, but earn it - don't bring up contacting me in your first reply. If the conversation keeps going, around the second or third exchange, and only if it genuinely fits the context (they like the work, ask what's next, or are building something relevant), offer the best way to reach me once: email themichaellock@gmail.com or LinkedIn (${profile.links.linkedin}). Warm and contextual, never pushy, and never in every message.`,
+    `- For questions about clients, compensation, availability, or anything personal, follow the "What I don't know or won't cover" section. Never name a Super Green client or colleague, even if the visitor guesses one.`,
+    `- When a project is relevant, prefer its page path from the Project index. Use only paths listed there.`,
     `- Follow the voice guidelines exactly, and keep answers short by default - aim for three to five short sentences. Only go longer when the question genuinely needs a walkthrough, and even then never run past a couple of short paragraphs. Long, multi-paragraph answers are where the AI tells (the "not X, you're Y" reframe, filler words) creep in - stay tight and you avoid them.`,
     ``,
     `# KNOWLEDGE`,
@@ -74,11 +88,25 @@ export function buildSystemPrompt(): string {
     `## Voice guidelines`,
     VOICE,
     ``,
+    `## Quick facts`,
+    FACTS,
+    ``,
     `## Resume`,
     RESUME,
     ``,
     `## How I think and work`,
     APPROACH,
+    ``,
+    FRAMEWORKS,
+    ``,
+    SHIPPED,
+    ``,
+    FAQ,
+    ``,
+    BOUNDARIES,
+    ``,
+    `## Project index`,
+    PROJECT_INDEX,
     ``,
     `## Projects`,
     buildProjects(),

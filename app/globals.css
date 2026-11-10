@@ -254,15 +254,155 @@
     }
 
 }
-/* Horizontal collections never own a vertical scroll gesture. */
-.horizontal-rail {
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  overscroll-behavior-y: auto;
-  touch-action: auto;
-  scrollbar-width: thin;
-  scroll-padding-inline: 1rem;
+
+/* ==========================================================================
+   Project detail pages (app/projects/[slug]) - owned by the project-page
+   pass. Scoped to .project-page / .project-prose so nothing here reaches the
+   homepage. Append-only block; edit inside it, not elsewhere.
+   ========================================================================== */
+.project-title {
+  letter-spacing: -0.035em;
+  text-wrap: balance;
 }
-.horizontal-rail:focus-visible { outline-offset: -3px; }
+.project-lede { text-wrap: pretty; }
+.project-results__value {
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* Entrance: header parts settle in once, staggered. The resting state is the
+   visible state (fill-mode: backwards), so without CSS animation support, or
+   with reduced motion, everything renders in place immediately. No JS. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes project-rise {
+    from { opacity: 0; transform: translateY(8px); }
+  }
+  .project-header > *,
+  .project-page .project-results {
+    animation: project-rise 560ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .project-header > :nth-child(2) { animation-delay: 60ms; }
+  .project-header > :nth-child(3) { animation-delay: 120ms; }
+  .project-header > :nth-child(4) { animation-delay: 160ms; }
+  .project-page .project-results { animation-delay: 200ms; }
+}
+
+/* Body: full-ink text, ~70 character measure, real heading steps. */
+.project-prose {
+  --tw-prose-body: hsl(var(--foreground) / 0.92);
+  --tw-prose-bullets: hsl(var(--muted-foreground) / 0.7);
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-quotes: hsl(var(--foreground));
+  font-size: 1.0625rem;
+  line-height: 1.72;
+}
+.project-prose :where(p, ul, ol, blockquote, h2, h3, h4, table) {
+  max-width: 38.5rem;
+}
+.project-prose p { text-wrap: pretty; }
+.project-prose > :first-child { margin-top: 0; }
+.project-prose > p:first-child {
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground));
+}
+.project-prose h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 3.5rem;
+  margin-bottom: 0.875rem;
+  text-wrap: balance;
+  scroll-margin-top: 2rem;
+}
+.project-prose h3 {
+  font-size: 1.1875rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.project-prose :where(h2, h3) a.heading-anchor {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+.project-prose :where(h2, h3) a.heading-anchor:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: hsl(var(--muted-foreground) / 0.6);
+}
+.project-prose a:not(.heading-anchor) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: hsl(var(--foreground) / 0.35);
+  transition: text-decoration-color 150ms ease;
+}
+.project-prose a:not(.heading-anchor):hover {
+  text-decoration-color: hsl(var(--foreground));
+}
+.project-prose strong { font-weight: 600; }
+.project-prose :where(ul, ol) { padding-left: 1.25rem; }
+.project-prose li { margin-top: 0.4em; margin-bottom: 0.4em; padding-left: 0.25rem; }
+.project-prose blockquote {
+  border-left: 1px solid hsl(var(--border));
+  padding-left: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+}
+.project-prose blockquote p:first-of-type::before,
+.project-prose blockquote p:last-of-type::after { content: none; }
+.project-prose :not(pre) > code {
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+  background: hsl(var(--secondary));
+}
+.project-prose :not(pre) > code::before,
+.project-prose :not(pre) > code::after { content: none; }
+
+/* Media and code frames: one treatment, a little wider than the measure. */
+.project-prose pre {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  background: hsl(var(--secondary) / 0.5);
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.project-prose > :is(pre, figure, div:has(> video), div:has(> iframe)) {
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
+}
+@media (min-width: 1024px) {
+  .project-prose > :is(pre, figure, div:has(> video), div:has(> iframe)) {
+    margin-left: -2.5rem;
+    margin-right: -2.5rem;
+    width: calc(100% + 5rem);
+    max-width: none;
+  }
+}
+
+/* Previous / next */
+.project-pager__link {
+  display: block;
+  min-height: 44px;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border) / 0.7);
+  padding: 1rem 1.125rem 1.125rem;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.project-pager__link:hover {
+  border-color: hsl(var(--border));
+  background: hsl(var(--accent) / 0.5);
+}
+.project-pager__link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+/* ===================== end project detail pages ===================== */

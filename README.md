@@ -3,8 +3,8 @@
 > A dark, animated bento landing page for a health-tech product marketing leader and AI-native operator. Designed, built, and shipped solo.
 
 [![Live](https://img.shields.io/badge/Live-michael--lock.com-000000?logo=vercel&logoColor=white)](https://michael-lock.com)
-[![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-0055FF?logo=framer&logoColor=white)](https://www.framer.com/motion/)
@@ -15,7 +15,7 @@
 
 My personal site, live at **[michael-lock.com](https://michael-lock.com)**. The home page is a single-page bento grid: who I am, the work I've shipped, the AI-native and go-to-market stack I build on, and how to reach me. Every project links to its own write-up rendered from MDX, and there's an "ask me anything" console — a chatbot grounded only in my resume and project write-ups (Anthropic Claude), with streaming replies and a rate-limited server endpoint.
 
-Built with Next.js 14 (App Router). It leans on scroll-reveal animation, server components, and a single source of content in `lib/data.ts`.
+Built with Next.js 15 (App Router). It leans on scroll-reveal animation, server components, and a single source of content in `lib/data.ts`.
 
 ## Features
 
@@ -39,7 +39,7 @@ Built with Next.js 14 (App Router). It leans on scroll-reveal animation, server 
 
 | Area | Choice |
 |------|--------|
-| Framework | Next.js 14 (App Router), React 18 |
+| Framework | Next.js 15 (App Router), React 19 |
 | Language | TypeScript |
 | Styling | Tailwind CSS 3, shadcn/ui, magic-ui |
 | Animation | Framer Motion |
@@ -112,8 +112,10 @@ are marked `no-store` and `no-referrer`.
 
 `CHAT_IP_HASH_SECRET` is optional. Set a separate random secret to enable keyed IP
 hashes; otherwise new records omit IP hashes. Old database records are unchanged.
-The chat displays a retention notice. A database retention period still needs to
-be chosen; this update does not delete conversations.
+The chat no longer displays a retention notice (removed November 10, 2026), so
+conversations are logged without on-page disclosure whenever `DATABASE_URL` is
+set. A database retention period still needs to be chosen; this update does not
+delete conversations.
 
 Security dependency overrides are in `pnpm-workspace.yaml`. Keep this file with
 the lockfile. Browser tests require `pnpm exec playwright install chromium`.

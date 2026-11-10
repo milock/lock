@@ -13,6 +13,8 @@ import { mdxOptions } from "@/lib/mdx-options";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { VideoEmbed } from "@/components/video-embed";
 import { PageActions } from "@/components/page-actions";
+import { ProjectResults } from "@/components/project/project-results";
+import { ProjectPager } from "@/components/project/project-pager";
 import {
   MemoryArchitectureDiagram,
   IngestFlowDiagram,
@@ -74,6 +76,15 @@ export default async function ProjectPage({ params }: PageProps) {
     ? "Watch the video"
     : "Live site";
 
+  // Quiet sentence-case meta line: the discipline or language from
+  // frontmatter, folded into the tag row. Replaces the old mono eyebrow.
+  // Skipped when it only repeats a stack tag (e.g. "TypeScript").
+  const meta = project.stack.some(
+    (t) => t.toLowerCase() === project.language.toLowerCase(),
+  )
+    ? ""
+    : project.language;
+
   return (
     <div className="relative min-h-screen bg-background">
       {/* Atmospheric top wash - subtle, on-theme with the bento grid */}
@@ -85,82 +96,102 @@ export default async function ProjectPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.4)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.4)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_20%,transparent_80%)]" />
       </div>
 
-      <main id="main-content" className="relative mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
-        <div className="mb-10 flex items-center justify-between">
+      <main
+        id="main-content"
+        className="project-page relative mx-auto w-full max-w-[44rem] px-4 pb-16 pt-6 sm:px-5 md:pb-20 md:pt-12"
+      >
+        <div className="mb-10 flex items-center justify-between gap-3 md:mb-14">
           <Link
-            href="/"
-            className="group inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            href="/#projects"
+            className="group -ml-1 inline-flex min-h-11 items-center gap-1.5 rounded-md px-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-            Back
+            All projects
           </Link>
           <PageActions mdPath={`/projects/${slug}.md`} />
         </div>
 
-        <header className="mb-12">
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            {project.language ? `Project · ${project.language}` : "Project"}
-          </p>
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
+        <header className="project-header">
+          <h1 className="project-title text-[2.5rem] font-semibold leading-[1.05] text-foreground sm:text-5xl md:text-[3.5rem]">
             {project.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          <p className="project-lede mt-5 max-w-[38rem] text-lg leading-relaxed text-foreground/80 md:text-xl md:leading-relaxed">
             {project.description}
           </p>
 
-          {project.stack.length > 0 && (
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {project.stack.map((tool) => (
-                <li
-                  key={tool}
-                  className="rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs text-secondary-foreground"
-                >
-                  {tool}
-                </li>
-              ))}
-            </ul>
+          {(meta || project.stack.length > 0) && (
+            <div className="project-meta mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+              {meta && <p className="text-sm text-muted-foreground">{meta}</p>}
+              {meta && project.stack.length > 0 && (
+                <span aria-hidden className="h-4 w-px bg-border" />
+              )}
+              {project.stack.length > 0 && (
+                <ul aria-label="Skills and stack" className="flex flex-wrap gap-1.5">
+                  {project.stack.map((tool) => (
+                    <li
+                      key={tool}
+                      className="rounded-full border border-border/80 px-2.5 py-0.5 text-xs text-muted-foreground"
+                    >
+                      {tool}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            {project.repo && (
-              <a
-                href={project.repo}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
-              >
-                <GitHubLogoIcon className="h-4 w-4" />
-                View repo
-              </a>
-            )}
-            {hasLiveSite && (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-              >
-                {liveLabel}
-                <ArrowTopRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            )}
-            {project.figma && (
-              <a
-                href={project.figma}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-              >
-                <FigmaLogoIcon className="h-4 w-4" />
-                View in Figma
-              </a>
-            )}
-          </div>
+          {(project.repo || hasLiveSite || project.figma) && (
+            <div className="project-actions mt-8 flex flex-wrap gap-3">
+              {hasLiveSite && (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex min-h-11 items-center gap-2 rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                >
+                  {liveLabel}
+                  <ArrowTopRightIcon className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
+              )}
+              {project.repo && (
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    hasLiveSite
+                      ? "border border-border text-foreground hover:bg-accent"
+                      : "bg-foreground text-background hover:opacity-90"
+                  }`}
+                >
+                  <GitHubLogoIcon className="h-4 w-4" />
+                  View repo
+                </a>
+              )}
+              {project.figma && (
+                <a
+                  href={project.figma}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                >
+                  <FigmaLogoIcon className="h-4 w-4" />
+                  View in Figma
+                </a>
+              )}
+            </div>
+          )}
         </header>
 
-        <div className="h-px w-full bg-border/60" />
+        {project.results.length > 0 ? (
+          <div className="mt-12 border-y border-border/70 py-8 md:mt-14 md:py-10">
+            <ProjectResults results={project.results} />
+          </div>
+        ) : (
+          <div className="mt-12 h-px w-full bg-border/70 md:mt-14" />
+        )}
 
-        <article className="prose prose-neutral mt-12 max-w-none dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl prose-h2:font-semibold prose-a:font-medium prose-a:underline-offset-4">
+        <article className="project-prose prose prose-neutral mt-12 max-w-none dark:prose-invert md:mt-14">
           <MDXRemote
             source={project.content}
             options={mdxOptions}
@@ -168,15 +199,7 @@ export default async function ProjectPage({ params }: PageProps) {
           />
         </article>
 
-        <div className="mt-16 border-t border-border/60 pt-6">
-          <Link
-            href="/"
-            className="group inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeftIcon className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-            Back to home
-          </Link>
-        </div>
+        <ProjectPager slug={slug} />
       </main>
     </div>
   );

@@ -13,6 +13,13 @@ stack:
   - Vercel
 language: TypeScript
 figma: ""
+results:
+  - value: "7"
+    label: "sources indexed into one vector store"
+  - value: "6"
+    label: "syncs a day on weekdays"
+  - value: "127"
+    label: "unit tests at launch"
 ---
 
 This is the memory layer underneath my AI assistant. It's two services I designed and built: a sync pipeline that indexes my work surface into a vector store, and a custom MCP server my assistant connects to so it can recall any of it on demand. It's the substrate the rest of my stack runs on: interactive sessions, the research pipeline, and the competitive monitor all read from the same memory. It has run in production since April 2026.

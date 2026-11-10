@@ -14,6 +14,16 @@ export interface ProjectFrontmatter {
   language: string;
   // Optional Figma portfolio link, surfaced as a button on design-led projects.
   figma: string;
+  // Optional key results shown as a figure band under the page header. Each
+  // entry restates a number already written in that project's own MDX body, so
+  // the band never carries a claim the write-up does not. Projects without hard
+  // numbers simply omit it and get no band.
+  results: ProjectResult[];
+}
+
+export interface ProjectResult {
+  value: string;
+  label: string;
 }
 
 export interface ProjectMeta extends ProjectFrontmatter {}
@@ -25,6 +35,16 @@ export interface Project extends ProjectMeta {
 function getProjectFiles(): string[] {
   if (!fs.existsSync(PROJECTS_DIR)) return [];
   return fs.readdirSync(PROJECTS_DIR).filter((file) => file.endsWith(".mdx"));
+}
+
+function parseResults(raw: unknown): ProjectResult[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item) => ({
+      value: String(item?.value ?? "").trim(),
+      label: String(item?.label ?? "").trim(),
+    }))
+    .filter((item) => item.value && item.label);
 }
 
 function readProject(slug: string): Project | null {
@@ -44,6 +64,7 @@ function readProject(slug: string): Project | null {
     stack: Array.isArray(data.stack) ? data.stack.map(String) : [],
     language: String(data.language ?? ""),
     figma: String(data.figma ?? ""),
+    results: parseResults(data.results),
   };
 
   return { ...frontmatter, content };

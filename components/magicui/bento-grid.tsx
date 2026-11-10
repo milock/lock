@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { ReactNode } from "react";
 import { RevealCard } from "@/components/reveal-card";
 
+// Tiles size to their content on phones; from md up a shared minimum row height
+// keeps side-by-side tiles level without forcing dead space into short ones.
 const BentoGrid = ({
   children,
   className,
@@ -14,10 +16,7 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        // Tighter rows trim the dead band between a tile's top content and its
-        // bottom-anchored heading (the marquee/Stack tiles fill their height, so
-        // they stay full while the rest get less white space).
-        "grid w-full auto-rows-[minmax(22rem,auto)] grid-cols-3 gap-2 sm:auto-rows-[minmax(22rem,auto)] md:auto-rows-[minmax(22rem,auto)] lg:gap-4",
+        "grid w-full auto-rows-auto grid-cols-3 gap-2 md:auto-rows-[minmax(20rem,auto)] lg:gap-4",
         className
       )}
     >
@@ -26,13 +25,107 @@ const BentoGrid = ({
   );
 };
 
+// One heading treatment for every tile: full-ink, tight tracking, a clear step
+// above the description. Exported so bespoke tiles (Contact) share the scale.
+export const tileHeadingClass =
+  "text-2xl font-semibold tracking-[-0.02em] text-neutral-950 sm:text-[1.75rem] sm:leading-tight dark:text-white";
+
+type BentoCardProps = {
+  id?: string;
+  name?: string;
+  className?: string;
+  // Bespoke tiles (Hero, About, Contact) render everything themselves here.
+  background?: ReactNode;
+  // Standard tiles: heading + description on top, content, then the CTA row.
+  content?: ReactNode;
+  // "split" puts heading and CTAs in a left column beside the content at lg.
+  layout?: "stack" | "split";
+  description?: string;
+  href?: string;
+  cta?: string;
+  href2?: string;
+  cta2?: string;
+  ctaIcon?: ReactNode;
+  cta2Icon?: ReactNode;
+  ctaCenter?: boolean;
+  index?: number;
+};
+
+// Phone-only "Show all" control for long tile lists. The hidden items stay in
+// the DOM (and server HTML) and are revealed with CSS, so nothing scrolls inside
+// a tile and the content is still crawlable. Renders nothing from sm up, where
+// every list shows in full.
+export function DisclosureButton({
+  controls,
+  expanded,
+  onToggle,
+  moreLabel,
+  lessLabel,
+  className,
+}: {
+  controls: string;
+  expanded: boolean;
+  onToggle: () => void;
+  moreLabel: string;
+  lessLabel: string;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      aria-expanded={expanded}
+      aria-controls={controls}
+      onClick={onToggle}
+      className={cn(
+        "inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border text-sm font-medium transition-colors sm:hidden",
+        "border-black/[0.08] bg-black/[0.02] text-neutral-800 hover:bg-black/[0.05] active:bg-black/[0.07]",
+        "dark:border-white/[0.1] dark:bg-white/[0.03] dark:text-neutral-200 dark:hover:bg-white/[0.07] dark:active:bg-white/[0.09]",
+        className
+      )}
+    >
+      {expanded ? lessLabel : moreLabel}
+      <ChevronDownIcon
+        aria-hidden
+        className={cn("h-4 w-4 transition-transform duration-200", expanded && "rotate-180")}
+      />
+    </button>
+  );
+}
+
+function CtaLink({
+  href,
+  label,
+  icon,
+  external,
+}: {
+  href: string;
+  label: string;
+  icon?: ReactNode;
+  external?: boolean;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      asChild
+      size="sm"
+      className="pointer-events-auto group/Arrow h-auto min-h-11 max-w-full whitespace-normal px-3 py-2 text-left text-neutral-800 hover:text-neutral-950 dark:text-neutral-200 dark:hover:text-white [&_svg]:shrink-0"
+    >
+      <a href={href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
+        {icon}
+        {label}
+        <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform duration-300 lg:group-hover/Arrow:translate-x-1" />
+      </a>
+    </Button>
+  );
+}
+
 const BentoCard = ({
   id,
   name,
   className,
   background,
   content,
-  Icon,
+  layout = "stack",
   description,
   href,
   cta,
@@ -42,125 +135,78 @@ const BentoCard = ({
   cta2Icon,
   ctaCenter,
   index = 0,
-}: {
-  id?: string;
-  name?: string;
-  className?: string;
-  background?: ReactNode;
-  content?: ReactNode;
-  Icon?: any;
-  description?: string;
-  href?: string;
-  cta?: string;
-  // Optional second CTA, rendered beside the first (e.g. GitHub + Figma).
-  href2?: string;
-  cta2?: string;
-  // Optional leading logos for each CTA.
-  ctaIcon?: ReactNode;
-  cta2Icon?: ReactNode;
-  // Center the CTA row instead of left-aligning it (used by the About tile).
-  ctaCenter?: boolean;
-  index?: number;
-}) => (
-  <RevealCard
-    index={index}
-    className={cn("col-span-3", className)}
-  >
-    <div
-      id={id}
-      className={cn(
-        "tile-surface group relative flex h-full flex-col justify-between overflow-hidden",
-        // light styles
-        "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
-        // dark styles
-        "dark:bg-background dark:[border:1px_solid_rgba(255,255,255,.1)]"
-      )}
-    >
-    {content ? <>
-      <div className="px-5 pb-4 pt-5 sm:px-6 sm:pt-6">
-        <h2 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">{name}</h2>
-        <p className="mt-1 text-neutral-600 dark:text-neutral-400">{description}</p>
-      </div>
-      <div className="min-w-0 flex-1">{content}</div>
-    </> : <div>{background}</div>}
-    {/* Readability scrim: an opaque-at-BOTTOM, fade-up-to-transparent wash
-        sitting between the background art (z-0) and the header text (z-10).
-        justify-between pins the title/description to the bottom of the tile, so
-        the scrim backs the text there and leaves the top (e.g. the scrolling
-        Projects marquee) completely clear. Only on tiles that actually have a
-        header — tiles that render their own content in `background`
-        (Hero/About/Contact) pass no name and must not be washed. */}
-    {name && !content ? (
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-32 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-background dark:via-background/75 dark:to-transparent sm:h-36"
-      />
-    ) : null}
-    {name && !content && <div className={cn("pointer-events-none z-10 flex flex-col gap-1 p-6 pb-16", cta2 && "pb-28 min-[360px]:pb-16")}>
-      <div className="flex flex-col gap-2">
-        <div>
-          {Icon ? (
-            <Icon className="h-12 w-12 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
-          ) : (
-            ""
-          )}
-        </div>
-
-        <h2 className="text-3xl font-semibold text-neutral-700 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_14px_hsl(var(--background))] dark:text-neutral-300">
-          {name}
-        </h2>
-      </div>
-      <p className="w-full text-neutral-500 [text-shadow:0_1px_2px_hsl(var(--background)),0_0_12px_hsl(var(--background))] dark:text-neutral-400">
-        {description}
-      </p>
-    </div>}
-
+}: BentoCardProps) => {
+  const hasCtas = Boolean((href && cta) || (href2 && cta2));
+  // CTA text aligns with the tile copy: row padding + the button's own px-3
+  // equals the header's px-5 / sm:px-6.
+  const ctaRow = hasCtas ? (
     <div
       className={cn(
-        // z-20 keeps the CTA above the readability scrim (z-5) so the buttons
-        // never get dimmed by it.
-        "pointer-events-none z-20 flex w-full flex-row flex-wrap items-center gap-1 px-4 pb-3",
-        content ? "relative pt-3" : "absolute bottom-0",
-        ctaCenter && "justify-center"
+        "pointer-events-none z-20 flex w-full flex-row flex-wrap items-center gap-x-1 px-2 pb-3 sm:px-3",
+        content ? "relative pt-2" : "absolute bottom-0",
+        ctaCenter && "justify-center",
+        layout === "split" && "lg:col-start-1 lg:row-start-2 lg:self-end"
       )}
     >
-      {href && cta ? (
-        <Button
-          variant="ghost"
-          asChild
-          size="sm"
-          className="pointer-events-auto group/Arrow h-auto min-h-11 max-w-full whitespace-normal py-2 text-left [&_svg]:shrink-0"
-        >
-          <a href={href}>
-            {ctaIcon}
-            {cta}
-            <ArrowRightIcon className="ml-2 h-4 w-4 lg:group-hover/Arrow:translate-x-1 transition-transform duration-300" />
-          </a>
-        </Button>
-      ) : (
-        ""
-      )}
-      {cta2 && href2 ? (
-        <Button
-          variant="ghost"
-          asChild
-          size="sm"
-          className="pointer-events-auto group/Arrow2 h-auto min-h-11 max-w-full whitespace-normal py-2 text-left [&_svg]:shrink-0"
-        >
-          <a href={href2} target="_blank" rel="noreferrer">
-            {cta2Icon}
-            {cta2}
-            <ArrowRightIcon className="ml-2 h-4 w-4 lg:group-hover/Arrow2:translate-x-1 transition-transform duration-300" />
-          </a>
-        </Button>
+      {href && cta ? <CtaLink href={href} label={cta} icon={ctaIcon} /> : null}
+      {href2 && cta2 ? (
+        <CtaLink href={href2} label={cta2} icon={cta2Icon} external />
       ) : null}
     </div>
-    {/* Hover wash is dark-mode only: on the light theme a darkening overlay
-        made the black tile text harder to read, so light tiles stay bright on
-        hover and lean on the shared .tile-surface lift/glow instead. */}
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:dark:bg-neutral-800/10" />
+  ) : null;
+
+  const header = name ? (
+    <div
+      className={cn(
+        "px-5 pb-4 pt-5 sm:px-6 sm:pt-6",
+        layout === "split" && "lg:col-start-1 lg:row-start-1 lg:pb-2"
+      )}
+    >
+      <h2 className={tileHeadingClass}>{name}</h2>
+      {description ? (
+        <p className="mt-1.5 max-w-[60ch] text-[0.95rem] leading-relaxed text-neutral-600 dark:text-neutral-400">
+          {description}
+        </p>
+      ) : null}
     </div>
-  </RevealCard>
-);
+  ) : null;
+
+  return (
+    <RevealCard index={index} className={cn("col-span-3", className)}>
+      <div
+        id={id}
+        className={cn(
+          "tile-surface group relative h-full overflow-hidden",
+          layout === "split"
+            ? "grid grid-cols-1 grid-rows-[auto_1fr_auto] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:grid-rows-[1fr_auto]"
+            : "flex flex-col justify-between",
+          "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.04),0_2px_4px_rgba(0,0,0,.04),0_12px_24px_rgba(0,0,0,.04)]",
+          "dark:bg-background dark:[border:1px_solid_rgba(255,255,255,.1)]"
+        )}
+      >
+        {content ? (
+          <>
+            {header}
+            <div
+              className={cn(
+                "min-w-0 flex-1",
+                layout === "split" &&
+                  "lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:flex lg:items-center"
+              )}
+            >
+              {content}
+            </div>
+          </>
+        ) : (
+          <div className="relative flex min-h-0 flex-1 flex-col">{background}</div>
+        )}
+        {ctaRow}
+        {/* Hover wash is dark-mode only; light tiles lean on the shared
+            .tile-surface lift instead so dark text keeps its contrast. */}
+        <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:dark:bg-neutral-800/10" />
+      </div>
+    </RevealCard>
+  );
+};
 
 export { BentoCard, BentoGrid };

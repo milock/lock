@@ -30,7 +30,7 @@ export default function Hero() {
   const showMeteors = mounted && !reduceMotion;
 
   return (
-    <div className="relative flex min-h-[26rem] w-full mx-auto sm:min-h-[22rem] items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+    <div className="relative mx-auto flex h-full min-h-[24rem] w-full items-center justify-center overflow-hidden sm:min-h-[22rem]">
       {/* Restored template ambient field — meteors streak diagonally behind the
           positioning. Absolute background layer (z-0); the text block stays z-50
           so it always sits on top. Decorative only (pointer-events-none on each

@@ -4,7 +4,6 @@
 
 import { useState, useEffect } from "react";
 import { fetchStars } from "@/lib/fetchers";
-import NumberTicker from "@/components/magicui/number-ticker";
 import { formatLargeNumber } from "@/lib/utils";
 
 const GitHubStars = () => {
@@ -19,12 +18,16 @@ const GitHubStars = () => {
     getStars();
   }, []);
 
+  // Inline element: this renders inside a paragraph in the Stars tile.
   if (stars === null) {
-    return <div>0</div>;
+    return <span className="tabular-nums">0</span>;
   }
 
   // Belt-and-suspenders: never let a non-finite value reach the ticker.
-  return <NumberTicker value={Number.isFinite(stars) ? stars : 5} />;
+  const value = Number.isFinite(stars) ? stars : 5;
+  // A count-up on a single-digit total reads as a glitch (and the ticker
+  // starts empty until in view), so the settled number renders directly.
+  return <span className="tabular-nums">{formatLargeNumber(value)}</span>;
 };
 
 export default GitHubStars;

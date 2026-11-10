@@ -89,7 +89,9 @@ test.describe("home page (bento landing)", () => {
   });
 
   test("projects include humanizer, polysearch, and lock", async ({ page }) => {
-    const bodyText = (await page.locator("body").innerText()).toLowerCase();
+    // textContent, not innerText: on mobile the grid shows six cards until
+    // "Show all" is pressed, and the rest stay in the DOM but are not rendered.
+    const bodyText = ((await page.locator("body").textContent()) ?? "").toLowerCase();
     expect(bodyText).toContain("humanizer");
     expect(bodyText).toContain("polysearch");
     // "lock" appears in the name "Michael Lock" too, so to prove the project

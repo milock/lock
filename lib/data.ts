@@ -27,11 +27,26 @@ export const about =
   "I'm Principal Product Marketer at Super Green, a go-to-market studio for health-tech startups. I work on positioning and narrative, then partner with our creative team to bring the story into decks, websites, and customer content. Before that, I built marketing functions and launched healthcare products at Clarity RCM, Elation Health, and 360training. I also build AI tools for research, writing, and the day-to-day work around them.";
 
 // Current role confirmed by Michael on 2026-11-04. No client names included.
-export const experience = [
+export type Role = {
+  company: string;
+  title: string;
+  period: string;
+  // Display years: `end` is a year, "now" for the current role, or null when unknown.
+  start: number;
+  end: number | "now" | null;
+  badges: string[];
+  logoDomain: string;
+  url: string;
+  metric: string;
+};
+
+export const experience: Role[] = [
   {
     company: "Super Green",
     title: "Principal Product Marketer",
     period: "Aug 2026-Present",
+    start: 2026,
+    end: "now",
     badges: ["Health-tech"],
     logoDomain: "super.green",
     url: "https://super.green",
@@ -41,6 +56,9 @@ export const experience = [
     company: "Clarity RCM",
     title: "Head of Marketing (Founding Marketer)",
     period: "Previous role · started 2025",
+    start: 2025,
+    // End year not confirmed in lib/knowledge/resume.ts, so only the start shows.
+    end: null,
     badges: ["Founding marketer", "$20M ARR"],
     logoDomain: "clarityrcm.com",
     url: "https://clarityrcm.com",
@@ -51,6 +69,8 @@ export const experience = [
     company: "Elation Health",
     title: "Principal Product Marketing Manager",
     period: "2023-2025",
+    start: 2023,
+    end: 2025,
     badges: ["Series D", "$50M ARR"],
     logoDomain: "elationhealth.com",
     url: "https://www.elationhealth.com",
@@ -61,6 +81,8 @@ export const experience = [
     company: "360training",
     title: "Product Marketing Lead, Healthcare",
     period: "2022-2023",
+    start: 2022,
+    end: 2023,
     badges: ["PE-backed", "$36M→$72M"],
     logoDomain: "360training.com",
     url: "https://www.360training.com",
@@ -71,6 +93,8 @@ export const experience = [
     company: "ExSite",
     title: "Founder, Fractional PMM",
     period: "2018-2022",
+    start: 2018,
+    end: 2022,
     badges: ["Founder", "$2M raised"],
     logoDomain: "",
     url: "",
@@ -81,6 +105,8 @@ export const experience = [
     company: "Meta",
     title: "Product Ops, Platform",
     period: "2016-2018",
+    start: 2016,
+    end: 2018,
     badges: ["NASDAQ: META", "0→500K MAU"],
     logoDomain: "meta.com",
     url: "https://about.meta.com",
@@ -90,6 +116,8 @@ export const experience = [
     company: "Accenture",
     title: "Financial Operations Analyst",
     period: "2015-2016",
+    start: 2015,
+    end: 2016,
     badges: ["Consulting"],
     logoDomain: "accenture.com",
     url: "https://www.accenture.com",
@@ -248,43 +276,44 @@ export const metrics = [
 // Tools with no Simple Icons brand mark use `slug: null` and fall back to a
 // styled monogram chip rendered in-DOM, so a logo can never break. Every slug
 // below was HEAD-checked against the Simple Icons CDN.
-export type StackTool = { name: string; slug: string | null };
+export type StackGroup = "build" | "gtm";
+export type StackTool = { name: string; slug: string | null; group: StackGroup };
 
 export const stack: StackTool[] = [
   // AI / build
-  { name: "Claude", slug: "anthropic" },
-  { name: "OpenAI", slug: null },
-  { name: "Codex", slug: null },
-  { name: "Cursor", slug: "cursor" },
-  { name: "Python", slug: "python" },
-  { name: "TypeScript", slug: "typescript" },
-  { name: "Next.js", slug: "nextdotjs" },
-  { name: "React", slug: "react" },
-  { name: "Tailwind", slug: "tailwindcss" },
-  { name: "Vercel", slug: "vercel" },
-  { name: "GitHub", slug: "github" },
-  { name: "n8n", slug: "n8n" },
-  { name: "Zapier", slug: "zapier" },
-  { name: "Hugging Face", slug: "huggingface" },
-  { name: "Perplexity", slug: "perplexity" },
-  { name: "Notion", slug: "notion" },
-  { name: "Linear", slug: "linear" },
-  { name: "Figma", slug: "figma" },
-  { name: "Slack", slug: null },
+  { name: "Claude", slug: "anthropic", group: "build" },
+  { name: "OpenAI", slug: null, group: "build" },
+  { name: "Codex", slug: null, group: "build" },
+  { name: "Cursor", slug: "cursor", group: "build" },
+  { name: "Python", slug: "python", group: "build" },
+  { name: "TypeScript", slug: "typescript", group: "build" },
+  { name: "Next.js", slug: "nextdotjs", group: "build" },
+  { name: "React", slug: "react", group: "build" },
+  { name: "Tailwind", slug: "tailwindcss", group: "build" },
+  { name: "Vercel", slug: "vercel", group: "build" },
+  { name: "GitHub", slug: "github", group: "build" },
+  { name: "n8n", slug: "n8n", group: "build" },
+  { name: "Zapier", slug: "zapier", group: "build" },
+  { name: "Hugging Face", slug: "huggingface", group: "build" },
+  { name: "Perplexity", slug: "perplexity", group: "build" },
+  { name: "Notion", slug: "notion", group: "build" },
+  { name: "Linear", slug: "linear", group: "build" },
+  { name: "Figma", slug: "figma", group: "build" },
+  { name: "Slack", slug: null, group: "build" },
   // GTM / marketing / sales
-  { name: "HubSpot", slug: "hubspot" },
-  { name: "Salesforce", slug: null },
-  { name: "Apollo", slug: null },
-  { name: "Gong", slug: null },
-  { name: "Navattic", slug: null },
-  { name: "Semrush", slug: "semrush" },
-  { name: "GA4", slug: "googleanalytics" },
-  { name: "Google Ads", slug: "googleads" },
-  { name: "Webflow", slug: "webflow" },
-  { name: "beehiiv", slug: null },
-  { name: "Intercom", slug: "intercom" },
-  { name: "Segment", slug: null },
-  { name: "Canva", slug: null },
+  { name: "HubSpot", slug: "hubspot", group: "gtm" },
+  { name: "Salesforce", slug: null, group: "gtm" },
+  { name: "Apollo", slug: null, group: "gtm" },
+  { name: "Gong", slug: null, group: "gtm" },
+  { name: "Navattic", slug: null, group: "gtm" },
+  { name: "Semrush", slug: "semrush", group: "gtm" },
+  { name: "GA4", slug: "googleanalytics", group: "gtm" },
+  { name: "Google Ads", slug: "googleads", group: "gtm" },
+  { name: "Webflow", slug: "webflow", group: "gtm" },
+  { name: "beehiiv", slug: null, group: "gtm" },
+  { name: "Intercom", slug: "intercom", group: "gtm" },
+  { name: "Segment", slug: null, group: "gtm" },
+  { name: "Canva", slug: null, group: "gtm" },
 ];
 
 // Michael's focus areas (rendered in the focus-areas marquee tile).

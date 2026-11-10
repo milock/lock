@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { stack, type StackTool } from "@/lib/data";
+import React, { useId, useState } from "react";
+import { stack, type StackGroup, type StackTool } from "@/lib/data";
+import { cn } from "@/lib/utils";
+import { DisclosureButton } from "@/components/magicui/bento-grid";
 
 // Derive a 1–2 character monogram from a tool name ("Hugging Face" → "HF",
 // "beehiiv" → "be", "n8n" → "n8"). Used both as the no-logo fallback and as
@@ -19,7 +21,7 @@ function Monogram({ name }: { name: string }) {
   return (
     <span
       aria-hidden
-      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-[10px] font-semibold tracking-tight ring-1 ring-inset bg-black/[0.04] text-neutral-600 ring-black/10 dark:bg-white/[0.08] dark:text-neutral-200 dark:ring-white/15"
+      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] text-[7.5px] font-semibold tracking-tight ring-1 ring-inset bg-black/[0.05] text-neutral-600 ring-black/10 dark:bg-white/[0.1] dark:text-neutral-200 dark:ring-white/15"
     >
       {monogram(name)}
     </span>
@@ -32,66 +34,106 @@ function ToolChip({ tool }: { tool: StackTool }) {
   const [broken, setBroken] = useState(tool.slug === null);
 
   return (
-    <div
-      className={[
-        "group/chip flex min-h-11 items-center gap-2 rounded-full px-3 py-1.5",
-        "text-xs font-medium transition-colors duration-200 ease-out",
-        // Light: dark text on a faint dark wash so chips read on white.
-        "border border-black/[0.08] bg-black/[0.03] text-neutral-700",
-        "hover:border-black/20 hover:bg-black/[0.06] hover:text-neutral-900",
-        // Dark: light text on a faint light wash.
-        "dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-300",
-        "dark:hover:border-white/20 dark:hover:bg-white/[0.08] dark:hover:text-white",
-      ].join(" ")}
+    <span
+      className={cn(
+        "inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium",
+        "border border-black/[0.07] bg-black/[0.025] text-neutral-800",
+        "dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200"
+      )}
     >
       {broken ? (
         <Monogram name={tool.name} />
       ) : (
-        // Two monochrome marks toggled by theme so the icon is always legible:
-        // a dark-gray glyph on the white surface, a white glyph on the dark
-        // surface. Plain <img> keeps us off next/image remote-domain config;
-        // an error on the dark variant swaps both to the monogram fallback.
+        // Two monochrome marks toggled by theme so the icon is always legible.
+        // Plain <img> keeps us off next/image remote-domain config; an error
+        // on either variant swaps the chip to the monogram fallback.
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://cdn.simpleicons.org/${tool.slug}/525252`}
             alt=""
             aria-hidden
-            width={20}
-            height={20}
+            width={16}
+            height={16}
             loading="lazy"
             onError={() => setBroken(true)}
-            className="h-5 w-5 shrink-0 opacity-90 transition-opacity duration-200 group-hover/chip:opacity-100 dark:hidden"
+            className="h-4 w-4 shrink-0 dark:hidden"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://cdn.simpleicons.org/${tool.slug}/white`}
             alt=""
             aria-hidden
-            width={20}
-            height={20}
+            width={16}
+            height={16}
             loading="lazy"
-            className="hidden h-5 w-5 shrink-0 opacity-80 transition-opacity duration-200 group-hover/chip:opacity-100 dark:block"
+            className="hidden h-4 w-4 shrink-0 opacity-85 dark:block"
             onError={() => setBroken(true)}
           />
         </>
       )}
       <span className="whitespace-nowrap">{tool.name}</span>
-    </div>
+    </span>
   );
 }
 
+const GROUPS: { id: StackGroup; label: string }[] = [
+  { id: "build", label: "AI and build" },
+  { id: "gtm", label: "Go-to-market" },
+];
+
+// How many chips of the first group show on a phone before "Show all": about
+// three rows at 390px.
+const MOBILE_PREVIEW = 10;
+
 export default function Technologies() {
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
+
   return (
-    <div>
-      <p className="mb-2 px-5 text-xs text-muted-foreground sm:px-6">Swipe or scroll to browse</p>
-      <div role="region" aria-label="Tool stack" tabIndex={0} className="horizontal-rail px-4 pb-3 pt-1">
-        <div className="grid w-max grid-flow-col grid-rows-3 items-stretch gap-2" role="list" aria-label="AI-native and go-to-market tool stack">
-          {stack.map((tool) => (
-            <div role="listitem" key={tool.name}><ToolChip tool={tool} /></div>
-          ))}
-        </div>
+    <div className="px-5 sm:px-6">
+      <div id={listId} className="flex flex-col gap-5">
+        {GROUPS.map((group, groupIdx) => {
+          const tools = stack.filter((t) => t.group === group.id);
+          return (
+            <section
+              key={group.id}
+              aria-labelledby={`${listId}-${group.id}`}
+              className={cn(groupIdx > 0 && !expanded && "max-sm:hidden")}
+            >
+              <h3
+                id={`${listId}-${group.id}`}
+                className="mb-2.5 text-[13px] font-medium text-neutral-500 dark:text-neutral-400"
+              >
+                {group.label}
+              </h3>
+              <ul className="flex flex-wrap gap-1.5">
+                {tools.map((tool, i) => (
+                  <li
+                    key={tool.name}
+                    className={cn(
+                      groupIdx === 0 &&
+                        i >= MOBILE_PREVIEW &&
+                        !expanded &&
+                        "max-sm:hidden"
+                    )}
+                  >
+                    <ToolChip tool={tool} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
       </div>
+      <DisclosureButton
+        controls={listId}
+        expanded={expanded}
+        onToggle={() => setExpanded((v) => !v)}
+        moreLabel={`Show all ${stack.length} tools`}
+        lessLabel="Show fewer tools"
+        className="mt-3"
+      />
     </div>
   );
 }
